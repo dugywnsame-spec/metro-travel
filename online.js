@@ -81,14 +81,35 @@ async function openRanking(){
 }
 
 /* ----- 레이스 방 ----- */
+const RACE_OPTS=[['events','🎲 공정 이벤트','모두 같은 지점에서 같은 억까·비상상황'],['atk','⚔️ 공격 아이템','8콤보마다 충전, Tab으로 앞사람 방해'],['rules','🔤 구간 규칙','초성·기억·안내방송 구간이 모두에게 똑같이']];
+const MINI_N=[0,1,2,3,4,5,6,8];
+const miniOf=r=>{const o=r.opts||{};return o.miniN!=null?o.miniN:(o.mini?((r.count||30)>=70?2:1):0)};
+const maxMini=c=>Math.max(1,Math.min(8,Math.floor((c||30)/6)));
+const seenAtk=new Set();
+function onAttacks(list){
+  if(!room||!user)return;
+  for(const a of list){if(a.to!==user.uid||seenAtk.has(a.id))continue;seenAtk.add(a.id);
+    if(a.round===room.round)MT.receiveAttack(a.fx,a.fromName);
+    net.del('rooms/'+roomCode+'/attacks/'+a.id).catch(()=>{})}
+}
+function sendAttack(fx,round){
+  if(!room||room.round!==round)return false;
+  const rows=raceRows(),me=rows.find(p=>p.me);if(!me)return false;
+  const others=rows.filter(p=>!p.me&&p.finishMs==null);if(!others.length)return false;
+  const ahead=others.filter(p=>p.done>=me.done).sort((a,b)=>a.done-b.done);
+  const t=ahead[0]||others.sort((a,b)=>b.done-a.done)[0];
+  const id=Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+  net.set('rooms/'+roomCode+'/attacks/'+id,{from:user.uid,fromName:myName(),to:t.id,fx,round,t:net.now()}).catch(()=>{});
+  toast('⚔️ '+t.name+'에게 공격!');return true;
+}
 function openRaceMenu(){
   if(!profile||!profile.name){askNickname();return}
   const c=MT.getCfg();
   MT.openPanel('친구와 레이스',`<div class="mg-intro"><span class="mg-ico">🏁</span><h2>친구와 레이스</h2></div>
     <p>모두 같은 역 이름을 같은 순서로 쳐. 먼저 종착역에 도착하는 사람이 이겨. 최대 8명.</p>
     <div class="sec"><p class="sec-t">방 만들기 · ${esc(c.lineName)} ${c.diffIcon} ${esc(c.diffName)}</p>
-    <div class="net-field"><select id="rcCount" class="btn" style="flex:1"><option value="20">짧게 · 역 이름 20개</option><option value="30" selected>보통 · 30개</option><option value="45">길게 · 45개</option></select><button class="btn go" id="rcMake" type="button">방 만들기</button></div>
-    <p class="net-msg">노선은 시작 화면에서 고른 노선으로 정해져.</p></div>
+    <div class="net-field"><select id="rcCount" class="btn" style="flex:1"><option value="20">짧게 · 20개 · 약 2분</option><option value="30" selected>보통 · 30개 · 약 2분 30초</option><option value="45">길게 · 45개 · 약 3분 30초</option><option value="70">반 구간 완주 · 70개 · 약 5분</option><option value="120">전 구간 완주 · 120개 · 약 8분</option><option value="200">마라톤 · 200개 · 약 13분</option></select><button class="btn go" id="rcMake" type="button">방 만들기</button></div>
+    <p class="net-msg">노선은 시작 화면에서 고른 노선으로 정해져. 미니게임 결승전 횟수는 대기실에서 정할 수 있어 (긴 코스일수록 최대 8번까지). 120개 이상이면 노선 전체 역을 달려.</p></div>
     <div class="sec"><p class="sec-t">친구 방에 들어가기</p><div class="net-field"><input id="rcCode" maxlength="5" autocomplete="off" placeholder="방 코드 5자리" style="text-transform:uppercase;letter-spacing:.15em"><button class="btn go" id="rcJoin" type="button">참가</button></div></div>
     <div class="net-err" id="rcErr"></div><div class="row"><button class="btn" id="rcBack" type="button">처음 화면</button></div>`);
   $('#rcBack').onclick=backToTitle;
@@ -100,7 +121,7 @@ function openRaceMenu(){
 async function createRoom(count){
   const c=MT.getCfg();let code='';
   for(let t=0;t<6;t++){code=Array.from({length:5},()=>CODE_CH[Math.floor(Math.random()*CODE_CH.length)]).join('');if(!(await net.get('rooms/'+code)))break}
-  await net.set('rooms/'+code,{host:user.uid,hostName:myName(),status:'lobby',line:c.line,diff:c.diff,count,round:0,words:[],startAt:0,createdAt:net.now()});
+  await net.set('rooms/'+code,{host:user.uid,hostName:myName(),status:'lobby',line:c.line,diff:c.diff,count,round:0,script:null,opts:{events:true,atk:true,rules:true,miniN:Math.min(maxMini(count),count<45?1:count<120?2:3)},startAt:0,createdAt:net.now()});
   await enterRoom(code);
 }
 async function joinRoom(code){
@@ -111,9 +132,10 @@ async function joinRoom(code){
 async function enterRoom(code){
   leaveRoom(true);roomCode=code;started=-1;resultShown=-1;statsSaved=-1;
   const r=await net.get('rooms/'+code);
-  await net.set('rooms/'+code+'/players/'+user.uid,{name:myName(),round:r?r.round:0,done:0,total:0,tpm:0,acc:0,finishMs:null,seen:net.now(),color:pickColor(code)});
+  await net.set('rooms/'+code+'/players/'+user.uid,{name:myName(),round:r?r.round:0,done:0,total:0,tpm:0,acc:0,finishMs:null,bonusMs:0,seen:net.now(),color:pickColor(code)});
   unsubs.push(net.watchDoc('rooms/'+code,onRoom));
   unsubs.push(net.watchCol('rooms/'+code+'/players',onPlayers));
+  unsubs.push(net.watchCol('rooms/'+code+'/attacks',onAttacks));
   hbTimer=setInterval(()=>{if(roomCode)net.update('rooms/'+roomCode+'/players/'+user.uid,{seen:net.now()}).catch(()=>{})},15000);
   checkTimer=setInterval(checkFinish,1000);
   addEventListener('beforeunload',unloadLeave);
@@ -133,11 +155,14 @@ function onRoom(r){
   if(!r||r.status==='closed'){const was=roomCode;leaveRoom(true);toast('방장이 방을 닫았어');MT.leaveRaceUI();return}
   if(r.status==='lobby')renderLobby();
   if(r.status==='racing'&&started!==r.round){started=r.round;firstFinishAt=0;
-    net.update('rooms/'+roomCode+'/players/'+user.uid,{round:r.round,done:0,total:r.words.length,tpm:0,acc:0,finishMs:null,seen:net.now()}).catch(()=>{});
+    const total=r.script.items.length;
+    net.update('rooms/'+roomCode+'/players/'+user.uid,{round:r.round,done:0,total,tpm:0,acc:0,finishMs:null,bonusMs:0,seen:net.now()}).catch(()=>{});
     const round=r.round,code=roomCode;
-    MT.startRace({words:r.words,line:r.line,diff:r.diff,startAt:r.startAt-(net.now()-Date.now()),
+    MT.startRace({script:r.script,opts:r.opts||{},line:r.line,diff:r.diff,startAt:r.startAt-(net.now()-Date.now()),
+      onAttack:fx=>sendAttack(fx,round),
+      onBonus:b=>{if(roomCode===code)net.update('rooms/'+code+'/players/'+user.uid,{bonusMs:b,seen:net.now()}).catch(()=>{})},
       onProgress:p=>{if(roomCode===code&&room&&room.round===round)net.update('rooms/'+code+'/players/'+user.uid,{round,done:p.done,total:p.total,tpm:p.tpm,seen:net.now()}).catch(()=>{})},
-      onFinish:f=>{if(roomCode===code)net.update('rooms/'+code+'/players/'+user.uid,{round,done:f.done,total:f.total,tpm:f.tpm,acc:f.acc,finishMs:f.ms,seen:net.now()}).catch(()=>{})}});
+      onFinish:f=>{if(roomCode===code)net.update('rooms/'+code+'/players/'+user.uid,{round,done:f.done,total:f.total,tpm:f.tpm,acc:f.acc,finishMs:f.ms,bonusMs:f.bonusMs||0,seen:net.now()}).catch(()=>{})}});
   }
 }
 function onPlayers(list){
@@ -150,9 +175,9 @@ function onPlayers(list){
   }
 }
 function raceRows(){
-  const r=room;return livePlayers().filter(p=>p.round===r.round).map(p=>({id:p.id,name:p.name,color:p.color,done:p.done||0,total:p.total||r.words.length,tpm:p.tpm||0,finishMs:p.finishMs==null?null:p.finishMs,me:p.id===user.uid}));
+  const r=room,tot=r.script?r.script.items.length:0;return livePlayers().filter(p=>p.round===r.round).map(p=>({id:p.id,name:p.name,color:p.color,done:p.done||0,total:p.total||tot,tpm:p.tpm||0,finishMs:p.finishMs==null?null:p.finishMs,bonusMs:p.bonusMs||0,me:p.id===user.uid}));
 }
-function sortRows(rows){return rows.slice().sort((a,b)=>(a.finishMs!=null)===(b.finishMs!=null)?(a.finishMs!=null?a.finishMs-b.finishMs:b.done-a.done):(a.finishMs!=null?-1:1))}
+function sortRows(rows){return MT.sortRace(rows)}
 function checkFinish(){
   if(!room||room.status!=='racing'||resultShown===room.round)return;
   const rows=raceRows();if(!rows.length)return;
@@ -164,7 +189,7 @@ function checkFinish(){
 }
 async function startRound(){
   if(!isHost())return;const n=room.status==='lobby'&&room.round===0?1:(room.round||0)+1;
-  await net.update('rooms/'+roomCode,{status:'racing',round:n,words:MT.makeRaceWords(room.line,room.count||30),startAt:net.now()+5000});
+  await net.update('rooms/'+roomCode,{status:'racing',round:n,script:MT.makeRaceScript(room.line,room.count||30,room.opts||{}),startAt:net.now()+5000});
 }
 function renderLobby(){
   if(!room||room.status!=='lobby')return;
@@ -177,11 +202,16 @@ function renderLobby(){
     <div class="lobby-code" id="lbCode">${esc(roomCode)}</div>
     <div class="row"><button class="btn" id="lbCopy" type="button">코드 복사</button></div>
     <p class="net-msg">${esc(room.line)}호선 · 역 이름 ${room.count||30}개 · 방장 ${esc(room.hostName||'')}</p>
+    <div class="race-opts">${RACE_OPTS.map(([k,l,d])=>`<label class="ropt"><input type="checkbox" data-k="${k}" ${(room.opts||{})[k]?'checked':''} ${isHost()?'':'disabled'}><span><b>${l}</b><small>${d}</small></span></label>`).join('')}</div>
+    <label class="ropt mini-n"><span><b>🎮 미니게임 결승전</b><small>모두 같은 미니게임을 하고, 점수만큼 기록이 줄어. 레이스 중간중간 고르게 나와</small></span><select id="miniN" ${isHost()?'':'disabled'}>${MINI_N.filter(n=>n<=maxMini(room.count)).map(n=>`<option value="${n}" ${miniOf(room)===n?'selected':''}>${n?n+'번':'끄기'}</option>`).join('')}</select></label>
+    <p class="net-msg">${isHost()?'방장만 바꿀 수 있어.':'방장이 정한 규칙이야.'}</p>
     <div class="lobby-list">${ps.map(p=>`<div><span class="rb-dot" style="background:${esc(p.color)}"></span>${esc(p.name)}${p.id===room.host?' 👑':''}${p.id===user.uid?' (나)':''}<small>대기 중</small></div>`).join('')}</div>
     <p class="net-msg">${L<2?'혼자서도 출발할 수 있지만 친구가 들어오면 더 재밌어.':L+'명 대기 중'}</p>
     <div class="row">${isHost()?'<button class="btn go" id="lbStart" type="button">🏁 출발!</button>':'<p class="net-msg" style="flex:1">방장이 출발을 누르면 5초 뒤에 시작해.</p>'}<button class="btn" id="lbLeave" type="button">나가기</button></div>`;
   $('#lbCopy').onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(roomCode).then(()=>toast('방 코드를 복사했어'),()=>toast('복사가 안 되면 코드를 직접 알려줘'))};
   if(isHost())$('#lbStart').onclick=async()=>{$('#lbStart').disabled=true;try{await startRound()}catch(e){toast('출발하지 못했어');$('#lbStart').disabled=false}};
   $('#lbLeave').onclick=()=>{leaveRoom();backToTitle()};
+  if(isHost())$('#miniN').onchange=e=>{const o=Object.assign({},room.opts||{});o.miniN=+e.target.value;delete o.mini;net.update('rooms/'+roomCode,{opts:o}).catch(()=>toast('설정을 바꾸지 못했어'))};
+  if(isHost())document.querySelectorAll('.race-opts input').forEach(cb=>cb.onchange=()=>{const o=Object.assign({},room.opts||{});o[cb.dataset.k]=cb.checked;net.update('rooms/'+roomCode,{opts:o}).catch(()=>toast('설정을 바꾸지 못했어'))});
 }
 boot();

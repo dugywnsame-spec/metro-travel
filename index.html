@@ -513,6 +513,15 @@ body.fever #typebox{box-shadow:0 0 0 2px var(--amber),0 0 48px rgba(255,150,30,.
 .toast{position:absolute;left:50%;top:14px;transform:translateX(-50%);background:rgba(12,17,22,.9);color:#fff;padding:9px 16px;border-radius:99px;font-size:13px;font-weight:700;z-index:20;pointer-events:none;animation:toast 2.6s var(--ease) forwards}
 @keyframes toast{0%{opacity:0;transform:translate(-50%,-10px)}10%,85%{opacity:1;transform:translate(-50%,0)}100%{opacity:0}}
 @media (max-width:900px){.race-board{top:auto;bottom:12px;width:auto;right:max(16px,env(safe-area-inset-right,0px))}}
+.atk-btn{align-self:center;border:0;border-radius:99px;padding:8px 16px;font:900 14px var(--f-body);color:#2a1503;background:linear-gradient(90deg,#ffd76e,#ff8a3c);cursor:pointer;box-shadow:0 6px 18px rgba(255,140,40,.35)}
+.atk-btn:disabled{opacity:.35;cursor:default;box-shadow:none}
+.atk-btn kbd{font:700 11px var(--f-mono);background:rgba(0,0,0,.15);padding:1px 5px;border-radius:4px;margin-left:4px}
+.race-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.ropt{display:flex;gap:8px;align-items:flex-start;padding:9px 10px;border-radius:12px;background:#fff;box-shadow:inset 0 0 0 1px #e0e6e3;cursor:pointer}
+.ropt input{margin-top:3px;accent-color:var(--line)}
+.mini-n{grid-column:1/-1;align-items:center}.mini-n span{flex:1}.mini-n select{font:700 14px var(--f-body);padding:6px 10px;border-radius:10px;border:1.5px solid #cfd6d3;background:#fff;color:var(--ink)}
+.ropt b{display:block;font-size:13.5px}.ropt small{display:block;font-size:11.5px;color:#66727a;line-height:1.35}
+.rt-name small{font-weight:500;color:#66727a;font-size:11.5px}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.01s!important}}
 </style>
 
@@ -547,6 +556,7 @@ body.fever #typebox{box-shadow:0 0 0 2px var(--amber),0 0 48px rgba(255,150,30,.
         <button class="btn go" type="submit">입력</button>
       </form>
       <div id="fb" aria-live="polite"></div>
+      <button class="atk-btn" id="atkBtn" type="button" hidden>⚔️ 공격 ×0 <kbd>Tab</kbd></button>
     </section>
   </div>
   <div id="flash"></div>
@@ -954,11 +964,11 @@ function accuracy(){const s=G.strokes,b=G.bs;return s+b?Math.round(s/(s+b)*100):
 function rankOf(t){let r=RANKS[0];for(const x of RANKS)if(t>=x[0])r=x;return r}
 function hud(){
   $('#sScore').textContent=G.score.toLocaleString();$('#sCoin').textContent=G.coins;$('#sCombo').textContent=G.combo;$('#sTpm').textContent=liveTpm();
-  if(G.race&&(G.phase==='race'||G.phase==='raceEnd')){const R=G.race,n=STATIONS.length,pos=R.i/R.words.length*(n-1);
+  if(G.race&&(G.phase==='race'||G.phase==='raceEnd')){const R=G.race,n=STATIONS.length,pos=R.i/R.items.length*(n-1);
     $('#trainMk').style.left=(pos/(n-1)*100)+'%';document.querySelectorAll('.route .dot').forEach(d=>d.classList.toggle('passed',+d.dataset.i<=pos));
     const ci=Math.min(n-1,Math.ceil(pos));document.querySelectorAll('.route .nm').forEach(d=>d.classList.toggle('cur',+d.dataset.n===ci));
     $('#signLbl').textContent='레이스';$('#signName').textContent=STATIONS[ci].name;
-    $('#segbar').hidden=false;$('#segTxt').textContent='종착역까지';$('#segNum').textContent=R.i+'/'+R.words.length;$('#segFill').style.width=(R.i/R.words.length*100)+'%';
+    $('#segbar').hidden=false;$('#segTxt').textContent='종착역까지';$('#segNum').textContent=R.i+'/'+R.items.length;$('#segFill').style.width=(R.i/R.items.length*100)+'%';
     renderChips();renderRace();return}
   const n=STATIONS.length;let p=0;
   if(G.phase==='ride')p=G.segNeed?G.segDone/G.segNeed:0;else if(G.phase==='arrive')p=1;
@@ -1262,23 +1272,23 @@ function fireEvent(k){
 function trapSeq(){
   const w=pickWord();
   setTarget(w,{limit:2.6,cls:'trap',prompt:'🪤 무정차 함정 역이야! 치지 말고 기다려!',
-    onOK:()=>{sfx.bad();loseCombo();const h=damage();G.score=Math.max(0,G.score-150);floatText('함정! -150','');fb(h?'함정에 걸렸어! 목숨 -1':'함정에 걸렸어! -150','bad');hud();later(nextWord,500)},
-    onTimeout:()=>{G.score+=120;sfx.ok();floatText('잘 참았어 +120','green');fb('함정 통과!','good');hud();nextWord()}});
+    onOK:()=>{sfx.bad();loseCombo();const h=damage();G.score=Math.max(0,G.score-150);floatText('함정! -150','');fb(h?'함정에 걸렸어! 목숨 -1':'함정에 걸렸어! -150','bad');hud();later(contFlow,500)},
+    onTimeout:()=>{G.score+=120;sfx.ok();floatText('잘 참았어 +120','green');fb('함정 통과!','good');hud();contFlow()}});
 }
 function animalSeq(){
   const a=ANIMALS[rnd(ANIMALS.length)];W.boost=-25;
   const el=document.createElement('div');el.className='pax animal';el.textContent=a[0];$('#fx').appendChild(el);setTimeout(()=>el.remove(),4200);
   setTarget(a[1],{limit:4.2,cls:'cat',prompt:a[0]+' "'+a[1]+'"라고 빨리 쳐서 비켜달라고 해!',
-    onOK:()=>{G.coins+=10;G.score+=150;sfx.gold();floatText(a[0]+' 비켜줬어 +150','');el.remove();hud();nextWord()},
-    onTimeout:()=>{fb(a[1]+'(이)가 천천히 비켜줬어…','bad');W.boost=-20;el.remove();nextWord()}});
+    onOK:()=>{G.coins+=10;G.score+=150;sfx.gold();floatText(a[0]+' 비켜줬어 +150','');el.remove();hud();contFlow()},
+    onTimeout:()=>{fb(a[1]+'(이)가 천천히 비켜줬어…','bad');W.boost=-20;el.remove();contFlow()}});
 }
 function estopSeq(){
   W.mode='estop';G.paused=true;$('#stage').classList.add('alarm');sfx.brake();
   const p=ESTOP[rnd(ESTOP.length)],d=D();const lim=(d.base+d.per*p.length)*1.4+1.5;
-  const resume=()=>{$('#stage').classList.remove('alarm');G.paused=false;if(G.phase==='ride'){W.mode='accel';sfx.depart()}};
+  const resume=()=>{$('#stage').classList.remove('alarm');G.paused=false;if(G.phase==='ride'||G.phase==='race'){W.mode='accel';sfx.depart()}};
   setTarget(p,{limit:lim,cls:'emg',prompt:'🚨 비상 정지! 이 문장을 쳐야 운행 재개',
-    onOK:()=>{resume();G.score+=200;floatText('운행 재개 +200','green');sfx.ok();hud();later(nextWord,600)},
-    onTimeout:()=>{resume();const h=damage();G.score=Math.max(0,G.score-200);fb(h?'운행 지연! 목숨 -1':'운행 지연! -200','bad');sfx.bad();hud();later(nextWord,600)}});
+    onOK:()=>{resume();G.score+=200;floatText('운행 재개 +200','green');sfx.ok();hud();later(contFlow,600)},
+    onTimeout:()=>{resume();const h=damage();G.score=Math.max(0,G.score-200);fb(h?'운행 지연! 목숨 -1':'운행 지연! -200','bad');sfx.bad();hud();later(contFlow,600)}});
 }
 function spawnPigeons(){for(let i=0;i<4;i++)setTimeout(()=>{if(G.phase!=='ride')return;const p=document.createElement('div');p.className='pigeon'+(i%2?' rev':'');p.innerHTML='<span>🕊️</span>';p.style.top=(30+Math.random()*24)+'%';$('#fx').appendChild(p);tone(1800,.06,'square',.08);setTimeout(()=>p.remove(),1700)},i*900)}
 function spawnPassenger(){const say=['잠깐만 지나갈게요~','저 내려요!','여기 자리 있나요?','죄송합니다~'];const p=document.createElement('div');p.className='pax';p.innerHTML='🧍<i>'+say[rnd(say.length)]+'</i>';$('#fx').appendChild(p);setTimeout(()=>p.remove(),3400)}
@@ -1919,16 +1929,36 @@ function endGame(over){
 
 /* ---------- 온라인 레이스 (웹사이트 버전에서 사용) ---------- */
 const OPP_COLORS=['#ffbf3c','#ff6b8b','#4fc3f7','#b388ff','#69f0ae','#ff8a65','#e0e0e0','#fff176'];
+const RACE_MINI=['mole','shade','count','push','balance','rhythm','stairs','next','sort','assemble','lost','fare','chosung'];
+const RACE_EVENTS=['pigeon','passenger','mirror','tiny','shuffle','vanish','quake','smoke','blackout','estop','trap','animal'];
+const ATK=['pigeon','mirror','shuffle','tiny','smoke','quake','vanish'];
+const contFlow=()=>G.phase==='race'?raceWord():nextWord();
 function makeRaceWords(line,count){const L=LINES[line]||LINES[2];const out=[],last=[];let guard=0;while(out.length<count&&guard++<5000){const w=L.all[rnd(L.all.length)];if(last.includes(w))continue;out.push(w);last.push(w);if(last.length>10)last.shift()}return out}
+function racePhrase(L){const n=L.names[rnd(L.names.length)];const P=['다음 역은 '+n+'입니다','이번 역은 '+n+'역입니다','내리실 문은 오른쪽입니다','출입문 닫습니다','안전선 밖으로 물러서 주세요','노약자석은 비워 두세요','열차가 들어오고 있습니다'];return P[rnd(P.length)]}
+/* 방장이 한 번 만들어서 모두에게 똑같이 나눠주는 레이스 대본 */
+function makeRaceScript(line,count,opts){
+  opts=opts||{};const L=LINES[line]||LINES[2],words=makeRaceWords(line,count),items=[];let i=0,b=0;
+  while(items.length<count){let m='normal';if(opts.rules&&b>0)m=['normal','chosung','memory','broadcast','normal'][rnd(5)];
+    if(m==='broadcast'){for(let k=0;k<3&&items.length<count;k++)items.push({w:racePhrase(L),m})}
+    else{const size=6+rnd(3);for(let k=0;k<size&&items.length<count;k++)items.push({w:words[i++%words.length],m})}b++}
+  let n=opts.miniN!=null?+opts.miniN:(opts.mini?(count>=70?2:1):0);n=Math.max(0,Math.min(n,8,Math.floor(count/6)));
+  let mini=null;if(n){const g=shuffle(RACE_MINI.slice());mini=Array.from({length:n},(_,k)=>({at:Math.max(2,Math.floor(count*(k+1)/(n+1))),game:g[k%g.length]}))}
+  const events=[];if(opts.events){const n=Math.max(2,Math.round(count/9)),used=new Set();if(mini)mini.forEach(m=>used.add(m.at));
+    for(let k=0;k<n;k++){let idx,t=0;do{idx=3+rnd(Math.max(1,count-4));t++}while(used.has(idx)&&t<50);used.add(idx);events.push([idx,RACE_EVENTS[rnd(RACE_EVENTS.length)]])}}
+  return{items,events,mini};
+}
 function startRace(o){
-  audioInit();G.run++;G.line=LINES[o.line]?+o.line:2;G.diff=DIFF[o.diff]?o.diff:'normal';G.course='half';
+  audioInit();G.run++;G.line=LINES[o.line]?+o.line:2;G.diff=DIFF[o.diff]?o.diff:'normal';G.course=o.script.items.length>=120?'full':'half';
   shuffleGames();applyLine();resetRun(false);G.maxLives=0;G.lives=0;
   closePanel();clearFx();
   if(glOK){plat.visible=true;plat.position.z=0;W.vel=0;W.mode='stopped';setPlatformSigns(0);setTerrain(STATIONS[0].up?'up':'tunnel')}
-  G.race={words:o.words.slice(),i:0,o,start:o.startAt,done:false,si:0,t0:0,lastSend:0,timer:0};G.opps=[];G.phase='race';
-  $('#raceBoard').hidden=false;hud();
+  const sc=o.script,ev={};(sc.events||[]).forEach(([i,k])=>ev[i]=k);
+  const minis=Array.isArray(sc.mini)?sc.mini:sc.mini?[sc.mini]:[];
+  G.race={items:sc.items,events:ev,evDone:{},minis,miniDone:{},bonusMs:0,atkOn:!!(o.opts&&o.opts.atk),atk:0,lastMode:'',i:0,o,start:o.startAt,done:false,si:0,t0:0,lastSend:0,timer:0};
+  G.opps=[];G.phase='race';$('#raceBoard').hidden=false;hud();renderAtk();
   setIdle('친구들과 같은 역 이름으로 레이스! 곧 출발해','준비');focusInput();fb('');W.doorTgt=0;sfx.door();
-  led('🏁 레이스 · '+lineName()+' · 역 이름 '+o.words.length+'개를 먼저 다 치면 승리!');
+  const on=[];if(o.opts){if(o.opts.events)on.push('이벤트');if(o.opts.atk)on.push('공격');if(o.opts.rules)on.push('구간 규칙');if(o.opts.miniN||o.opts.mini)on.push('미니게임 '+(o.opts.miniN||'')+'번')}
+  led('🏁 레이스 · '+lineName()+' · '+sc.items.length+'개'+(on.length?' · '+on.join(' · '):'')+' · 먼저 다 치면 승리!');
   const run=G.run;let shown=null;
   const iv=setInterval(()=>{if(run!==G.run||G.phase!=='race'){clearInterval(iv);return}
     const ms=G.race.start-Date.now();
@@ -1937,59 +1967,102 @@ function startRace(o){
 }
 function raceSend(force){
   const R=G.race;if(!R||!R.o.onProgress)return;const now=Date.now();clearTimeout(R.timer);
-  const go=()=>{R.lastSend=Date.now();R.o.onProgress({done:R.i,total:R.words.length,tpm:liveTpm()})};
+  const go=()=>{R.lastSend=Date.now();R.o.onProgress({done:R.i,total:R.items.length,tpm:liveTpm()})};
   if(force||now-R.lastSend>400)go();else R.timer=setTimeout(go,420-(now-R.lastSend));
 }
+const RACE_PROMPT={chosung:'🔤 초성을 보고 이 노선의 역 이름을 쳐!',memory:'🧠 잠깐 보였다가 사라져!',broadcast:'📢 안내방송 문장을 쳐! (띄어쓰기 상관없어)'};
 function raceWord(){
   const R=G.race;if(!R||G.phase!=='race')return;
-  if(R.i>=R.words.length){raceFinish();return}
-  const n=STATIONS.length,si=Math.min(n-2,Math.floor(R.i/R.words.length*(n-1)));
-  if(si!==R.si){R.si=si;G.si=si;if(glOK){setPlatformSigns(si);plat.visible=true;plat.position.z=-150;setTerrain(STATIONS[si].seg)}led(STATIONS[si].name+'역 통과 · 남은 역 이름 '+(R.words.length-R.i)+'개')}
-  const w=R.words[R.i];
-  setTarget(w,{stat:true,prompt:'🏁 '+(R.i+1)+' / '+R.words.length+' · 먼저 다 치면 승리!',
-    onOK:()=>{R.i++;G.hits++;G.combo++;G.maxCombo=Math.max(G.maxCombo,G.combo);G.score+=strokes(w)*6;sfx.ok();flash();W.boost=Math.min(28,W.boost+8);hud();raceSend(R.i>=R.words.length);raceWord()}});
+  if(R.i>=R.items.length){raceFinish();return}
+  const n=STATIONS.length,si=Math.min(n-2,Math.floor(R.i/R.items.length*(n-1)));
+  if(si!==R.si){R.si=si;G.si=si;if(glOK){setPlatformSigns(si);plat.visible=true;plat.position.z=-150;setTerrain(STATIONS[si].seg)}led(STATIONS[si].name+'역 통과 · 남은 '+(R.items.length-R.i)+'개')}
+  const mg=R.minis.find(m=>m.at===R.i);if(mg&&!R.miniDone[R.i]){R.miniDone[R.i]=1;raceMini(mg);return}
+  const it=R.items[R.i];
+  if(it.m!==R.lastMode){const first=!R.lastMode;R.lastMode=it.m;if(!first||it.m!=='normal'){const M=MODES[it.m];banner(M.icon,M.name,it.m==='normal'?'다시 평소처럼 역 이름을 쳐':RACE_PROMPT[it.m].slice(2),'mode')}}
+  const ek=R.events[R.i];if(ek&&!R.evDone[R.i]){R.evDone[R.i]=1;if(fireEvent(ek))return}
+  const fx=G.fx,w=it.w;let disp=null,alts=null,dispProg=false,hideAfter=0;
+  if(it.m==='chosung'){const c=cho(w);alts=LINES[G.line].all.filter(x=>cho(x)===c);disp=c;dispProg=true}
+  if(it.m==='memory'||fx.vanish>0)hideAfter=it.m==='memory'?900:750;
+  if(fx.shuffle>0&&disp==null&&it.m!=='broadcast'&&w.length>1&&new Set(w).size>1){let s;do{s=shuffle([...w]).join('')}while(s===w);disp=s}
+  const cls=[fx.mirror>0?'mirror':'',fx.tiny>0?'tiny':'',fx.quake>0?'quake':'',fx.smoke>0?'smoke':'',it.m==='broadcast'?'long':''].join(' ');
+  setTarget(w,{stat:true,alts,disp,dispProg,hideAfter,cls,prompt:'🏁 '+(R.i+1)+' / '+R.items.length+' · '+(RACE_PROMPT[it.m]||'먼저 다 치면 승리!'),
+    onOK:()=>{R.i++;G.hits++;G.combo++;G.maxCombo=Math.max(G.maxCombo,G.combo);G.score+=strokes(T.matched||w)*6;
+      if(R.atkOn&&G.combo%8===0&&R.atk<3){R.atk++;floatText('⚔️ 공격 아이템 +1','');sfx.coin()}
+      sfx.ok();flash();W.boost=Math.min(28,W.boost+8);tickFx();hud();raceSend(R.i>=R.items.length);raceWord()}});
+  renderAtk();
+}
+function raceMini(mg){
+  const R=G.race,g=GAMES[mg.game];T.active=false;
+  openPanel('미니게임 결승전',`<div class="mg-intro"><span class="mg-ico">${g.icon}</span><h2>${g.title}</h2></div><p><b>모두 같은 미니게임이야!</b> 점수만큼 최종 기록에서 시간이 빠져 (한 번에 최대 15초).</p><p>${g.rule}</p><p class="net-msg" id="mgAuto">5초 뒤 자동으로 시작해</p><div class="row"><button class="btn go" id="mgStart" type="button">바로 시작</button></div>`,'boss');
+  const start=()=>{if(!$('#mgStart')||G.phase!=='race')return;
+    panel.querySelector('.panel-body').innerHTML=`<div class="mg-intro sm"><span class="mg-ico">${g.icon}</span><h2>${g.title}</h2></div><div id="mgArea" class="mg-area"></div>`;
+    g.run($('#mgArea'),(pts,msg)=>{if(mgStop){mgStop();mgStop=null}if(G.phase!=='race')return;
+      const bonus=Math.min(15000,Math.round(Math.max(0,pts)/60*1000));R.bonusMs=(R.bonusMs||0)+bonus;R.o.onBonus&&R.o.onBonus(R.bonusMs);sfx.chime();
+      panel.querySelector('.panel-body').innerHTML=`<div class="result-msg">${msg}</div><div class="result-big">-${(bonus/1000).toFixed(1)}<small> 초</small></div><p style="text-align:center">최종 기록에서 빠지는 시간이야. 다시 달려!</p>`;
+      setTimeout(()=>{if(G.phase!=='race')return;closePanel();focusInput();raceWord()},1600)})};
+  $('#mgStart').onclick=start;setTimeout(start,5000);
+}
+function renderAtk(){
+  const b=$('#atkBtn'),R=G.race;if(!b)return;
+  if(!R||!R.atkOn||G.phase!=='race'){b.hidden=true;return}
+  b.hidden=false;b.disabled=R.atk<=0;b.innerHTML=`⚔️ 공격 ×${R.atk} <kbd>Tab</kbd>`;
+}
+function raceAttack(){
+  const R=G.race;if(!R||G.phase!=='race'||R.atk<=0||!R.o.onAttack)return;
+  const fx=ATK[rnd(ATK.length)];R.atk--;
+  if(!R.o.onAttack(fx)){R.atk++;floatText('공격할 상대가 없어','')}else{sfx.swap();floatText('⚔️ '+EVENTS[fx].name+' 발사!','')}
+  renderAtk();focusInput();
+}
+function receiveAttack(fx,from){
+  if(!G.race||G.phase!=='race'||!EVENTS[fx])return;const e=EVENTS[fx];
+  banner('⚔️',(from||'누군가')+'의 공격!',e.icon+' '+e.name+' · '+e.desc,'troll');sfx.troll();
+  if(fx==='pigeon')spawnPigeons();else{G.fx[fx]=Math.max(G.fx[fx]||0,3);if(T.active&&['mirror','tiny','quake','smoke'].includes(fx))wordEl.classList.add(fx)}
+  renderChips();
 }
 function raceFinish(){
-  const R=G.race;if(!R||R.done)return;R.done=true;G.phase='raceEnd';T.active=false;
+  const R=G.race;if(!R||R.done)return;R.done=true;G.phase='raceEnd';T.active=false;renderAtk();clearFx();
   const n=STATIONS.length;G.si=n-1;
   if(glOK){setTerrain(STATIONS[n-1].up?'up':'tunnel');setPlatformSigns(n-1);plat.visible=true;plat.position.z=-130;W.mode='approach';W.onStop=()=>{W.doorTgt=1}}
   setIdle('도착! 다른 사람을 기다리는 중…','🏁 도착');sfx.win();hud();
   const ms=Math.round(performance.now()-R.t0);
-  R.o.onFinish&&R.o.onFinish({ms,tpm:avgTpm(),acc:accuracy(),done:R.words.length,total:R.words.length});
+  R.o.onFinish&&R.o.onFinish({ms,bonusMs:R.bonusMs||0,tpm:avgTpm(),acc:accuracy(),done:R.items.length,total:R.items.length});
 }
-function raceStop(){if(G.race&&G.phase==='race'){G.phase='raceEnd';T.active=false;W.mode='estop'}}
+function raceStop(){if(G.race&&G.phase==='race'){G.phase='raceEnd';T.active=false;W.mode='estop';renderAtk()}}
+const adjMs=p=>p.finishMs==null?null:Math.max(0,p.finishMs-(p.bonusMs||0));
+function sortRace(rows){return rows.slice().sort((a,b)=>{const A=adjMs(a),B=adjMs(b);return(A!=null)===(B!=null)?(A!=null?A-B:b.done-a.done):(A!=null?-1:1)})}
 function raceUpdate(list){G.opps=list||[];renderRace()}
 function renderRace(){
   const R=G.race,b=$('#raceBoard');if(!R){b.hidden=true;return}
   document.querySelectorAll('#route .opp').forEach(e=>e.remove());
   const route=$('#route');
-  G.opps.forEach((p,k)=>{if(p.me)return;const x=Math.min(1,p.done/Math.max(1,p.total||R.words.length))*100;const d=document.createElement('div');d.className='opp';d.style.left=x+'%';d.style.setProperty('--oc',p.color||OPP_COLORS[k%8]);d.title=p.name;route.appendChild(d)});
-  const rows=G.opps.slice().sort((a,b)=>(a.finishMs!=null)===(b.finishMs!=null)?(a.finishMs!=null?a.finishMs-b.finishMs:b.done-a.done):(a.finishMs!=null?-1:1));
-  b.innerHTML='<div class="rb-h">🏁 실시간 순위</div>'+rows.map((p,i)=>{const tot=p.total||R.words.length,pct=Math.min(100,p.done/Math.max(1,tot)*100);
-    return`<div class="rb-row${p.me?' me':''}"><span class="rb-rank">${i+1}</span><span class="rb-dot" style="background:${p.color}"></span><span class="rb-name">${esc(p.name||'플레이어')}${p.me?' (나)':''}</span><span class="rb-val">${p.finishMs!=null?'🏁 '+(p.finishMs/1000).toFixed(1)+'초':p.done+'/'+tot}</span><span class="rb-bar"><i style="width:${pct}%;background:${p.color}"></i></span></div>`}).join('');
+  G.opps.forEach((p,k)=>{if(p.me)return;const x=Math.min(1,p.done/Math.max(1,p.total||R.items.length))*100;const d=document.createElement('div');d.className='opp';d.style.left=x+'%';d.style.setProperty('--oc',p.color||OPP_COLORS[k%8]);d.title=p.name;route.appendChild(d)});
+  b.innerHTML='<div class="rb-h">🏁 실시간 순위</div>'+sortRace(G.opps).map((p,i)=>{const tot=p.total||R.items.length,pct=Math.min(100,p.done/Math.max(1,tot)*100),a=adjMs(p);
+    return`<div class="rb-row${p.me?' me':''}"><span class="rb-rank">${i+1}</span><span class="rb-dot" style="background:${p.color}"></span><span class="rb-name">${esc(p.name||'플레이어')}${p.me?' (나)':''}</span><span class="rb-val">${a!=null?'🏁 '+(a/1000).toFixed(1)+'초':p.done+'/'+tot}</span><span class="rb-bar"><i style="width:${pct}%;background:${p.color}"></i></span></div>`}).join('');
   b.hidden=false;
 }
 function showRaceResult(rows,opts){
-  raceStop();$('#raceBoard').hidden=true;
-  const medal=['🥇','🥈','🥉'];const me=rows.find(r=>r.me),myRank=me?rows.indexOf(me)+1:0;
+  raceStop();$('#raceBoard').hidden=true;rows=sortRace(rows);
+  const medal=['🥇','🥈','🥉'];const me=rows.find(r=>r.me),myRank=me?rows.indexOf(me)+1:0,ma=me?adjMs(me):null;
   if(myRank===1)sfx.win();
   openPanel('레이스 결과',`<div class="res2"><div class="rescol"><h2>${myRank===1?'🏆 우승!':myRank?myRank+'등으로 도착!':'레이스 종료'}</h2>
-    <p class="sub">${lineName()} · 역 이름 ${G.race?G.race.words.length:''}개</p>
-    ${me?`<div class="result-big">${me.finishMs!=null?(me.finishMs/1000).toFixed(1)+'<small> 초</small>':me.done+'<small> 개</small>'}</div><div class="rank"><span>${rankOf(me.tpm||0)[1]}</span><b>${rankOf(me.tpm||0)[2]}</b><em>${me.tpm||0}타/분</em></div>`:''}
-    <p class="sub" id="raceWait">${opts.isHost?'방장이야. 다시 하기를 누르면 모두 같이 출발해.':'방장이 다시 시작하면 바로 출발해.'}</p>
+    <p class="sub">${lineName()} · ${G.race?G.race.items.length:''}개</p>
+    ${me?`<div class="result-big">${ma!=null?(ma/1000).toFixed(1)+'<small> 초</small>':me.done+'<small> 개</small>'}</div>${me.bonusMs?`<p style="text-align:center">미니게임 보너스 -${(me.bonusMs/1000).toFixed(1)}초 포함</p>`:''}<div class="rank"><span>${rankOf(me.tpm||0)[1]}</span><b>${rankOf(me.tpm||0)[2]}</b><em>${me.tpm||0}타/분</em></div>`:''}
+    <p class="sub">${opts.isHost?'방장이야. 다시 하기를 누르면 모두 같이 출발해.':'방장이 다시 시작하면 바로 출발해.'}</p>
     <div class="row">${opts.isHost?'<button class="btn go" id="rAgain" type="button">다시 하기</button>':''}<button class="btn" id="rLeave" type="button">방 나가기</button></div></div>
-    <div class="rescol"><div class="race-table">${rows.map((r,i)=>`<div class="rt-row${r.me?' me':''}"><span class="rt-rank">${medal[i]||i+1}</span><span class="rb-dot" style="background:${r.color}"></span><span class="rt-name">${esc(r.name||'플레이어')}</span><span class="rt-time">${r.finishMs!=null?(r.finishMs/1000).toFixed(1)+'초':'미완주 '+r.done+'/'+r.total}</span><span class="rt-tpm">${r.tpm||0}타</span></div>`).join('')}</div></div></div>`);
+    <div class="rescol"><div class="race-table">${rows.map((r,i)=>{const a=adjMs(r);return`<div class="rt-row${r.me?' me':''}"><span class="rt-rank">${medal[i]||i+1}</span><span class="rb-dot" style="background:${r.color}"></span><span class="rt-name">${esc(r.name||'플레이어')}${r.bonusMs?` <small>(미니 -${(r.bonusMs/1000).toFixed(1)}초)</small>`:''}</span><span class="rt-time">${a!=null?(a/1000).toFixed(1)+'초':'미완주 '+r.done+'/'+r.total}</span><span class="rt-tpm">${r.tpm||0}타</span></div>`}).join('')}</div></div></div>`);
   panel.classList.add('wide','mid');
   if(opts.isHost)$('#rAgain').onclick=()=>opts.onAgain&&opts.onAgain();
   $('#rLeave').onclick=()=>{opts.onLeave&&opts.onLeave();leaveRaceUI()};
 }
-function leaveRaceUI(){G.race=null;G.opps=[];$('#raceBoard').hidden=true;document.querySelectorAll('#route .opp').forEach(e=>e.remove());goHome()}
+function leaveRaceUI(){G.race=null;G.opps=[];$('#raceBoard').hidden=true;renderAtk();document.querySelectorAll('#route .opp').forEach(e=>e.remove());goHome()}
+inp.addEventListener('keydown',e=>{if(e.key==='Tab'&&G.race&&G.phase==='race'&&G.race.atkOn){e.preventDefault();raceAttack()}});
 window.MT={
-  makeRaceWords,startRace,raceUpdate,raceStop,showRaceResult,leaveRaceUI,OPP_COLORS,
+  makeRaceWords,makeRaceScript,startRace,raceUpdate,raceStop,showRaceResult,leaveRaceUI,receiveAttack,sortRace,adjMs,OPP_COLORS,
   openPanel:(h,b,k)=>{openPanel(h,b,k);return panel.querySelector('.panel-body')},
   widePanel:()=>panel.classList.add('wide','mid'),closePanel,goHome,esc,sfx,
   getCfg:()=>({line:G.line,diff:G.diff,course:G.course,lineName:lineName(),diffName:D().name,diffIcon:D().icon}),
   isPlaying:()=>!['title','end'].includes(G.phase),
+  debug:()=>({phase:G.phase,target:T.target,alts:T.alts,active:T.active,cls:wordEl.className,atk:G.race&&G.race.atk,panel:!scrim.hidden}),
   onResult:null,titleHook:null
 };
 
