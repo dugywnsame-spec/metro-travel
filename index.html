@@ -71,6 +71,16 @@ body{background:var(--night);color:var(--sign);font-family:var(--f-body);overflo
 .stat b.bump{transform:scale(1.18)}
 .stat.combo b{color:var(--line-hi)}
 .toggles{display:flex;flex-direction:column;gap:4px}
+.iconbtn.home-hud{background:rgba(255,255,255,.92);color:#14191d;border-color:#fff}
+#homeAsk{position:fixed;inset:0;z-index:80;display:grid;place-items:center;background:rgba(4,7,10,.55);backdrop-filter:blur(6px);animation:fadeIn .2s}
+#homeAsk[hidden]{display:none}
+#homeAsk .ha{background:#f6f8f7;color:#14191d;border-radius:20px;padding:22px 22px 18px;width:min(360px,calc(100vw - 32px));box-shadow:0 24px 60px rgba(0,0,0,.45);text-align:center}
+#homeAsk h3{margin:0 0 6px;font:900 20px var(--f-body)}#homeAsk p{margin:0 0 16px;color:#56626a;font-size:13.5px;line-height:1.5}
+#homeAsk .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tabs2.three{grid-template-columns:1fr 1fr auto}
+.tabs2 .rnd{padding:9px 12px;background:#14191d;color:#fff;border-color:#14191d}
+.tabs2 .rnd:hover{background:#2a3238}
+.routeopt.spin{outline:3px solid var(--amber);outline-offset:1px}
 .iconbtn{pointer-events:auto;background:var(--glass);border:1px solid var(--glass-line);color:var(--sign);border-radius:99px;padding:0 12px;font:700 11.5px var(--f-body);cursor:pointer;min-height:30px;flex:1;backdrop-filter:blur(12px);transition:background .2s,color .2s}
 .iconbtn[aria-pressed="false"]{color:var(--mute);background:rgba(16,22,28,.4)}
 @media (max-width:520px){.stats{flex:1 1 100%}.stat{flex:1;min-width:0;padding:6px 10px}.toggles{flex-direction:row;flex:1 1 100%}.iconbtn{min-height:34px}}
@@ -522,6 +532,59 @@ body.fever #typebox{box-shadow:0 0 0 2px var(--amber),0 0 48px rgba(255,150,30,.
 .mini-n{grid-column:1/-1;align-items:center}.mini-n span{flex:1}.mini-n select{font:700 14px var(--f-body);padding:6px 10px;border-radius:10px;border:1.5px solid #cfd6d3;background:#fff;color:var(--ink)}
 .ropt b{display:block;font-size:13.5px}.ropt small{display:block;font-size:11.5px;color:#66727a;line-height:1.35}
 .rt-name small{font-weight:500;color:#66727a;font-size:11.5px}
+
+/* v5: 노선 선택 · 버스 · 세부 설정 · 새 미니게임 */
+.badge{width:auto!important;min-width:22px;padding:0 6px;border-radius:99px!important;box-sizing:border-box}
+.lb.wide{width:auto;min-width:20px;padding:0 5px;border-radius:99px;font-size:10px}
+.tabs2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.tabs2 button{border:1.5px solid #dfe5e2;background:#fff;border-radius:12px;padding:9px;font:800 14px var(--f-body);cursor:pointer;color:var(--ink)}
+.tabs2 button[aria-pressed="true"]{border-color:var(--line);background:color-mix(in srgb,var(--line) 12%,#fff)}
+.route-scroll{max-height:300px;overflow:auto;display:flex;flex-direction:column;gap:6px;padding-right:2px}
+.route-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.kind-t{font-size:12px!important;font-weight:900;color:#56626a!important;margin:2px 0 -2px!important}
+.routeopt{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:12px;border:1.5px solid #dfe5e2;background:#fff;cursor:pointer;text-align:left;font:inherit;color:var(--ink);min-width:0;transition:border-color .2s,box-shadow .2s}
+.routeopt[aria-pressed="true"]{border-color:var(--c);box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 20%,transparent)}
+.routeopt:focus-visible,.tabs2 button:focus-visible,.mchip:focus-visible,.segN button:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.rbadge{flex:none;min-width:26px;height:26px;padding:0 7px;border-radius:99px;background:var(--c);color:#fff;display:grid;place-items:center;font:900 12px var(--f-body);box-sizing:border-box}
+.rinfo{display:flex;flex-direction:column;min-width:0}
+.rinfo b{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rinfo small{font-size:11px;color:#66727a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rprev{background:#fff;border-radius:12px;padding:12px 12px 6px;box-shadow:inset 0 0 0 1.5px #e0e6e3;display:flex;flex-direction:column;gap:14px}
+.rprev .lmap{margin-right:0;margin-bottom:18px;--c:inherit}
+.rprev .lst em{max-width:150px;overflow:hidden;text-overflow:ellipsis}
+.rprev .lrail{background:var(--c)}
+.rprev .lst i{border-color:var(--c)}
+.lmap.dense .lst{width:4px;height:4px}.lmap.dense .lst i{border-width:1.5px}
+.lmap .lst.ns i{border-style:dotted;background:#eef1f0;opacity:.7}
+.tbtn2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tbtn2 .btn{min-height:44px;font-size:14px;padding:8px}
+.cust-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.mode-chips{display:flex;flex-wrap:wrap;gap:6px}
+.mchip{border:1.5px solid #dfe5e2;background:#fff;border-radius:99px;padding:6px 11px;font:700 12.5px var(--f-body);cursor:pointer;color:var(--ink)}
+.mchip[aria-pressed="true"]{border-color:var(--line);background:color-mix(in srgb,var(--line) 14%,#fff)}
+.mchip[aria-pressed="false"]{opacity:.5;text-decoration:line-through}
+.mchip:disabled{cursor:default;opacity:1;text-decoration:none}
+.cust-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid #e3e8e6;flex-wrap:wrap}
+.cust-row b{display:block;font-size:14px}.cust-row small{display:block;font-size:11.5px;color:#66727a}
+.segN{display:flex;gap:4px;flex-wrap:wrap}
+.segN button{border:1.5px solid #dfe5e2;background:#fff;border-radius:10px;padding:6px 10px;font:700 12.5px var(--f-body);cursor:pointer;color:var(--ink)}
+.segN button[aria-pressed="true"]{border-color:var(--line);background:color-mix(in srgb,var(--line) 14%,#fff)}
+#word.redlight{color:#ff5a4f;text-decoration:none;font-size:clamp(30px,8vw,48px)}
+.ord-slots{display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+.ord-slots i{min-width:44px;height:38px;padding:0 8px;border-radius:10px;background:#fff;box-shadow:inset 0 -3px 0 #dbe2df;display:grid;place-items:center;font:800 14px var(--f-body);font-style:normal;color:#9aa5ab}
+.ord-slots i.on{color:var(--ink);box-shadow:inset 0 -3px 0 var(--line)}
+.memo{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;min-height:120px;align-content:flex-start}
+.memo-it{border:1.5px solid #dfe5e2;background:#fff;border-radius:10px;padding:8px 12px;font:700 14px var(--f-body);color:var(--ink);cursor:pointer}
+.memo-it.show{border-color:var(--line);background:color-mix(in srgb,var(--line) 10%,#fff);cursor:default}
+.memo-it.on{border-color:var(--ink);background:#eef1f0}
+.memo-it.right{border-color:var(--line);background:color-mix(in srgb,var(--line) 18%,#fff)}
+.memo-it.wrong{border-color:var(--red);background:#ffeceb}
+.memo-it.miss{border-style:dashed;border-color:var(--amber)}
+.q-opts.typo{grid-template-columns:repeat(3,1fr)}
+.cbtn.big{font-size:26px!important;min-height:58px}
+@media (max-width:760px){.cust-grid{grid-template-columns:1fr}.route-grid{grid-template-columns:1fr}}
+.sign-main b.long{font-size:clamp(17px,3.2vw,23px)!important;line-height:1.25}
+.segbar #segTxt{max-width:48%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.01s!important}}
 </style>
 
@@ -540,7 +603,7 @@ body.fever #typebox{box-shadow:0 0 0 2px var(--amber),0 0 48px rgba(255,150,30,.
         <div class="stat tpm"><span>타수</span><b id="sTpm">0</b></div>
         <div class="stat combo"><span>콤보</span><b id="sCombo">0</b></div>
         <div class="stat"><span>코인</span><b id="sCoin">0</b></div>
-        <div class="toggles"><button class="iconbtn" id="autoBtn" type="button">자동 넘김 켬</button><button class="iconbtn" id="musicBtn" type="button">음악 켬</button><button class="iconbtn" id="sfxBtn" type="button">효과음 켬</button></div>
+        <div class="toggles"><button class="iconbtn home-hud" id="homeHud" type="button" hidden>🏠 홈으로</button><button class="iconbtn" id="autoBtn" type="button">자동 넘김 켬</button><button class="iconbtn" id="musicBtn" type="button">음악 켬</button><button class="iconbtn" id="sfxBtn" type="button">효과음 켬</button></div>
       </div>
     </header>
     <div id="led">시청역 · 승강장에 열차가 대기 중입니다</div>
@@ -604,7 +667,46 @@ const LINES={
     ter:{},
     all:['방화','개화산','김포공항','송정','마곡','발산','우장산','화곡','까치산','신정','목동','오목교','양평','영등포구청','영등포시장','신길','여의도','여의나루','마포','공덕','애오개','충정로','서대문','광화문','종로3가','을지로4가','동대문역사문화공원','청구','신금호','행당','왕십리','마장','답십리','장한평','군자','아차산','광나루','천호','강동','길동','굽은다리','명일','고덕','상일동','둔촌동','올림픽공원','방이','오금','개롱','거여','마천']}
 };
-Object.values(LINES).forEach(L=>{L.names=L.stops.map(s=>s.split('|')[0]);L.all=[...new Set([...L.all,...L.names])]});
+/* ---- 노선 확장: 6~9호선 · 신분당선 · 공항철도 ---- */
+Object.assign(LINES,{
+  6:{color:'#cd7c2f',dir:'신내',stops:['디지털미디어시티|공항철도·경의중앙선','월드컵경기장','마포구청','망원','합정|2호선','상수','광흥창','대흥','공덕|5호선·공항철도·경의중앙선','효창공원앞|경의중앙선','삼각지|4호선','녹사평','이태원','한강진','버티고개','약수|3호선','청구|5호선','신당|2호선','동묘앞|1호선','창신','보문|우이신설선','안암','고려대','월곡','상월곡','돌곶이','석계|1호선','태릉입구|7호선','화랑대','봉화산'],ter:{},all:[]},
+  7:{color:'#747f00',dir:'석남',stops:['도봉산|1호선','수락산','마들','노원|4호선','중계','하계','공릉','태릉입구|6호선','먹골','중화','상봉|경의중앙선','면목','사가정','용마산','중곡','군자|5호선','어린이대공원','건대입구|2호선','뚝섬유원지','청담','강남구청|수인분당선','학동','논현|신분당선','반포','고속터미널|3·9호선','내방','이수|4호선','남성','숭실대입구','상도'],ter:{건대입구:'up',뚝섬유원지:'bridge'},all:[]},
+  8:{color:'#e6186c',dir:'모란',stops:['별내|경춘선','다산','동구릉','구리|경의중앙선','장자호수공원','암사역사공원','암사','천호|5호선','강동구청','몽촌토성','잠실|2호선','석촌|9호선','송파','가락시장|3호선','문정','장지','복정|수인분당선','남위례','산성','남한산성입구','단대오거리','신흥','수진','모란|수인분당선'],ter:{},all:[]},
+  9:{color:'#bdb092',dir:'중앙보훈병원',stops:['김포공항|5호선·공항철도','공항시장','신방화','마곡나루|공항철도','양천향교','가양','증미','등촌','염창','신목동','선유도','당산|2호선','국회의사당','여의도|5호선','샛강','노량진|1호선','노들','흑석','동작|4호선','구반포','신반포','고속터미널|3·7호선','사평','신논현|신분당선','언주','선정릉|수인분당선','삼성중앙','봉은사','종합운동장|2호선'],ter:{},all:[]},
+  sb:{color:'#d4003b',name:'신분당선',short:'신분',dir:'광교',stops:['신사|3호선','논현|7호선','신논현|9호선','강남|2호선','양재|3호선','양재시민의숲','청계산입구','판교|경강선','정자|수인분당선','미금|수인분당선','동천','수지구청','성복','상현','광교중앙','광교'],ter:{},all:[]},
+  ar:{color:'#0090d2',name:'공항철도',short:'공항',dir:'인천공항2터미널',stops:['서울역|1·4호선','공덕|5·6호선','홍대입구|2호선','디지털미디어시티|6호선','마곡나루|9호선','김포공항|5·9호선','계양|인천1호선','검암|인천2호선','청라국제도시','영종','운서','공항화물청사','인천공항1터미널','인천공항2터미널'],ter:{김포공항:'up',계양:'up',검암:'up',청라국제도시:'bridge',영종:'up',운서:'up'},all:[]}
+});
+/* ---- 버스: 실제 노선 정류장 (미정차·가상 정류장 포함) ---- */
+const BUS={
+  bus701:{kind:'간선',color:'#3d5bab',short:'701',name:'701번 간선',dir:'종로2가',
+    stops:['진관공영차고지','동산동능모퉁이.한국지역난방공사','은덕교.금암문화공원','진관중고교약수사입구','진관초교입구','푸르지오625동앞.관음사입구','삼천리골입구56사단북한산부대','입곡삼거리','하나고.삼천사.진관사입구','제각말5단지.은평뉴타운도서관','신도중학교','폭포동.은평노인종합복지관','은평경찰서','연신초등학교','불광지구대','새장골유래비','연서시장','연신내역','동명여고.천주교불광동성당','불광역','불광역3호선.서울혁신파크','한전서대문은평.북한산푸르지오','녹번역','산골고개.e편한세상서대문','홍제역.서대문세무서','홍제삼거리.인왕산한신휴플러스','무악재역','안산초등학교','독립문역.한성과학고','영천시장','서대문역','경찰청.동북아역사재단','서울역버스환승센터','숭례문','남대문시장앞.이회영활동터','명동.롯데영플라자','우리은행종로지점','종로2가.삼일교']},
+  bus7016:{kind:'지선',color:'#5bb025',short:'7016',name:'7016번 지선',dir:'상명대',
+    stops:['은평공영차고지','덕은교.은평차고지앞','DMC첨단산업센터','월드컵파크7단지','서부면허시험장','월드컵파크3단지정문','월드컵파크2단지.에스플렉스센터','상암초등학교','DMC상암센트럴파크','월드컵경기장북측','성산아파트','성산119안전센터','성산2동주민센터','중동초등학교','성산2교','성미약수터','경성중고.홍대부속여중고입구','아만티호텔서울','서서울농협홍대역점','홍대입구역(가상)','홍대입구역','동교동삼거리','신촌역8번출구','신촌로터리','서강대학교','광성중고등학교','대흥역','용강초등학교','동도중학교.서울디자인고등학교','공덕역1번출구','마포역','청암동강변삼성아파트','원효2동산호아파트','원효로풍전아파트','원효로3가','원효로2가사거리','남정초등학교','용산e편한세상','용산꿈나무종합타운','용산경찰서','남영역.민주화운동기념관','숙대입구역','갈월동','서울역버스환승센터.강우규의거터','소공동주민센터','서울신문사','광화문역2번출구.KT광화문지사','경복궁역3번출구','통인시장종로구보건소','효자동','경기상고','자하문터널입구.석파정','하림각','상명대입구.세검정교회','상명대정문']},
+  bus9401:{kind:'광역',color:'#e60012',short:'9401',name:'9401번 광역',dir:'서울역',
+    stops:['구미동차고지앞','성우스타우스','LG아파트.무지개마을사거리.신한아파트','주공4단지','하얀마을.그랜드빌.벽산빌라','오리초등학교','미금초등학교','대우.롯데아파트상가','대원사거리.까치마을','더샵분당파크리버.헬스케어혁신파크','정자3동행정복지센터','정든마을.우성아파트','한솔마을.LG아파트','푸른마을','샛별마을.우방아파트','중앙공원.샛별마을.라이프아파트','효자촌','서현중학교','양현보도육교','이매촌한신.서현역.AK프라자','성남역.백현마을2단지','백현마을1단지','판교역.낙생육교.현대백화점','옛골(가상)','청계산입구역(미정차)','서초IC(가상)','한남대교(가상)','순천향대학병원','국가인권위.안중근활동터','우리은행종로지점','조계사','세종문화회관','신한은행본점','서울역버스환승센터'],
+    ter:{'판교역.낙생육교.현대백화점':'highway','옛골':'highway','청계산입구역':'highway','서초IC':'highway','한남대교':'bridge'}},
+  busM5107:{kind:'광역급행',color:'#e60012',short:'M5107',name:'M5107번 광역급행',dir:'서울역',
+    stops:['경희대차고지(미정차)','경희대학교생명과학대학관(미정차)','경희대외국어대학관(미정차)','경희대학교','살구골.서광아파트','살구골동아아파트','영통역','청명역3번출구','황골벽산아파트','청현마을.수원신갈IC','수원신갈TG(미정차)','신갈JC(미정차)','죽전(미정차)','금곡(미정차)','서울TG(미정차)','판교IC(미정차)','금토JC(미정차)','서울진입(미정차)','청계산입구역(미정차)','양재IC(미정차)','서초IC(미정차)','반포IC(미정차)','한남IC(미정차)','한남대교북단(미정차)','한남1고가차도(미정차)','남산1호터널TG(미정차)','국가인권위.안중근활동터(중)','SKT타워(미정차)','서울시청','시청교차로(미정차)','신한은행본점','서울역버스환승센터(6번승강장)(중)'],
+    ter:{'청현마을.수원신갈IC':'highway','수원신갈TG':'highway','신갈JC':'highway','죽전':'highway','금곡':'highway','서울TG':'highway','판교IC':'highway','금토JC':'highway','서울진입':'highway','청계산입구역':'highway','양재IC':'highway','서초IC':'highway','반포IC':'highway','한남IC':'bridge'}},
+  icChuncheon:{kind:'시외',color:'#7b4fb3',short:'시외',name:'동서울→춘천 시외',dir:'춘천',
+    stops:['동서울종합터미널','강일IC(미정차)','선동IC(미정차)','덕소삼패IC(미정차)','남양주TG(미정차)','화도IC(미정차)','화도JC(미정차)','서종IC(미정차)','설악IC(미정차)','가평휴게소','강촌IC(미정차)','남춘천IC(미정차)','춘천시외버스터미널']},
+  icSokcho:{kind:'시외',color:'#7b4fb3',short:'시외',name:'동서울→속초 시외',dir:'속초',
+    stops:['동서울종합터미널','강일IC(미정차)','선동IC(미정차)','덕소삼패IC(미정차)','남양주TG(미정차)','화도IC(미정차)','화도JC(미정차)','서종IC(미정차)','설악IC(미정차)','가평휴게소(미정차)','강촌IC(미정차)','남춘천IC(미정차)','동산TG(미정차)','조양IC(미정차)','춘천JC(미정차)','동홍천IC(미정차)','홍천휴게소(미정차)','내촌IC(미정차)','인제IC(미정차)','내린천휴게소','서림IC(미정차)','양양JC(미정차)','양양IC(미정차)','속초시외버스터미널']},
+  exBusan:{kind:'고속',color:'#a0522d',short:'고속',name:'서울→부산 고속',dir:'부산',
+    stops:['서울경부고속버스터미널','양재IC(미정차)','금토JC(미정차)','대왕판교IC(미정차)','판교JC(미정차)','판교IC(미정차)','서울TG(미정차)','신갈JC(미정차)','수원신갈IC(미정차)','기흥IC(미정차)','기흥동탄IC(미정차)','동탄JC(미정차)','오산IC(미정차)','남사진위IC(미정차)','안성JC(미정차)','안성IC(미정차)','북천안IC(미정차)','천안IC(미정차)','천안JC(미정차)','목천IC(미정차)','옥산JC(미정차)','옥산IC(미정차)','청주IC(미정차)','남이JC(미정차)','청주JC(미정차)','남청주IC(미정차)','신탄진IC(미정차)','회덕JC(미정차)','대전IC(미정차)','비룡JC(미정차)','옥천IC(미정차)','금강IC(미정차)','영동IC(미정차)','황간IC(미정차)','추풍령IC(미정차)','추풍령휴게소','김천IC(미정차)','동김천IC(미정차)','김천JC(미정차)','북구미IC(미정차)','구미IC(미정차)','남구미IC(미정차)','왜관IC(미정차)','칠곡물류IC(미정차)','칠곡JC(미정차)','금호JC(미정차)','북대구IC(미정차)','도동JC(미정차)','동대구JC(미정차)','경산IC(미정차)','영천IC(미정차)','영천JC(미정차)','건천IC(미정차)','경주IC(미정차)','활천IC(미정차)','언양JC(미정차)','서울산IC(미정차)','서울주JC(미정차)','통도사IC(미정차)','양산IC(미정차)','양산JC(미정차)','노포JC(미정차)','부산TG(미정차)','부산종합버스터미널']},
+  exGangneung:{kind:'고속',color:'#a0522d',short:'고속',name:'서울→강릉 고속',dir:'강릉',
+    stops:['서울경부고속버스터미널','양재IC(미정차)','금토JC(미정차)','판교JC(미정차)','서울TG(미정차)','신갈JC(미정차)','마성IC(미정차)','서용인JC(미정차)','용인IC(미정차)','용인JC(미정차)','양지IC(미정차)','덕평IC(미정차)','호법JC(미정차)','이천IC(미정차)','여주JC(미정차)','여주IC(미정차)','문막IC(미정차)','만종JC(미정차)','원주JC(미정차)','원주IC(미정차)','새말IC(미정차)','횡성휴게소','둔내IC(미정차)','동둔내IC(미정차)','면온IC(미정차)','평창IC(미정차)','속사IC(미정차)','진부IC(미정차)','대관령IC(미정차)','강릉JC(미정차)','강릉고속버스터미널']}
+};
+for(const k in BUS)LINES[k]=Object.assign({bus:true,ter:{},all:[]},BUS[k]);
+function parseStop(raw){const nostop=/\((미정차|가상)\)/.test(raw);return{name:raw.replace(/\((미정차|가상|중)\)/g,'').trim(),nostop,virtual:/\(가상\)/.test(raw),rest:!nostop&&/휴게소$/.test(raw),hub:/(역|환승센터|터미널|시장|휴게소|로터리)/.test(raw)}}
+/* 버스 정류장 이름 중 칠 부분: 영문을 뺀 한글 첫 조각 */
+function typeName(name){const parts=name.replace(/\(.*?\)/g,'').split('.').map(p=>p.replace(/[A-Za-z]+/g,'').replace(/[^가-힣0-9]/g,'')).filter(p=>p.length>=2);return parts[0]||name.replace(/[^가-힣0-9]/g,'')||name}
+const SUBWAY_KEYS=Object.keys(LINES).filter(k=>!LINES[k].bus);
+const BUS_KEYS=Object.keys(LINES).filter(k=>LINES[k].bus);
+
+for(const k in LINES){const L=LINES[k];L.name=L.name||k+'호선';L.short=L.short||String(k);
+  if(L.bus){L.parsed=L.stops.map(parseStop);L.names=L.parsed.map(q=>q.name);const parts=[];L.names.forEach(n=>n.replace(/\(.*?\)/g,'').split('.').forEach(q=>{const c=q.replace(/[A-Za-z]+/g,'').replace(/[^가-힣0-9]/g,'');if(c.length>=2&&/[가-힣]/.test(c))parts.push(c)}));L.all=[...new Set(parts)];const t={};for(const nm in L.ter)t[nm.replace(/\((미정차|가상|중)\)/g,'')]=L.ter[nm];L.ter=t}
+  else{L.names=L.stops.map(q=>q.split('|')[0]);L.all=[...new Set([...L.all,...L.names])]}}
 
 const DIFF={
   easy:{name:'쉬움',icon:'🌱',words:8,base:3.2,per:.35,ev:.35,evMax:1,cats:{pop:2},lives:0,mult:1,desc:'단어 8개 · 단어당 약 5초 · 귀여운 갑툭튀만'},
@@ -620,9 +722,15 @@ const MODES={
   chosung:{name:'초성 퀴즈 구간',icon:'🔤',desc:'초성만 보고 이 노선의 역 이름을 맞혀',wf:.5,tf:2.2,pf:2},
   memory:{name:'기억 구간',icon:'🧠',desc:'역 이름이 잠깐 보였다가 사라져',wf:.8,tf:1.3,pf:1.5},
   broadcast:{name:'안내방송 구간',icon:'📢',desc:'역 이름 대신 안내방송 문장을 쳐',wf:.35,tf:1,pf:1.3},
-  golden:{name:'황금 구간',icon:'🌟',desc:'모든 역이 황금 역! 코인 대박',wf:.8,tf:1,pf:1}
+  golden:{name:'황금 구간',icon:'🌟',desc:'모든 단어가 황금! 코인 대박',wf:.8,tf:1,pf:1},
+  reverse:{name:'역방향 구간',icon:'🔁',desc:'거꾸로 보이는 이름을 바르게 쳐',wf:.8,tf:1.5,pf:1.6},
+  blank:{name:'빈칸 구간',icon:'🕳️',desc:'한 글자가 가려져. 전체 이름을 쳐',wf:.8,tf:1.4,pf:1.5},
+  night:{name:'심야 운행',icon:'🌙',desc:'불 꺼진 어둠 속에서 쳐',wf:1,tf:1.2,pf:1.4},
+  nomiss:{name:'노미스 챌린지',icon:'🎯',desc:'한 번도 안 틀리면 보너스 +500',wf:1,tf:1,pf:1.2},
+  longname:{name:'긴 이름 구간',icon:'📏',desc:'긴 이름만 골라서 나와',wf:.7,tf:1.15,pf:1.5},
+  timetable:{name:'시간표 구간',icon:'🕐',desc:'출발 시각을 쳐 (콜론은 빼도 돼)',wf:.8,tf:1,pf:1.2}
 };
-const MODE_W={easy:{normal:5,golden:1,memory:1,chosung:1,broadcast:1,express:1},normal:{normal:3,express:2,rush:1,memory:1,chosung:1,broadcast:1,golden:1},hard:{normal:2,express:2,rush:2,memory:2,chosung:1,broadcast:1,golden:1},hell:{normal:1,express:2,rush:3,memory:2,chosung:1,broadcast:1}};
+const MODE_W={easy:{normal:5,golden:1,memory:1,chosung:1,broadcast:1,express:1,reverse:1,blank:1,night:1,longname:1,timetable:1},normal:{normal:3,express:2,rush:1,memory:1,chosung:1,broadcast:1,golden:1,reverse:1,blank:1,night:1,nomiss:1,longname:1,timetable:1},hard:{normal:2,express:2,rush:2,memory:2,chosung:1,broadcast:1,golden:1,reverse:1,blank:1,night:1,nomiss:2,longname:1,timetable:1},hell:{normal:1,express:2,rush:3,memory:2,chosung:1,broadcast:1,reverse:2,blank:1,night:2,nomiss:2,longname:1,timetable:1}};
 const EVENTS={
   pigeon:{cat:'pop',icon:'🕊️',name:'비둘기 난입!',desc:'화면을 휙휙 가로질러'},
   passenger:{cat:'pop',icon:'🙋',name:'잠깐만요~',desc:'승객이 앞을 가로막아'},
@@ -640,9 +748,15 @@ const EVENTS={
   shuffle:{cat:'troll',icon:'🧩',name:'글자 섞임',desc:'글자 순서가 뒤죽박죽'},
   thief:{cat:'troll',icon:'⌛',name:'시간 도둑',desc:'제한 시간이 반토막'},
   vanish:{cat:'troll',icon:'🫥',name:'사라지는 글자',desc:'역 이름이 금방 사라져'},
-  quake:{cat:'troll',icon:'🌀',name:'흔들리는 열차',desc:'글자가 마구 흔들려'}
+  quake:{cat:'troll',icon:'🌀',name:'흔들리는 열차',desc:'글자가 마구 흔들려'},
+  redlight:{cat:'bus',icon:'🚦',name:'빨간불!',desc:'아무것도 치지 말고 신호를 기다려'},
+  cutin:{cat:'bus',icon:'🚗',name:'끼어들기!',desc:'"빵빵"을 빨리 쳐서 경적을 울려'},
+  suddenbrake:{cat:'bus',icon:'⚠️',name:'급정거!',desc:'안내방송을 쳐서 승객을 지켜'},
+  buslane:{cat:'bus',icon:'🟦',name:'버스전용차로',desc:'5단어 동안 점수 2배'},
+  jam:{cat:'bus',icon:'🚥',name:'정체 구간',desc:'차가 막혀서 3단어 더 쳐야 해'},
+  complaint:{cat:'bus',icon:'📢',name:'승객 민원',desc:'사과 방송을 쳐'}
 };
-const FXI={golden:'🌟',blackout:'🔦',smoke:'💨',crowd:'👥',swap:'🔀',mirror:'🪞',tiny:'🔍',shuffle:'🧩',thief:'⌛',vanish:'🫥',quake:'🌀'};
+const FXI={lane:'🟦',golden:'🌟',blackout:'🔦',smoke:'💨',crowd:'👥',swap:'🔀',mirror:'🪞',tiny:'🔍',shuffle:'🧩',thief:'⌛',vanish:'🫥',quake:'🌀'};
 const RANKS=[[0,'🐢','거북이 완행'],[150,'🚌','마을버스'],[250,'🚇','일반 열차'],[350,'🚄','급행 열차'],[450,'🚅','KTX'],[550,'🧲','자기부상열차'],[700,'🚀','하이퍼루프']];
 const CHO='ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ';
 const cho=s=>[...s].map(ch=>{const c=ch.charCodeAt(0)-0xAC00;return c>=0&&c<11172?CHO[Math.floor(c/588)]:ch}).join('');
@@ -651,27 +765,62 @@ function strokes(s){let n=0;for(const ch of s){const c=ch.charCodeAt(0);if(c>=0x
 let gameDeck=[];
 function shuffleGames(){gameDeck=shuffle(GAME_POOL.slice())}
 let STATIONS=[];
+/* ---------- 세부 설정 ---------- */
+const CUSTOM_DEF=()=>({modes:Object.fromEntries(Object.keys(MODES).map(k=>[k,true])),ev:1,mg:'all',wm:1,tm:1,extras:true});
+function C(){return G.custom||(G.custom=CUSTOM_DEF())}
+const V=()=>G.bus?{stop:'정류장',veh:'버스',door:'출입문',name:'정류장 이름'}:{stop:'역',veh:'열차',door:'스크린도어',name:'역 이름'};
+function eul(w){const c=w.charCodeAt(w.length-1)-0xAC00;return w+(c>=0&&c<11172&&c%28?'을':'를')}
+const BUS_KF={간선:.35,지선:.3,광역:.45,광역급행:.45,시외:.5,고속:.45};
+function applyCustomTypes(){
+  const c=C();let g=0;
+  STATIONS.forEach(s=>{
+    if(!c.extras&&(s.type==='shop'&&!s.rest||s.type==='roulette'))s.type='game';
+    if(s.type==='game'){g++;if(c.mg==='none'||(c.mg==='half'&&g%2===0))s.type=G.bus?'stop':'quick'}
+    if(s.type==='onboard'&&c.mg==='none')s.type='nostop';
+  });
+}
 function buildStations(){
-  const L=LINES[G.line];let stops=L.stops;if(G.course==='half')stops=stops.slice(0,13);
+  const L=LINES[G.line];G.bus=!!L.bus;
+  if(!gameDeck.length)shuffleGames();
+  if(L.bus){buildBusStations(L);return}
+  let stops=L.stops;if(G.course==='half')stops=stops.slice(0,13);
   const n=stops.length;
-  STATIONS=stops.map((raw,i)=>{const[nm,x]=raw.split('|');return{name:nm,xfer:x||'',transfer:!!x,terminal:i===n-1,type:'game',seg:i<n-1?(L.ter[nm]||'tunnel'):'tunnel'}});
+  STATIONS=stops.map((raw,i)=>{const[nm,x]=raw.split('|');return{name:nm,typeName:nm,xfer:x||'',transfer:!!x,terminal:i===n-1,type:'game',seg:i<n-1?(L.ter[nm]||'tunnel'):'tunnel'}});
   STATIONS.forEach((s,i)=>{const a=i>0?STATIONS[i-1].seg:s.seg,b=i<n-1?s.seg:STATIONS[i-1].seg;s.up=a!=='tunnel'&&b!=='tunnel'});
   STATIONS[0].type='start';
   for(let i=1;i<n;i++){const s=STATIONS[i];if(s.terminal||i%6===0)s.type='boss';else if(i%6===3)s.type='shop'}
   const free=()=>STATIONS.map((s,i)=>i).filter(i=>i>1&&STATIONS[i].type==='game'&&STATIONS[i-1].type!=='pass'&&!(STATIONS[i+1]&&STATIONS[i+1].type==='pass'));
   const extra=n>16?2:1;
   for(let k=0;k<extra;k++){let f=free();if(f.length)STATIONS[f[rnd(f.length)]].type='pass';f=free();if(f.length)STATIONS[f[rnd(f.length)]].type='roulette'}
-  if(!gameDeck.length)shuffleGames();let k=0;
-  STATIONS.forEach(s=>{if(s.type==='game')s.game=gameDeck[k++%gameDeck.length]});
+  let k=0;STATIONS.forEach(s=>{if(s.type==='game')s.game=gameDeck[k++%gameDeck.length]});
+  applyCustomTypes();
 }
+function buildBusStations(L){
+  let ps=L.parsed;if(G.course==='half')ps=ps.slice(0,Math.min(ps.length,Math.max(10,Math.ceil(ps.length/2))));
+  const n=ps.length,hw=L.kind==='고속'||L.kind==='시외';
+  STATIONS=ps.map((p,i)=>({name:p.name,typeName:typeName(p.name),xfer:'',transfer:false,terminal:i===n-1,nostop:p.nostop&&i>0&&i<n-1,virtual:p.virtual,rest:p.rest,hub:p.hub,ic:/(IC|JC|TG|진입)$/.test(p.name),type:'stop',
+    seg:i<n-1?(L.ter[p.name]||(hw?(i===0?'road':'highway'):'road')):'road',up:true}));
+  STATIONS[0].type='start';
+  let stops=0,ns=0,sp=0;
+  for(let i=1;i<n;i++){const s=STATIONS[i];
+    if(s.terminal){s.type='boss';continue}
+    if(s.rest){s.type='shop';continue}
+    if(s.nostop){ns++;s.type='nostop';if(ns%8===0)s.type='onboard';continue}
+    stops++;if(stops%5===0){sp++;s.type=sp%3===0?'shop':sp%4===0?'roulette':'game'}
+  }
+  let k=0;STATIONS.forEach(s=>{if(s.type==='game'||s.type==='onboard')s.game=gameDeck[k++%gameDeck.length]});
+  applyCustomTypes();
+}
+function stTerrain(st){return G.bus?(st.seg==='highway'?'highway':st.seg==='bridge'?'bridge':'road'):(st.up?'up':'tunnel')}
+function lineName(k){const L=LINES[k==null?G.line:k];return L?L.name:k+'호선'}
 function mix(hex,to,t){const a=parseInt(hex.slice(1),16),b=parseInt(to.slice(1),16);const c=s=>Math.round(((a>>s)&255)*(1-t)+((b>>s)&255)*t);return'#'+[16,8,0].map(s=>c(s).toString(16).padStart(2,'0')).join('')}
 function ro(w){const c=w.charCodeAt(w.length-1)-0xAC00;const j=c>=0&&c<11172?c%28:0;return w+(j&&j!==8?'으로':'로')}
-function lineName(){return G.line+'호선'}
 const BEST_KEY='metroTyping.best';
 
 /* ---------- 상태 ---------- */
-const G={phase:'title',line:2,diff:'normal',course:'half',si:0,score:0,coins:0,combo:0,maxCombo:0,hits:0,miss:0,typos:0,bs:0,strokes:0,typeTime:0,wlog:[],segTpm:[],segS:0,segTt:0,segDone:0,segNeed:0,recent:[],run:0,oppCd:6,lives:0,maxLives:0,items:{shield:0,time:0,coin2:0,guard:0},segBuff:{},fx:{},evAt:[],mode:'normal',prevMode:'',fever:false,paused:false,segT:0,segLimit:0,testT:0,testOn:false,events:0};
-const norm=s=>s.replace(/[\s.,!?'"·]/g,'').toLowerCase();
+const G={phase:'title',line:'2',bus:false,tab:'subway',custom:null,diff:'normal',course:'half',si:0,score:0,coins:0,combo:0,maxCombo:0,hits:0,miss:0,typos:0,bs:0,strokes:0,typeTime:0,wlog:[],segTpm:[],segS:0,segTt:0,segDone:0,segNeed:0,recent:[],run:0,oppCd:6,lives:0,maxLives:0,items:{shield:0,time:0,coin2:0,guard:0},segBuff:{},fx:{},evAt:[],mode:'normal',prevMode:'',fever:false,paused:false,segT:0,segLimit:0,testT:0,testOn:false,events:0};
+const norm=s=>s.replace(/[\s.,!?'"·:\-]/g,'').toLowerCase();
+const norm2=s=>norm(s).replace(/[0-9]/g,d=>'영일이삼사오육칠팔구'[d]);
 const isHangul=s=>/[가-힣]/.test(s);
 const rnd=n=>Math.floor(Math.random()*n);
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
@@ -762,10 +911,10 @@ function applyLine(){
   buildStations();
   const c=LINES[G.line].color,r=document.documentElement.style;
   r.setProperty('--line',c);r.setProperty('--line-hi',mix(c,'#ffffff',.42));r.setProperty('--line-deep',mix(c,'#000000',.28));
-  document.querySelectorAll('.lineNo').forEach(e=>e.textContent=G.line);
+  document.querySelectorAll('.lineNo').forEach(e=>e.textContent=LINES[G.line].short);
   $('#lineName').textContent=lineName();$('#dirText').textContent=LINES[G.line].dir+' 방면';
   buildRoute();
-  if(glOK){tileDraw(c);tileTexRef.needsUpdate=true;frameMat.color.set(c);stripeMat.color.set(c);ledMat.color.set(c);setPlatformSigns(G.si)}
+  if(glOK){setVehicle(G.bus);tileDraw(c);tileTexRef.needsUpdate=true;frameMat.color.set(c);stripeMat.color.set(c);ledMat.color.set(c);setPlatformSigns(G.si);if(G.bus)setStopKind(STATIONS[G.si])}
 }
 const W={mode:'stopped',vel:0,cruise:30,boost:0,accel:11,onStop:null,doorCur:1,doorTgt:1,t:0};
 function canvasTex(w,h,draw){const c=document.createElement('canvas');c.width=w;c.height=h;draw(c.getContext('2d'),w,h);const t=new THREE.CanvasTexture(c);t.anisotropy=4;return t}
@@ -785,8 +934,9 @@ function initGL(){
   // 침목 바닥 (스크롤 텍스처)
   const bedTex=canvasTex(64,64,(g,w,h)=>{g.fillStyle='#3a3631';g.fillRect(0,0,w,h);for(let i=0;i<220;i++){g.fillStyle=Math.random()<.5?'#4b463f':'#2a2723';g.fillRect(rnd(w),rnd(h),2,2)}g.fillStyle='#6a6056';g.fillRect(0,20,w,22);g.fillStyle='#4f473f';g.fillRect(0,40,w,2)});
   bedTex.wrapS=bedTex.wrapT=THREE.RepeatWrapping;bedTex.repeat.set(1,240);
-  [-0.6,2.6].forEach((x,i)=>{const t=i?bedTex.clone():bedTex;t.needsUpdate=true;const m=new THREE.Mesh(new THREE.PlaneGeometry(2.8,240),M(0xffffff,{map:t}));m.rotation.x=-Math.PI/2;m.position.set(x,.01,-100);scene.add(m);beds.push(t);
-    [-.72,.72].forEach(dx=>{const r=new THREE.Mesh(new THREE.BoxGeometry(.09,.14,240),M(0x9aa2a8));r.position.set(x+dx,.08,-100);scene.add(r)})});
+  trackG=new THREE.Group();scene.add(trackG);
+  [-0.6,2.6].forEach((x,i)=>{const t=i?bedTex.clone():bedTex;t.needsUpdate=true;const m=new THREE.Mesh(new THREE.PlaneGeometry(2.8,240),M(0xffffff,{map:t}));m.rotation.x=-Math.PI/2;m.position.set(x,.01,-100);trackG.add(m);beds.push(t);
+    [-.72,.72].forEach(dx=>{const r=new THREE.Mesh(new THREE.BoxGeometry(.09,.14,240),M(0x9aa2a8));r.position.set(x+dx,.08,-100);trackG.add(r)})});
   tunnelG=new THREE.Group();scene.add(tunnelG);
   // 터널 벽
   const wallTex=canvasTex(256,128,(g,w,h)=>{g.fillStyle='#2c3135';g.fillRect(0,0,w,h);for(let i=0;i<500;i++){g.fillStyle=Math.random()<.5?'#343a3f':'#24282c';g.fillRect(rnd(w),rnd(h),2,2)}g.fillStyle='#1a1d20';g.fillRect(0,0,7,h);g.fillStyle='#121416';g.fillRect(0,36,w,3);g.fillRect(0,44,w,3);g.fillStyle='#e8a33a';g.fillRect(120,84,26,10);g.fillStyle='#f2f2f2';g.fillRect(124,86,4,6)});
@@ -811,7 +961,7 @@ function initGL(){
     if(side<.4)st.position.set(-5+Math.random()*.4,.6+Math.random()*4.4,-Math.random()*120);else if(side<.8)st.position.set(4.6+Math.random()*.4,.6+Math.random()*4.4,-Math.random()*120);else st.position.set(-4+Math.random()*8,5.2+Math.random()*.25,-Math.random()*120);
     tunnelG.add(st);movers.push({o:st,L:120});streaks.push(st)}
   for(let i=0;i<3;i++){const p=new THREE.PointLight(0xcfe0ff,1.25,26);p.position.set(0,4.2,-i*40-8);tunnelG.add(p);movers.push({o:p,L:120})}
-  buildPlatform(M,B);buildOpp(M,B);buildOutdoor(M,B);
+  buildPlatform(M,B);buildOpp(M,B);buildOutdoor(M,B);subPlat=plat;oppTrain=opp;buildRoad(M,B);
   if(THREE.EffectComposer&&THREE.UnrealBloomPass&&THREE.RenderPass){try{composer=new THREE.EffectComposer(renderer);composer.addPass(new THREE.RenderPass(scene,camera));
     bloom=new THREE.UnrealBloomPass(new THREE.Vector2(256,256),.85,.55,.8);composer.addPass(bloom)}catch(e){composer=null}}
   resize();glOK=true;
@@ -852,8 +1002,10 @@ function buildOpp(M,B){
 function makeSign(name,prev,next){
   return canvasTex(512,128,(g,w,h)=>{
     g.fillStyle='#f3f5f4';g.fillRect(0,0,w,h);g.fillStyle=LINES[G.line].color;g.fillRect(0,h-14,w,14);
-    g.beginPath();g.arc(36,52,22,0,Math.PI*2);g.fill();g.fillStyle='#fff';g.font='900 26px "Noto Sans KR",sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(String(G.line),36,53);
-    g.fillStyle='#15191d';g.font='400 64px "Black Han Sans","Noto Sans KR",sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(name,w/2,52);
+    const sh=LINES[G.line].short;g.font='900 24px "Noto Sans KR",sans-serif';const bw=Math.max(44,g.measureText(sh).width+22);
+    g.beginPath();if(g.roundRect)g.roundRect(14,30,bw,44,22);else g.rect(14,30,bw,44);g.fill();g.fillStyle='#fff';g.textAlign='center';g.textBaseline='middle';g.fillText(sh,14+bw/2,53);
+    g.fillStyle='#15191d';let fs=64;g.font='400 '+fs+'px "Black Han Sans","Noto Sans KR",sans-serif';const avail=w-bw-50;while(g.measureText(name).width>avail&&fs>22){fs-=4;g.font='400 '+fs+'px "Black Han Sans","Noto Sans KR",sans-serif'}
+    g.textAlign='center';g.textBaseline='middle';g.fillText(name,14+bw+(w-14-bw)/2,52);
     g.font='700 18px "Noto Sans KR",sans-serif';g.fillStyle='#5d676e';
     if(prev){g.textAlign='left';g.fillText('◀ '+prev,14,96)}
     if(next){g.textAlign='right';g.fillText(next+' ▶',w-14,96)}
@@ -871,7 +1023,7 @@ function resize(){
 }
 let cityG=null,bridgeG=null,tunnelG=null,sun=null,amb=null,terrain='tunnel';
 function buildOutdoor(M,B){
-  cityG=new THREE.Group();bridgeG=new THREE.Group();scene.add(cityG);scene.add(bridgeG);
+  cityG=new THREE.Group();bridgeG=new THREE.Group();railG=new THREE.Group();scene.add(cityG);scene.add(bridgeG);scene.add(railG);railG.visible=false;
   // 지상: 땅 + 건물 + 전철주 + 펜스
   const ground=new THREE.Mesh(new THREE.PlaneGeometry(260,240),M(0x77806d));ground.rotation.x=-Math.PI/2;ground.position.set(0,-.03,-100);cityG.add(ground);
   const winTex=canvasTex(64,128,(g,w,h)=>{g.fillStyle='#ffffff';g.fillRect(0,0,w,h);g.fillStyle='#8094a3';for(let y=6;y<h;y+=14)for(let x=6;x<w;x+=14)g.fillRect(x,y,8,8)});
@@ -882,9 +1034,9 @@ function buildOutdoor(M,B){
     const b=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),M(pal[i%pal.length],{map:t}));b.position.set(side*(11+Math.random()*28),h/2,-Math.random()*120);cityG.add(b);movers.push({o:b,L:120})}
   const poleM=M(0x5b646b);
   for(let i=0;i<10;i++){const p=new THREE.Group();[-5.3,5.3].forEach(x=>{const pole=new THREE.Mesh(new THREE.BoxGeometry(.18,6.2,.18),poleM);pole.position.set(x,3.1,0);p.add(pole)});
-    const arm=new THREE.Mesh(new THREE.BoxGeometry(10.8,.12,.12),poleM);arm.position.set(0,6.1,0);p.add(arm);p.position.z=-i*12;cityG.add(p);movers.push({o:p,L:120})}
-  [-5.5,5.5].forEach(x=>{const f=new THREE.Mesh(new THREE.BoxGeometry(.1,1.1,240),M(0x9aa6ad));f.position.set(x,.55,-100);cityG.add(f)});
-  const wire=new THREE.Mesh(new THREE.BoxGeometry(.03,.03,240),B(0x2a2f33));wire.position.set(-0.6,5.75,-100);cityG.add(wire);
+    const arm=new THREE.Mesh(new THREE.BoxGeometry(10.8,.12,.12),poleM);arm.position.set(0,6.1,0);p.add(arm);p.position.z=-i*12;railG.add(p);movers.push({o:p,L:120})}
+  [-5.5,5.5].forEach(x=>{const f=new THREE.Mesh(new THREE.BoxGeometry(.1,1.1,240),M(0x9aa6ad));f.position.set(x,.55,-100);railG.add(f)});
+  const wire=new THREE.Mesh(new THREE.BoxGeometry(.03,.03,240),B(0x2a2f33));wire.position.set(-0.6,5.75,-100);railG.add(wire);
   // 한강 다리: 강물 + 트러스 + 멀리 보이는 스카이라인
   const water=new THREE.Mesh(new THREE.PlaneGeometry(420,280),M(0x3d7ea8));water.rotation.x=-Math.PI/2;water.position.set(0,-6,-110);bridgeG.add(water);
   const glintM=new THREE.MeshBasicMaterial({color:0xe8f6ff,transparent:true,opacity:.5});
@@ -899,9 +1051,64 @@ function buildOutdoor(M,B){
   cityG.visible=false;bridgeG.visible=false;sun.visible=false;
 }
 const SKY=window.THREE?new THREE.Color(0x9cc0de):null,TUNC=window.THREE?new THREE.Color(0x060a10):null;
+/* ---------- 버스용 3D: 도로 · 고속도로 · 정류장 · 맞은편 차 ---------- */
+let trackG=null,railG=null,roadG=null,hwyG=null,busPlat=null,subPlat=null,oppTrain=null,oppCar=null,shelterG=null,gantryG=null;
+function buildRoad(M,B){
+  roadG=new THREE.Group();hwyG=new THREE.Group();scene.add(roadG);scene.add(hwyG);
+  const asph=M(0x3c3f43),dashM=B(0xf2f2f2),yel=B(0xf5c518);
+  [roadG,hwyG].forEach(g=>{const r=new THREE.Mesh(new THREE.PlaneGeometry(17,240),asph);r.rotation.x=-Math.PI/2;r.position.set(.8,.02,-100);g.add(r)});
+  [-2.55,-2.35].forEach(x=>{const l=new THREE.Mesh(new THREE.BoxGeometry(.1,.01,240),yel);l.position.set(x,.03,-100);roadG.add(l)});
+  const busLane=new THREE.Mesh(new THREE.BoxGeometry(.18,.01,240),B(0x2f6fdb));busLane.position.set(4.3,.03,-100);roadG.add(busLane);
+  for(let i=0;i<24;i++){[1.1,-5.4].forEach(x=>{const d=new THREE.Mesh(new THREE.BoxGeometry(.12,.01,2.6),dashM);d.position.set(x,.03,-i*5);roadG.add(d);movers.push({o:d,L:120})})}
+  const walk=new THREE.Mesh(new THREE.BoxGeometry(4,.18,240),M(0xb9b3a8));walk.position.set(6.6,.09,-100);roadG.add(walk);
+  const curb=new THREE.Mesh(new THREE.BoxGeometry(.2,.22,240),M(0xdedede));curb.position.set(4.6,.11,-100);roadG.add(curb);
+  const walkL=new THREE.Mesh(new THREE.BoxGeometry(4,.18,240),M(0xb9b3a8));walkL.position.set(-9.4,.09,-100);roadG.add(walkL);
+  const poleM=M(0x6b7177);
+  for(let i=0;i<8;i++){const g=new THREE.Group();const pole=new THREE.Mesh(new THREE.BoxGeometry(.14,5.4,.14),poleM);pole.position.set(5.2,2.7,0);g.add(pole);
+    const arm=new THREE.Mesh(new THREE.BoxGeometry(1.4,.1,.1),poleM);arm.position.set(4.6,5.35,0);g.add(arm);const lamp=new THREE.Mesh(new THREE.BoxGeometry(.5,.08,.25),B(0xfff3c4));lamp.position.set(4,5.28,0);g.add(lamp);
+    g.position.z=-i*15-4;roadG.add(g);movers.push({o:g,L:120})}
+  for(let i=0;i<12;i++){const t=new THREE.Group();const trunk=new THREE.Mesh(new THREE.BoxGeometry(.18,1.6,.18),M(0x6b4a2f));trunk.position.y=.9;t.add(trunk);
+    const top=new THREE.Mesh(new THREE.ConeGeometry(.9,2.4,7),M(0x4f8a4a));top.position.y=2.7;t.add(top);t.position.set(7.7,0,-i*10-2);roadG.add(t);movers.push({o:t,L:120})}
+  const rail=M(0xc8ccd0);
+  [4.9,-2.75].forEach(x=>{const r=new THREE.Mesh(new THREE.BoxGeometry(.12,.35,240),rail);r.position.set(x,.7,-100);hwyG.add(r)});
+  const med=new THREE.Mesh(new THREE.BoxGeometry(.5,.8,240),M(0xbfbab0));med.position.set(-3.1,.4,-100);hwyG.add(med);
+  for(let i=0;i<24;i++){const d=new THREE.Mesh(new THREE.BoxGeometry(.12,.01,3),dashM);d.position.set(1.1,.03,-i*5);hwyG.add(d);movers.push({o:d,L:120})}
+  const grass=new THREE.Mesh(new THREE.PlaneGeometry(320,260),M(0x6f8f5a));grass.rotation.x=-Math.PI/2;grass.position.set(0,-.06,-100);hwyG.add(grass);
+  for(let i=0;i<34;i++){const h=10+Math.random()*26;const c=new THREE.Mesh(new THREE.ConeGeometry(12+Math.random()*18,h,6),M(i%3?0x5d7a4f:0x6c8a5a));c.position.set((Math.random()<.5?-1:1)*(34+Math.random()*80),h/2-1,-20-Math.random()*160);hwyG.add(c)}
+  for(let i=0;i<10;i++){const p=new THREE.Mesh(new THREE.BoxGeometry(.12,1,.12),M(0x8d939a));p.position.set(5.5,.5,-i*12);hwyG.add(p);movers.push({o:p,L:120})}
+  roadG.visible=false;hwyG.visible=false;
+  // 정류장(쉘터)과 고속도로 표지판
+  busPlat=new THREE.Group();shelterG=new THREE.Group();gantryG=new THREE.Group();busPlat.add(shelterG);busPlat.add(gantryG);
+  const roof=new THREE.Mesh(new THREE.BoxGeometry(2.3,.12,5),M(0x2f3a44));roof.position.set(6.4,2.75,0);shelterG.add(roof);
+  [[5.5,-2.3],[5.5,2.3],[7.3,-2.3],[7.3,2.3]].forEach(([x,z])=>{const p=new THREE.Mesh(new THREE.BoxGeometry(.1,2.7,.1),M(0x9aa3ab));p.position.set(x,1.35,z);shelterG.add(p)});
+  const back=new THREE.Mesh(new THREE.BoxGeometry(.05,1.9,4.6),new THREE.MeshLambertMaterial({color:0x9fd3c0,transparent:true,opacity:.35}));back.position.set(7.35,1.25,0);shelterG.add(back);
+  const bench=new THREE.Mesh(new THREE.BoxGeometry(.6,.1,3),M(0x8a6a4a));bench.position.set(6.9,.55,0);shelterG.add(bench);
+  const sm=new THREE.MeshBasicMaterial({color:0xd2d2d2,side:THREE.DoubleSide});signMats.push(sm);
+  const sgn=new THREE.Mesh(new THREE.PlaneGeometry(2.8,.7),sm);sgn.position.set(5.6,3.35,2.6);shelterG.add(sgn);
+  const pst=new THREE.Mesh(new THREE.BoxGeometry(.1,3.2,.1),M(0x9aa3ab));pst.position.set(5.6,1.6,2.6);shelterG.add(pst);
+  for(let i=0;i<3;i++){const ppl=new THREE.Mesh(new THREE.BoxGeometry(.4,1.5,.3),M([0x355c8c,0x8c3546,0x3d7a4a][i]));ppl.position.set(6.2+i*.35,.95,-1+i*.9);ppl.userData.person=true;shelterG.add(ppl)}
+  const gM=M(0x8d939a);[-3.1,5.3].forEach(x=>{const p=new THREE.Mesh(new THREE.BoxGeometry(.3,6.4,.3),gM);p.position.set(x,3.2,0);gantryG.add(p)});
+  const beam=new THREE.Mesh(new THREE.BoxGeometry(8.6,.3,.3),gM);beam.position.set(1.1,6.3,0);gantryG.add(beam);
+  const board=new THREE.Mesh(new THREE.BoxGeometry(4.6,1.3,.08),B(0x15703a));board.position.set(1.1,5.4,.05);gantryG.add(board);
+  const gm=new THREE.MeshBasicMaterial({color:0xd2d2d2});signMats.push(gm);const gs=new THREE.Mesh(new THREE.PlaneGeometry(4.2,1.05),gm);gs.position.set(1.1,5.4,.1);gantryG.add(gs);
+  busPlat.visible=false;scene.add(busPlat);
+  // 맞은편 차
+  oppCar=new THREE.Group();const body=new THREE.Mesh(new THREE.BoxGeometry(1.9,1.1,4.2),M(0xffffff));body.position.y=.75;oppCar.add(body);
+  const cab=new THREE.Mesh(new THREE.BoxGeometry(1.7,.7,2.2),M(0x22303a));cab.position.set(0,1.55,.2);oppCar.add(cab);
+  const hl=new THREE.Mesh(new THREE.BoxGeometry(1.5,.15,.05),B(0xfff6d0));hl.position.set(0,.8,2.11);oppCar.add(hl);
+  oppCar.userData.body=body;oppCar.position.set(-4.6,0,-200);oppCar.visible=false;oppCar.userData.v=0;scene.add(oppCar);
+}
+function setStopKind(st){if(!shelterG||!st)return;const hw=!!(st.ic||terrain==='highway'&&!st.rest&&!st.terminal&&!/(터미널)/.test(st.name));shelterG.visible=!hw;gantryG.visible=hw;
+  const wait=!st.nostop;shelterG.children.forEach(c=>{if(c.userData.person)c.visible=wait&&Math.random()<.8})}
+function setVehicle(bus){
+  if(!glOK)return;subPlat.visible=false;busPlat.visible=false;oppTrain.visible=false;oppCar.visible=false;
+  plat=bus?busPlat:subPlat;opp=bus?oppCar:oppTrain;trackG.visible=!bus;terrain='';
+}
+function spawnOpp(){opp.position.z=-160;opp.userData.v=G.bus?32:40;opp.visible=true;if(G.bus&&opp.userData.body)opp.userData.body.material.color.setHSL(Math.random(),.45,.55);setTimeout(sfx.whoosh,1300)}
 function setTerrain(t){
-  if(!glOK||terrain===t)return;terrain=t;const out=t!=='tunnel';
-  tunnelG.visible=!out;cityG.visible=t==='up';bridgeG.visible=t==='bridge';sun.visible=out;
+  if(!glOK||terrain===t)return;terrain=t;const out=t!=='tunnel',bus=!!G.bus;
+  tunnelG.visible=!out;cityG.visible=(t==='up'&&!bus)||t==='road';railG.visible=t==='up'&&!bus;bridgeG.visible=t==='bridge';sun.visible=out;
+  trackG.visible=!bus;roadG.visible=bus&&(t==='road'||t==='bridge');hwyG.visible=bus&&t==='highway';
   scene.background.copy(out?SKY:TUNC);scene.fog.color.copy(out?SKY:TUNC);scene.fog.near=out?25:4;scene.fog.far=out?190:86;
   if(amb)amb.intensity=out?.8:.5;if(bloom)bloom.strength=out?.3:.85;
 }
@@ -930,7 +1137,7 @@ function frame(now){
     physics(dt);
     // 맞은편 열차
     if(opp.visible){opp.position.z+=(opp.userData.v+W.vel)*dt;if(opp.position.z>40)opp.visible=false}
-    else if(G.phase==='ride'&&W.mode==='cruise'){G.oppCd-=dt;if(G.oppCd<=0){G.oppCd=9+Math.random()*12;opp.position.z=-160;opp.userData.v=40;opp.visible=true;setTimeout(sfx.whoosh,1300)}}
+    else if(G.phase==='ride'&&W.mode==='cruise'){G.oppCd-=dt;if(G.oppCd<=0){G.oppCd=9+Math.random()*12;spawnOpp()}}
     // 문
     W.doorCur+=(W.doorTgt-W.doorCur)*Math.min(1,dt*5);
     for(const d of doors)d.m.position.z=d.zc+d.sd*(.4+W.doorCur*.72);
@@ -945,8 +1152,8 @@ function frame(now){
     trainSound(W.vel,dt);
     if(composer)composer.render();else renderer.render(scene,camera);
   }
-  if(T.active&&T.limit>0){T.t-=dt;const r=Math.max(0,T.t/T.limit);tFill.style.transform='scaleX('+r+')';tFill.classList.toggle('low',r<.3);if(T.t<=0){T.active=false;const f=T.onTimeout;f&&f()}}
-  if(G.phase==='ride'&&G.mode==='rush'&&!G.paused&&G.segLimit>0){G.segT-=dt;const r=Math.max(0,G.segT/G.segLimit);tFill.style.transform='scaleX('+r+')';tFill.classList.toggle('low',r<.25);if(G.segT<=0){G.segLimit=0;rushFail()}}
+  if(T.active&&T.limit>0&&!G.hold){T.t-=dt;const r=Math.max(0,T.t/T.limit);tFill.style.transform='scaleX('+r+')';tFill.classList.toggle('low',r<.3);if(T.t<=0){T.active=false;const f=T.onTimeout;f&&f()}}
+  if(G.phase==='ride'&&G.mode==='rush'&&!G.paused&&!G.hold&&G.segLimit>0){G.segT-=dt;const r=Math.max(0,G.segT/G.segLimit);tFill.style.transform='scaleX('+r+')';tFill.classList.toggle('low',r<.25);if(G.segT<=0){G.segLimit=0;rushFail()}}
   if(G.phase==='test'&&G.testOn){G.testT-=dt;const r=Math.max(0,G.testT/60);tFill.style.transform='scaleX('+r+')';tFill.classList.toggle('low',r<.15);if(G.testT<=0){G.testOn=false;T.active=false;testResult()}}
   requestAnimationFrame(frame);
 }
@@ -962,7 +1169,7 @@ function avgTpm(){return G.typeTime>0?Math.round(G.strokes/G.typeTime*60):0}
 function peakTpm(){let m=0;for(let i=0;i+5<=G.wlog.length;i++){let s=0,t=0;for(const[a,b]of G.wlog.slice(i,i+5)){s+=a;t+=b}if(t)m=Math.max(m,Math.round(s/t*60))}return m||liveTpm()}
 function accuracy(){const s=G.strokes,b=G.bs;return s+b?Math.round(s/(s+b)*100):100}
 function rankOf(t){let r=RANKS[0];for(const x of RANKS)if(t>=x[0])r=x;return r}
-function hud(){
+function hud(){{const hb=document.getElementById("homeHud");if(hb)hb.hidden=G.phase==="title"}
   $('#sScore').textContent=G.score.toLocaleString();$('#sCoin').textContent=G.coins;$('#sCombo').textContent=G.combo;$('#sTpm').textContent=liveTpm();
   if(G.race&&(G.phase==='race'||G.phase==='raceEnd')){const R=G.race,n=STATIONS.length,pos=R.i/R.items.length*(n-1);
     $('#trainMk').style.left=(pos/(n-1)*100)+'%';document.querySelectorAll('.route .dot').forEach(d=>d.classList.toggle('passed',+d.dataset.i<=pos));
@@ -977,8 +1184,8 @@ function hud(){
   const moving=G.phase==='ride'||G.phase==='arrive';
   const showI=Math.min(n-1,moving?G.si+1:G.si);
   document.querySelectorAll('.route .nm').forEach(d=>d.classList.toggle('cur',+d.dataset.n===showI));
-  $('#signLbl').textContent=G.phase==='test'?'타자 측정':G.phase==='ride'?'다음 역':'이번 역';
-  $('#signName').textContent=STATIONS[showI].name;
+  $('#signLbl').textContent=G.phase==='test'?'타자 측정':G.phase==='ride'?'다음 '+V().stop:'이번 '+V().stop;
+  const sn=STATIONS[showI].name;$('#signName').textContent=sn;$('#signName').classList.toggle('long',sn.length>11);
   const sb=$('#segbar');sb.hidden=!(G.phase==='ride'||G.phase==='test');
   if(G.phase==='ride'){$('#segTxt').textContent=STATIONS[G.si+1].name+'까지';$('#segNum').textContent=G.segDone+'/'+G.segNeed;$('#segFill').style.width=(G.segDone/G.segNeed*100)+'%'}
   if(G.phase==='test'){$('#segTxt').textContent='친 역 이름';$('#segNum').textContent=G.hits+'개';$('#segFill').style.width=Math.min(100,G.hits*2)+'%'}
@@ -1005,14 +1212,19 @@ function fb(t,cls){const e=$('#fb');e.textContent=t;e.className=cls||''}
 function banner(icon,title,desc,kind){const b=$('#banner');b.className='banner '+(kind||'');b.innerHTML=`<span class="bi">${icon}</span><span class="bt"><b>${title}</b><small>${desc}</small></span>`;void b.offsetWidth;b.classList.add('show');clearTimeout(banner.t);banner.t=setTimeout(()=>b.classList.remove('show'),2400)}
 
 /* ---------- 타이핑 ---------- */
-const T={target:'',alts:null,disp:null,dispProg:false,hide:false,matched:'',onOK:null,onTimeout:null,limit:0,t:0,active:false,last:0,composing:false,base:0,shown:0,id:0,stat:false};
+const T={target:'',alts:null,disp:null,dispProg:false,hide:false,matched:'',onOK:null,onTimeout:null,limit:0,t:0,active:false,last:0,composing:false,base:0,ghost:'',shown:0,id:0,stat:false};
 const typebox=$('#typebox'),inp=$('#typeIn'),wordEl=$('#word'),tFill=$('#tbarFill');
 /* 입력 처리: 입력칸을 조합 중에 비우면 한글 입력기가 마지막 글자를 다음 칸에 다시 넣는다.
    그래서 입력칸은 절대 조합 중에 지우지 않고, 이미 끝난 단어 뒤(T.base)부터만 읽어서 판정·표시한다. */
 const inView=$('#inView');
 const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-const typed=()=>inp.value.slice(T.base).replace(/^\s+/,'');
-function matchOf(v){const n=norm(v);if(!n)return'';for(const t of (T.alts||[T.target]))if(norm(t)===n)return t;return''}
+function typed(){let v=inp.value.slice(T.base).replace(/^\s+/,'');
+  /* 한글 입력기가 앞 단어 마지막 글자를 한 번 더 넣는 경우(유령 글자)는 자동으로 떼어낸다 */
+  if(T.ghost&&v.startsWith(T.ghost)&&!(T.alts||[T.target]).some(t=>t.startsWith(T.ghost)))v=v.slice(T.ghost.length).replace(/^\s+/,'');
+  return v}
+function matchOf(v){const n=norm(v);if(!n)return'';const n2=norm2(v);for(const t of (T.alts||[T.target])){const a=norm(t),b=norm2(t);if(a===n||b===n2)return t;
+  /* 앞에 찌꺼기가 붙어도 끝이 정확히 정답이면 인정 (최대 2글자까지) */
+  if(a&&n.length-a.length<=2&&n.length>a.length&&(n.endsWith(a)||n2.endsWith(b)))return t}return''}
 function typedProgress(v,t){let k=0;while(k<v.length&&k<t.length&&v[k]===t[k])k++;return k}
 function progress(v){let k=0;for(const t of (T.alts||[T.target])){const p=typedProgress(v,t);if(p>k)k=p}return k}
 function paintInput(){
@@ -1027,14 +1239,14 @@ function renderWord(){
   if(T.disp!=null){wordEl.innerHTML=T.dispProg?'<span class="ok">'+esc(T.disp.slice(0,k))+'</span>'+esc(T.disp.slice(k)):esc(T.disp);return}
   wordEl.innerHTML='<span class="ok">'+esc(T.target.slice(0,k))+'</span>'+esc(T.target.slice(k));
 }
-function resetInput(){
-  if(inp.value.length<T.base)T.base=inp.value.length;
-  if(T.composing)T.base=inp.value.length;else{inp.value='';T.base=0}
-  paintInput();
-}
+/* 입력칸은 절대 그 자리에서 비우지 않는다. 조합이 완전히 끝나고 새로 친 글자가 없을 때만 나중에 비운다. */
+function resetInput(){T.base=inp.value.length;paintInput();scheduleCleanup()}
+function scheduleCleanup(){clearTimeout(scheduleCleanup.t);scheduleCleanup.t=setTimeout(()=>{if(!T.composing&&inp.value.slice(T.base).trim()===''){if(inp.value!==''){inp.value=''}T.base=0;T.ghost='';paintInput()}},40)}
+const finePointer=!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);
+function endComposition(){if(!T.composing||!finePointer||document.activeElement!==inp)return;try{inp.blur();inp.focus({preventScroll:true})}catch(e){}}
 function setTarget(text,o){
   T.id++;T.target=text;T.alts=o.alts||null;T.disp=o.disp==null?null:o.disp;T.dispProg=!!o.dispProg;T.hide=false;T.matched='';
-  T.onOK=o.onOK;T.onTimeout=o.onTimeout||null;T.limit=o.limit||0;T.t=T.limit;T.active=true;T.shown=performance.now();T.stat=!!o.stat;
+  T.onOK=o.onOK;T.onTimeout=o.onTimeout||null;T.limit=o.limit||0;T.t=T.limit;T.active=true;T.shown=performance.now();T.stat=!!o.stat;T.trapAny=!!o.trapAny;
   typebox.hidden=false;wordEl.className=(o.cls||'')+' pop';$('#goldTag').hidden=!o.golden;
   $('#prompt').textContent=o.prompt||'';resetInput();tFill.style.transform='scaleX(1)';tFill.classList.remove('low');
   tFill.parentElement.style.visibility=(T.limit||o.bar)?'visible':'hidden';renderWord();
@@ -1046,7 +1258,7 @@ function setIdle(prompt,word){
 }
 function focusInput(){try{inp.focus({preventScroll:true})}catch(e){inp.focus()}}
 function accept(){
-  const cb=T.onOK;T.active=false;T.base=inp.value.length;
+  const cb=T.onOK;T.active=false;const mw=norm(T.matched||T.target);T.ghost=mw?mw.slice(-1):'';T.base=inp.value.length;endComposition();T.base=inp.value.length;
   if(T.stat){const dt=Math.max(.3,(performance.now()-T.shown)/1000),s=strokes(T.matched||T.target);G.strokes+=s;G.typeTime+=dt;G.segS+=s;G.segTt+=dt;G.wlog.push([s,dt]);if(G.wlog.length>500)G.wlog.shift()}
   cb&&cb();
 }
@@ -1055,18 +1267,24 @@ function submit(){
   if(!T.active)return;const v=typed();if(!v.trim())return;
   const m=matchOf(v);if(m){T.matched=m;accept();return}
   G.typos++;loseCombo();hud();sfx.bad();fb('오타! 다시 쳐봐','bad');typebox.classList.remove('shake');void typebox.offsetWidth;typebox.classList.add('shake');
-  if(!T.composing){inp.value='';T.base=0}else T.base=inp.value.length;renderWord();
+  if(G.mode==='nomiss')noMissFail();
+  T.base=inp.value.length;scheduleCleanup();renderWord();
 }
 function check(){if(!autoNext||!T.active)return;const m=matchOf(typed());if(m){T.matched=m;accept()}}
 inp.addEventListener('compositionstart',()=>T.composing=true);
-inp.addEventListener('compositionend',()=>{T.composing=false;renderWord();check()});
+inp.addEventListener('compositionend',()=>{T.composing=false;renderWord();check();scheduleCleanup()});
 inp.addEventListener('input',e=>{
-  if(inp.value.length<T.base)T.base=inp.value.length;
-  if(e.inputType&&e.inputType.indexOf('delete')===0&&T.active)G.bs++;
-  if(T.active)sfx.key();renderWord();check();
+  if(inp.value.length<T.base){const ins=e.inputType&&e.inputType.indexOf('insert')===0;T.base=ins?Math.max(0,inp.value.length-(e.data||'').length):inp.value.length}
+  if(e.inputType&&e.inputType.indexOf('delete')===0){T.ghost='';if(T.active)G.bs++}
+  if(T.active)sfx.key();renderWord();
+  if(T.trapAny&&T.active&&typed()){T.matched='';accept();return}
+  check();
 });
-inp.addEventListener('keyup',e=>{if(e.key==='Enter'||(e.key===' '&&!/\s/.test(T.target))){if(!T.composing){submit();if(!T.composing&&T.base>=inp.value.length){inp.value='';T.base=0;paintInput()}}}});
-inp.addEventListener('focus',paintInput);
+inp.addEventListener('keyup',e=>{if(e.key==='Enter'||(e.key===' '&&!/\s/.test(T.target))){if(!T.composing){submit();scheduleCleanup()}}});
+inp.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].includes(e.key)&&!e.isComposing)e.preventDefault()});
+inp.addEventListener('mousedown',e=>{if(document.activeElement===inp)e.preventDefault()});
+inp.addEventListener('select',()=>{if(!T.composing){const n=inp.value.length;try{inp.setSelectionRange(n,n)}catch(e){}}});
+inp.addEventListener('focus',()=>{if(!T.composing){const n=inp.value.length;try{inp.setSelectionRange(n,n)}catch(e){}}paintInput()});
 $('#typeForm').addEventListener('submit',e=>{e.preventDefault();if(!T.composing)submit()});
 
 /* ---------- 게임 흐름 ---------- */
@@ -1076,94 +1294,108 @@ function pickWord(maxLen){
   G.recent.push(w);if(G.recent.length>12)G.recent.shift();return w;
 }
 function phrase(){
-  const to=STATIONS[G.si+1],n=to.name;
+  const to=STATIONS[G.si+1],n=to.typeName||to.name;
+  if(G.bus){const P=['다음 정류장은 '+n+'입니다','이번 정류장은 '+n+'입니다','내리실 분은 벨을 눌러 주세요','버스가 완전히 멈춘 뒤 일어나 주세요','하차 시에도 교통카드를 찍어 주세요','뒷문으로 내려 주세요','손잡이를 꼭 잡아 주세요','안전벨트를 매 주세요','이 버스는 '+LINES[G.line].dir+' 방면 버스입니다','출발합니다 손잡이를 잡아 주세요'];let p,t=0;do{p=P[rnd(P.length)];t++}while(G.recent.includes(p)&&t<20);G.recent.push(p);if(G.recent.length>12)G.recent.shift();return p}
   const P=['다음 역은 '+n+'입니다','이번 역은 '+n+'역입니다','내리실 문은 왼쪽입니다','내리실 문은 오른쪽입니다','출입문 닫습니다','열차가 들어오고 있습니다','안전선 밖으로 물러서 주세요','노약자석은 비워 두세요','휴대전화는 진동으로 해 주세요','승강장과 열차 사이가 넓습니다','잊으신 물건 없이 안녕히 가십시오','이 열차는 '+LINES[G.line].dir+'행 열차입니다'];
   if(to.xfer)P.push(n+'역에서 '+ro(to.xfer)+' 갈아타실 수 있습니다');
   let p,t=0;do{p=P[rnd(P.length)];t++}while(G.recent.includes(p)&&t<20);G.recent.push(p);if(G.recent.length>12)G.recent.shift();return p;
 }
 function resetRun(test){
-  Object.assign(G,{si:0,score:0,coins:0,combo:0,maxCombo:0,hits:0,miss:0,typos:0,bs:0,strokes:0,typeTime:0,wlog:[],segTpm:[],segS:0,segTt:0,segDone:0,segNeed:0,recent:[],oppCd:6,fx:{},evAt:[],mode:'normal',prevMode:'',fever:false,paused:false,events:0,test:!!test,segBuff:{},segLimit:0,testOn:false});
+  Object.assign(G,{si:0,score:0,coins:0,combo:0,maxCombo:0,hits:0,miss:0,typos:0,bs:0,strokes:0,typeTime:0,wlog:[],segTpm:[],segS:0,segTt:0,segDone:0,segNeed:0,recent:[],oppCd:6,fx:{},evAt:[],mode:'normal',prevMode:'',modeLeft:0,fever:false,paused:false,events:0,test:!!test,segBuff:{},segLimit:0,testOn:false});
   G.race=null;G.opps=[];const rb=$('#raceBoard');if(rb)rb.hidden=true;document.querySelectorAll('#route .opp').forEach(e=>e.remove());
   G.maxLives=test?0:D().lives;G.lives=G.maxLives;G.items={shield:0,time:0,coin2:0,guard:0};
   document.body.classList.remove('fever');tempo=112;
 }
 function startGame(test){
-  audioInit();G.run++;shuffleGames();buildStations();buildRoute();resetRun(test);
+  audioInit();G.run++;shuffleGames();buildStations();buildRoute();resetRun(test);if(glOK)setVehicle(G.bus);
   closePanel();clearFx();
-  if(glOK){plat.visible=true;plat.position.z=0;W.vel=0;W.mode='stopped';setPlatformSigns(0);setTerrain(STATIONS[0].up?'up':'tunnel')}
+  if(glOK){plat.visible=true;plat.position.z=0;W.vel=0;W.mode='stopped';setPlatformSigns(0);setTerrain(stTerrain(STATIONS[0]))}
   G.phase='depart';hud();
   if(test)testSeq();else departSeq();
 }
 function departSeq(){
   G.phase='depart';hud();
-  setIdle('출입문이 닫힙니다. 곧 단어가 나와!','출발 준비');focusInput();fb('');
-  led('출입문 닫습니다 · 다음 역은 '+STATIONS[G.si+1].name+'입니다');
+  setIdle(V().door+'이 닫힙니다. 곧 단어가 나와!','출발 준비');focusInput();fb('');
+  led(V().door+' 닫습니다 · 다음 '+V().stop+'은 '+STATIONS[G.si+1].name+'입니다');
   W.doorTgt=0;sfx.door();
   later(()=>{W.mode='accel';W.boost=0;sfx.depart();beginSegment()},1000);
 }
 function chooseMode(){
-  if(G.si===0)return'normal';
-  const w=MODE_W[G.diff],pool=[];
-  for(const k in w)if(k!==G.prevMode)for(let i=0;i<w[k];i++)pool.push(k);
-  return pool[rnd(pool.length)];
+  if(G.si===0&&!G.bus)return'normal';
+  if(G.bus&&G.modeLeft>0&&C().modes[G.mode]!==false){G.modeLeft--;return G.mode}
+  const w=MODE_W[G.diff],cm=C().modes,pool=[];
+  for(const k in w)if(k!==G.prevMode&&(k==='normal'||cm[k]!==false))for(let i=0;i<w[k];i++)pool.push(k);
+  if(G.bus)G.modeLeft=2+rnd(3);
+  return pool.length?pool[rnd(pool.length)]:'normal';
 }
 function pickEvent(used){
   const d=D(),pool=[];
   for(const k in EVENTS){if(used.has(k))continue;const e=EVENTS[k];
-    let w=e.cat==='troll'?(d.cats.troll||(e.lite?d.cats.troll1||0:0)):(d.cats[e.cat]||0);
-    if(k==='estop'&&G.mode==='rush')w=0;if(G.mode==='broadcast'&&(k==='swap'||k==='shuffle'))w=0;
+    let w=e.cat==='bus'?(G.bus?3:0):e.cat==='troll'?(d.cats.troll||(e.lite?d.cats.troll1||0:0)):(d.cats[e.cat]||0);
+    if(G.bus&&(k==='blackout'||k==='estop'))w=0;
+    if(k==='estop'&&G.mode==='rush')w=0;if((G.mode==='broadcast'||G.mode==='timetable')&&(k==='swap'||k==='shuffle'))w=0;
     for(let i=0;i<w;i++)pool.push(k)}
   return pool.length?pool[rnd(pool.length)]:null;
 }
 function beginSegment(){
   if(G.phase==='over'||G.phase==='end')return;
-  const from=STATIONS[G.si],to=STATIONS[G.si+1],d=D();
-  G.mode=chooseMode();G.prevMode=G.mode;const M=MODES[G.mode];
-  W.cruise=M.cruise||30;
-  const need=Math.max(G.mode==='broadcast'?3:4,Math.round(d.words*M.wf)+Math.floor(G.si/8));
-  G.segNeed=need;G.segDone=0;G.segS=0;G.segTt=0;
+  const from=STATIONS[G.si],to=STATIONS[G.si+1],d=D(),c=C(),L=LINES[G.line];
+  const prev=G.mode;G.mode=chooseMode();const changed=G.mode!==prev||!G.bus||G.si===0;G.prevMode=G.mode;const M=MODES[G.mode];
+  W.cruise=(M.cruise||30)+(G.bus&&from.seg==='highway'?10:0);
+  let need=Math.round(d.words*M.wf*c.wm)+Math.floor(G.si/8);
+  if(G.bus){need=Math.round(d.words*M.wf*c.wm*(BUS_KF[L.kind]||.4));if(to.nostop)need=Math.round(need*.6)}
+  need=Math.max(G.mode==='broadcast'?2:G.bus?2:4,need);
+  G.segNeed=need;G.segDone=0;G.segS=0;G.segTt=0;G.segFail=false;
   G.segBuff={time:G.items.time>0,coin2:G.items.coin2>0};if(G.items.time>0)G.items.time--;if(G.items.coin2>0)G.items.coin2--;
-  G.evAt=[];let cnt=0;for(let k=0;k<d.evMax;k++)if(Math.random()<(k===0?d.ev:d.ev*.5))cnt++;
-  if(G.si===0)cnt=Math.min(cnt,G.diff==='hell'?1:0);
-  const used=new Set();for(let k=0;k<cnt;k++){const ev=pickEvent(used);if(!ev)break;used.add(ev);G.evAt.push({at:Math.max(1,Math.floor(need*(.15+Math.random()*.65))),ev})}
+  G.evAt=[];let cnt=0;const evp=d.ev*c.ev*(G.bus?.55:1),evm=Math.round(d.evMax*(c.ev>1?2:1));
+  for(let k=0;k<evm;k++)if(Math.random()<(k===0?evp:evp*.5))cnt++;
+  if(G.si===0&&!G.bus)cnt=Math.min(cnt,G.diff==='hell'?1:0);
+  const used=new Set();for(let k=0;k<cnt;k++){const ev=pickEvent(used);if(!ev)break;used.add(ev);G.evAt.push({at:Math.max(G.bus?0:1,Math.floor(need*(.15+Math.random()*.65))),ev})}
   G.evAt.sort((a,b)=>a.at-b.at);
-  G.segLimit=0;if(G.mode==='rush'){G.segLimit=G.segT=need*(d.base*.75+d.per*3.4)*(G.segBuff.time?1.4:1)}
+  G.segLimit=0;if(G.mode==='rush'){G.segLimit=G.segT=need*(d.base*.75+d.per*3.4)*(G.segBuff.time?1.4:1)*c.tm}
+  if(G.mode==='night')$('#stage').classList.add('dark');
   G.phase='ride';tempo=(G.mode==='express'||G.mode==='rush')?128:112;if(G.fever)tempo=136;hud();
-  const ter=from.seg==='bridge'?'🌉 한강 횡단 · ':from.seg==='up'?'🌤️ 지상 구간 · ':'';
-  banner(M.icon,ter+M.name,M.desc+' · '+to.name+'까지 '+need+(G.mode==='broadcast'?'문장':'개'),'mode');
-  led('이번 열차는 '+lineName()+' '+LINES[G.line].dir+'행입니다 · 다음 역 '+to.name);
-  later(nextWord,1100);
+  const ter=from.seg==='bridge'?'🌉 한강 횡단 · ':from.seg==='up'?'🌤️ 지상 구간 · ':from.seg==='highway'?'🛣️ 고속도로 · ':'';
+  if(changed)banner(M.icon,ter+M.name,M.desc+' · '+to.name+'까지 '+need+(G.mode==='broadcast'?'문장':'개'),'mode');
+  led(G.bus?'이번 버스는 '+lineName()+' '+L.dir+' 방면입니다 · 다음 정류장 '+to.name:'이번 열차는 '+lineName()+' '+L.dir+'행입니다 · 다음 역 '+to.name);
+  later(nextWord,changed?1100:350);
 }
 function terrainTick(){
   if(!glOK)return;
   const from=STATIONS[G.si],to=STATIONS[G.si+1],p=G.segDone/G.segNeed;
+  if(G.bus){if(from.seg!==terrain&&p>=.15){setTerrain(from.seg);whiteFlash();led(from.seg==='highway'?'고속도로에 진입했습니다':from.seg==='bridge'?'한강을 건너고 있습니다':'시내 구간을 달리고 있습니다')}return}
   let want=from.up?'up':'tunnel';
   if(p>=.2)want=from.seg;
   if(p>=.85)want=to.up?(from.seg==='bridge'?'bridge':'up'):'tunnel';
   if(want!==terrain){setTerrain(want);whiteFlash();led(want==='tunnel'?'터널 구간으로 들어갑니다':want==='bridge'?'한강을 건너고 있습니다 · 창밖을 보세요':'지상 구간을 달리고 있습니다')}
 }
+function pickLong(){const a=LINES[G.line].all,m=a.filter(w=>w.length>=5);const pool=m.length>=6?m:a.slice().sort((x,y)=>y.length-x.length).slice(0,Math.max(6,Math.ceil(a.length/3)));let w,t=0;do{w=pool[rnd(pool.length)];t++}while(G.recent.includes(w)&&t<20);G.recent.push(w);if(G.recent.length>12)G.recent.shift();return w}
 function nextWord(){
   if(G.phase!=='ride')return;
   terrainTick();
   const e=G.evAt[0];if(e&&e.at<=G.segDone){G.evAt.shift();if(fireEvent(e.ev))return}
-  const M=MODES[G.mode],d=D(),fx=G.fx;
+  const M=MODES[G.mode],d=D(),fx=G.fx,nm=V().name;
   let w,disp=null,alts=null,dispProg=false,hideAfter=0,prompt='';
   if(G.mode==='broadcast'){w=phrase();prompt='📢 안내방송을 그대로 쳐! (띄어쓰기는 틀려도 괜찮아)'}
-  else if(G.mode==='chosung'){w=pickWord();const c=cho(w);alts=LINES[G.line].all.filter(x=>cho(x)===c);disp=c;dispProg=true;prompt='🔤 '+lineName()+'에서 이 초성인 역을 쳐!'}
-  else{w=pickWord(G.mode==='rush'?4:0);prompt=G.mode==='memory'?'🧠 잘 보고 기억해서 쳐!':G.mode==='rush'?'⏱️ 구간 시간 안에 전부 쳐!':''}
+  else if(G.mode==='chosung'){w=pickWord();const c=cho(w);alts=LINES[G.line].all.filter(x=>cho(x)===c);disp=c;dispProg=true;prompt='🔤 '+lineName()+'에서 이 초성인 이름을 쳐!'}
+  else if(G.mode==='reverse'){do{w=pickWord()}while(w.length<2);disp=[...w].reverse().join('');prompt='🔁 거꾸로 보이는 '+nm+'을 바르게 쳐!'}
+  else if(G.mode==='blank'){do{w=pickWord()}while(w.length<2);const i=rnd(w.length);disp=w.slice(0,i)+'□'+w.slice(i+1);dispProg=true;prompt='🕳️ 가려진 글자까지 전부 쳐!'}
+  else if(G.mode==='longname'){w=pickLong();prompt='📏 긴 이름 구간!'}
+  else if(G.mode==='timetable'){w=String(5+rnd(19)).padStart(2,'0')+':'+String(rnd(60)).padStart(2,'0');prompt='🕐 출발 시각을 쳐! (콜론은 빼도 돼)'}
+  else{w=pickWord(G.mode==='rush'?4:0);prompt=G.mode==='memory'?'🧠 잘 보고 기억해서 쳐!':G.mode==='rush'?'⏱️ 구간 시간 안에 전부 쳐!':G.mode==='nomiss'?'🎯 한 번도 틀리지 마!':G.mode==='night'?'🌙 어둠 속에서 쳐!':''}
   if(G.mode==='memory'||fx.vanish>0)hideAfter=G.mode==='memory'?Math.max(500,1000-DL()*120):750;
-  if(fx.shuffle>0&&disp==null&&w.length>1&&new Set(w).size>1){let s;do{s=shuffle([...w]).join('')}while(s===w);disp=s}
+  if(fx.shuffle>0&&disp==null&&w.length>1&&new Set(w).size>1&&G.mode!=='timetable'){let s;do{s=shuffle([...w]).join('')}while(s===w);disp=s}
   const gold=G.mode==='golden'||fx.golden>0||Math.random()<(.12+(STATIONS[G.si].seg==='bridge'?.35:0));
   let limit=0;
   if(G.mode!=='rush'){const len=G.mode==='broadcast'?w.replace(/\s/g,'').length:w.length;
-    limit=(d.base+d.per*len*(G.mode==='broadcast'?1.5:1))*M.tf*(1-Math.min(.22,G.si*.008));
+    limit=(d.base+d.per*len*(G.mode==='broadcast'?1.5:1))*M.tf*C().tm*(1-Math.min(.22,G.si*.008));
     if(fx.thief>0)limit*=.5;if(fx.crowd>0)limit*=.7;if(G.segBuff.time)limit*=1.4;limit=Math.max(1.1,limit)}
   const cls=[gold?'golden':'',fx.mirror>0?'mirror':'',fx.tiny>0?'tiny':'',fx.quake>0?'quake':'',fx.smoke>0?'smoke':'',G.mode==='broadcast'?'long':''].join(' ');
   setTarget(w,{limit,bar:G.mode==='rush',alts,disp,dispProg,hideAfter,cls,golden:gold,stat:true,
-    prompt:prompt||(autoNext?'역 이름을 다 치면 바로 다음으로! 맞힐수록 빨라져':'역 이름을 치고 Enter! 맞힐수록 빨라져'),onOK:()=>wordOK(T.target,gold),onTimeout:wordMiss});
-  if(fx.swap>0&&G.mode!=='broadcast'&&G.mode!=='chosung'){fx.swap--;const id=T.id;
+    prompt:prompt||(autoNext?nm+'을 다 치면 바로 다음으로! 맞힐수록 빨라져':nm+'을 치고 Enter! 맞힐수록 빨라져'),onOK:()=>wordOK(T.matched||T.target,gold),onTimeout:wordMiss});
+  if(fx.swap>0&&!['broadcast','chosung','timetable','blank','reverse'].includes(G.mode)){fx.swap--;const id=T.id;
     later(()=>{if(T.id!==id||!T.active||G.phase!=='ride')return;let nw;do{nw=pickWord()}while(nw===T.target);
-      T.target=nw;T.disp=null;T.alts=null;T.t=Math.max(T.t,2.4+nw.length*.45);sfx.swap();fb('🔀 앗! 역 이름이 바뀌었어','bad');
+      T.target=nw;T.disp=null;T.alts=null;T.t=Math.max(T.t,2.4+nw.length*.45);sfx.swap();fb('🔀 앗! 이름이 바뀌었어','bad');
       wordEl.classList.remove('swapped');void wordEl.offsetWidth;wordEl.classList.add('swapped');renderWord()},Math.max(450,(limit||3)*1000*.3))}
   renderChips();
 }
@@ -1172,10 +1404,10 @@ function wordOK(w,gold){
   const M=MODES[G.mode],fx=G.fx;
   G.combo++;G.maxCombo=Math.max(G.maxCombo,G.combo);G.hits++;
   if(!G.fever&&G.combo>=15){G.fever=true;tempo=136;document.body.classList.add('fever');banner('🔥','피버 타임!','콤보 15 달성 · 콤보가 끊길 때까지 점수 2배','fever')}
-  const mult=D().mult*(M.pf||1)*(fx.crowd>0?1.5:1)*(G.fever?2:1);
+  const mult=D().mult*(M.pf||1)*(fx.crowd>0?1.5:1)*(fx.lane>0?2:1)*(G.fever?2:1);
   const pts=Math.round(strokes(w)*6*(gold?3:1)*mult+G.combo*3);G.score+=pts;
   let c=gold?5:1;if(G.segBuff.coin2)c*=2;G.coins+=c;G.segDone++;
-  W.boost=Math.min(28,W.boost+8);
+  W.boost=Math.min(28,W.boost+(fx.lane>0?14:8));
   flash();if(gold){sfx.gold();floatText('★ +'+pts,'')}else{sfx.ok();floatText('+'+pts,'green')}
   fb(G.fever?'🔥 피버! '+G.combo+' 콤보':G.combo>=5?G.combo+' 콤보! 쾌속 운행 중':'좋아!','good');
   tickFx();hud();
@@ -1183,7 +1415,7 @@ function wordOK(w,gold){
 }
 function wordMiss(){
   if(G.phase!=='ride')return;
-  G.miss++;loseCombo();W.boost=-14;sfx.bad();
+  G.miss++;loseCombo();W.boost=-14;sfx.bad();if(G.mode==='nomiss')noMissFail();
   const hurt=damage();fb(hurt?'놓쳤어! 목숨 -1':'놓쳤어! 열차가 느려졌어','bad');
   G.segDone++;tickFx();hud();if(G.phase!=='ride')return;
   if(G.segDone>=G.segNeed)later(arriveSeq,300);else later(nextWord,300);
@@ -1195,7 +1427,8 @@ function damage(){
   if(G.lives<=0){G.phase='over';T.active=false;later(()=>endGame(true),700)}
   return true;
 }
-function tickFx(){const fx=G.fx;for(const k in fx)if(k!=='swap'&&fx[k]>0)fx[k]--;if(!fx.blackout)$('#stage').classList.remove('dark')}
+function tickFx(){const fx=G.fx;for(const k in fx)if(k!=='swap'&&fx[k]>0)fx[k]--;if(!fx.blackout&&G.mode!=='night')$('#stage').classList.remove('dark')}
+function noMissFail(){if(G.segFail||G.phase!=='ride')return;G.segFail=true;banner('🎯','노미스 실패!','이번 구간 보너스는 없어','emg')}
 function clearFx(){G.fx={};G.paused=false;$('#stage').classList.remove('dark','alarm');document.querySelectorAll('#fx .pigeon,#fx .pax,#fx .balloon').forEach(e=>e.remove())}
 function rushFail(){
   if(G.phase!=='ride')return;const left=G.segNeed-G.segDone;G.miss+=left;loseCombo();
@@ -1206,8 +1439,10 @@ function arriveSeq(){
   if(G.phase!=='ride')return;
   T.active=false;G.phase='arrive';const st=STATIONS[G.si+1];
   if(G.mode==='rush'&&G.segLimit){const b=Math.round(G.segT*30);G.segLimit=0;if(b>0){G.score+=b;floatText('남은 시간 보너스 +'+b,'green')}}
+  if(G.mode==='nomiss'&&!G.segFail){const b=Math.round(500*D().mult);G.score+=b;sfx.gold();banner('🎯','노미스 성공!','보너스 +'+b,'good')}
   G.segTpm.push(G.segTt>0?Math.round(G.segS/G.segTt*60):0);
   clearFx();tempo=G.fever?136:112;hud();
+  if(G.bus){busArrive(st);return}
   if(st.type==='pass'){passStation();return}
   setIdle('열차가 '+st.name+'역에 들어가는 중…','곧 도착');
   led('이번 역은 '+st.name+', '+st.name+'역입니다.'+(st.transfer?' '+ro(st.xfer)+' 갈아타실 수 있습니다.':'')+' 내리실 문은 왼쪽입니다.');
@@ -1215,6 +1450,32 @@ function arriveSeq(){
   const go=()=>{G.si++;hud();doorPrompt()};
   if(glOK){setTerrain(st.up?'up':'tunnel');setPlatformSigns(G.si+1);plat.visible=true;plat.position.z=-130;W.mode='approach';W.onStop=go}
   else later(go,2500);
+}
+/* ---------- 버스 정류장 도착 ---------- */
+function showStopPass(i){if(!glOK)return;setPlatformSigns(i);setStopKind(STATIONS[i]);plat.visible=true;plat.position.z=-150}
+function busArrive(st){
+  if(st.type==='nostop'){G.si++;hud();showStopPass(G.si);led('🚏 '+st.name+(st.virtual?' (가상 정류장)':'')+' · 미정차 통과');floatText((st.virtual?'가상 정류장':'미정차')+' 통과','green');G.phase='arrive';later(beginSegment,250);return}
+  if(st.type==='onboard'){G.si++;hud();showStopPass(G.si);led('🚌 '+st.name+' 통과 중 · 차내 미니게임!');G.phase='station';setIdle('차내 미니게임 준비…','🎮 차내 이벤트');later(runStationGame,800);return}
+  const must=st.terminal||['boss','shop','game','roulette'].includes(st.type);
+  let bell=false,wait=0;
+  if(!must){bell=Math.random()<.42;wait=Math.random()<.5?1+rnd(4):0}
+  if(!must&&!bell&&!wait){busSkip(st);return}
+  G.busWait=wait||(must?1+rnd(3):0);
+  const why=st.terminal?'종점':st.rest?'휴게소 정차':bell&&wait?'🔔 하차벨 · 🧍 '+wait+'명 대기':bell?'🔔 하차벨이 울렸어':wait?'🧍 '+wait+'명이 기다려':'주요 정류장';
+  banner('🚏',st.name,why+' · 정차해서 문을 열어','mode');
+  setIdle(st.name+' 정류장에 들어가는 중…','곧 정차');
+  const nx=STATIONS[G.si+2];led('이번 정류장은 '+st.name+'입니다.'+(st.terminal?' 이 버스의 종점입니다.':nx?' 다음 정류장은 '+nx.name+'입니다.':''));
+  sfx.chime();
+  const go=()=>{G.si++;hud();doorPrompt()};
+  if(glOK){setPlatformSigns(G.si+1);setStopKind(st);plat.visible=true;plat.position.z=-130;W.mode='approach';W.onStop=go}else later(go,2000);
+}
+function busSkip(st){
+  banner('🚏','미정차 판정!','내릴 사람도 탈 사람도 없어. 치지 말고 지나가!','troll');
+  showStopPass(G.si+1);G.phase='ride';
+  const done=()=>{G.si++;hud();G.phase='arrive';later(beginSegment,350)};
+  setTarget(st.typeName,{limit:2.4,cls:'trap',prompt:'🚏 '+st.name+' · 아무도 없어! 치면 괜히 서는 거야',
+    onOK:()=>{sfx.bad();loseCombo();G.score=Math.max(0,G.score-100);floatText('괜히 정차! -100','');fb('승객도 없는데 섰어… -100','bad');done()},
+    onTimeout:()=>{G.score+=80;G.coins+=2;sfx.ok();floatText('미정차 통과 +80','green');fb('정확한 미정차!','good');done()}});
 }
 function passStation(){
   const st=STATIONS[G.si+1];
@@ -1227,18 +1488,22 @@ function passStation(){
 }
 function doorPrompt(){
   G.phase='door';hud();const st=STATIONS[G.si];
-  setTarget(st.name,{prompt:'문을 열려면 역 이름을 입력해!',onOK:doorOK,stat:true});fb('');
+  setTarget(st.typeName||st.name,{prompt:G.bus?'🚏 '+st.name+' · 정류장 이름을 쳐서 문 열기':'문을 열려면 역 이름을 입력해!',onOK:doorOK,stat:true});fb('');
 }
 function doorOK(){
   G.score+=50;G.coins+=3;W.doorTgt=1;sfx.door();floatText('문 열림 +50','green');
   const st=STATIONS[G.si];G.phase='station';hud();
-  led(st.name+'역 · '+({boss:'보스전이 기다리고 있어요',shop:'역 매점이 열려 있어요',roulette:'행운 룰렛 이벤트 중!',game:'승강장에서 미션이 기다리고 있어요'}[st.type]||''));
-  setIdle('잠시 후 시작…','문이 열립니다');
+  if(st.type==='stop'||st.type==='quick'){
+    const n=G.bus?G.busWait||0:2+rnd(6);G.coins+=n;
+    setIdle(G.bus?(n?'🪪 교통카드 찍는 중… 삑! 삑!':'🔔 손님이 내리는 중…'):'승객이 타고 내리는 중…',G.bus?(n?n+'명 탑승':'하차 완료'):'잠깐 정차');
+    if(G.bus&&n)for(let i=0;i<n;i++)setTimeout(()=>tone(1660,.07,'square',.12),180+i*170);
+    later(afterStation,G.bus?700+n*170:900);return}
+  led(st.name+(G.bus?' · ':'역 · ')+({boss:'보스전이 기다리고 있어요',shop:st.rest?'휴게소에서 쉬어 가세요':'매점이 열려 있어요',roulette:'행운 룰렛 이벤트 중!',game:G.bus?'정류장 미션이 기다리고 있어요':'승강장에서 미션이 기다리고 있어요'}[st.type]||''));
+  setIdle('잠시 후 시작…',V().door+'이 열립니다');
   later(runStation,900);
 }
-function runStation(){const st=STATIONS[G.si];if(st.type==='shop')openShop();else if(st.type==='roulette')openRoulette();else runStationGame()}
-function afterStation(){if(G.phase==='over')return;if(STATIONS[G.si].terminal)endGame(false);else departSeq()}
-
+function runStation(){const st=STATIONS[G.si];if(st.type==='shop')openShop();else if(st.type==='roulette')openRoulette();else if(st.type==='quick'||st.type==='stop')afterStation();else runStationGame()}
+function afterStation(){if(G.phase==='over')return;const st=STATIONS[G.si];if(st.terminal)endGame(false);else if(G.bus&&st.type==='onboard'){focusInput();G.phase='arrive';beginSegment()}else departSeq()}
 /* ---------- 이벤트 ---------- */
 const ANIMALS=[['🐈','고양이'],['🐕','강아지'],['🦝','너구리'],['🦆','오리가족'],['🐿️','다람쥐']];
 const ESTOP=['안전 확인 완료','비상정지 해제','선로 이상 없음','출입문 정상 작동','운행을 재개합니다'];
@@ -1264,10 +1529,28 @@ function fireEvent(k){
     case'quake':fx.quake=5;break;
     case'swap':fx.swap=2;break;
     case'trap':trapSeq();return true;
+    case'redlight':redlightSeq();return true;
+    case'cutin':phraseSeq('빵빵','🚗 끼어들기! "빵빵"을 빨리 쳐서 경적!',3.2,'cat',{ok:150,slow:true,fail:'끼어든 차 때문에 느려졌어'});return true;
+    case'suddenbrake':phraseSeq('손잡이를 꼭 잡아 주세요','⚠️ 급정거! 안내방송을 쳐서 승객을 지켜',0,'emg',{ok:200,dmg:true,fail:'승객이 넘어졌어…'});return true;
+    case'complaint':phraseSeq('불편을 드려 죄송합니다','📢 승객 민원! 사과 방송을 쳐',0,'emg',{ok:150,fail:'민원이 접수됐어… -100',pen:100});return true;
+    case'buslane':fx.lane=5;break;
+    case'jam':G.segNeed+=3;break;
     case'animal':animalSeq();return true;
     case'estop':estopSeq();return true;
   }
   return false;
+}
+function phraseSeq(text,prompt,limit,cls,o){
+  const d=D();const lim=limit||((d.base+d.per*text.replace(/\s/g,'').length)*1.4+1.5)*C().tm;if(o.slow)W.boost=-25;
+  setTarget(text,{limit:lim,cls,prompt,
+    onOK:()=>{const b=Math.round(o.ok*D().mult);G.score+=b;sfx.ok();floatText('+'+b,'green');hud();contFlow()},
+    onTimeout:()=>{if(o.dmg)damage();if(o.slow)W.boost=-20;if(o.pen)G.score=Math.max(0,G.score-o.pen);fb(o.fail||'놓쳤어','bad');sfx.bad();hud();later(contFlow,400)}});
+}
+function redlightSeq(){
+  W.mode='estop';const go=()=>{if(G.phase==='ride'||G.phase==='race'){W.mode='accel';sfx.depart()}};
+  setTarget('신호대기',{limit:1.8+Math.random()*1.6,cls:'trap redlight',disp:'🔴 정지',trapAny:true,prompt:'🚦 빨간불! 아무것도 치지 말고 기다려',
+    onOK:()=>{sfx.bad();loseCombo();G.score=Math.max(0,G.score-150);floatText('신호위반! -150','');fb('신호위반! 벌점 -150','bad');go();hud();later(contFlow,600)},
+    onTimeout:()=>{wordEl.className='idle';wordEl.textContent='🟢 출발';sfx.ok();G.score+=60;go();hud();later(contFlow,450)}});
 }
 function trapSeq(){
   const w=pickWord();
@@ -1313,7 +1596,7 @@ let mgStop=null;
 const scrim=$('#scrim'),panel=$('#panel');
 function openPanel(head,body,kind){
   if(mgStop){mgStop();mgStop=null}
-  panel.innerHTML=`<div class="panel-head${kind?' '+kind:''}"><span class="badge">${G.line}</span><b>${head}</b><span>${kind==='boss'?'보스전':kind==='xfer'?'환승역':''}</span></div><div class="panel-body">${body}</div>`;
+  panel.innerHTML=`<div class="panel-head${kind?' '+kind:''}"><span class="badge">${LINES[G.line].short}</span><b>${head}</b><span>${kind==='boss'?'보스전':kind==='xfer'?'환승역':''}</span></div><div class="panel-body">${body}</div>`;
   panel.className='panel';scrim.hidden=false;typebox.hidden=true;scrim.scrollTop=0;
 }
 function closePanel(){if(mgStop){mgStop();mgStop=null}scrim.hidden=true;panel.innerHTML=''}
@@ -1324,14 +1607,16 @@ function imeBox(ph){
   w.innerHTML='<input class="mg-input ime" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send" aria-label="'+ph+'"><div class="inview" aria-hidden="true"></div>';
   const i=w.querySelector('input'),v=w.querySelector('.inview');let base=0,comp=false,cb=null;
   const typedB=()=>i.value.slice(base).replace(/^\s+/,'');
+  const later2=()=>{paint();setTimeout(()=>{if(!comp&&i.value.slice(base).trim()===''){i.value='';base=0;paint()}},40)};
   const paint=()=>{const t=typedB();v.innerHTML=(t?'<span class="tx">'+esc(t)+'</span>':'<span class="ph">'+ph+'</span>')+'<i class="caret"></i>'};
   i.addEventListener('compositionstart',()=>comp=true);
   i.addEventListener('compositionend',()=>{comp=false;paint();cb&&cb(typedB(),false,false)});
-  i.addEventListener('input',()=>{if(i.value.length<base)base=i.value.length;paint();sfx.key();cb&&cb(typedB(),comp,false)});
+  i.addEventListener('input',e=>{if(i.value.length<base){const ins=e.inputType&&e.inputType.indexOf('insert')===0;base=ins?Math.max(0,i.value.length-(e.data||'').length):i.value.length}paint();sfx.key();cb&&cb(typedB(),comp,false)});
+  i.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)&&!e.isComposing)e.preventDefault()});
   i.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing){e.preventDefault();cb&&cb(typedB(),comp,true)}});
   paint();
   return{w,i,typed:typedB,on(f){cb=f},focus(){try{i.focus({preventScroll:true})}catch(e){i.focus()}},
-    consume(){if(comp)base=i.value.length;else{i.value='';base=0}paint()},clear(){if(comp)base=i.value.length;else{i.value='';base=0}paint()}};
+    consume(){base=i.value.length;if(comp&&finePointer){try{i.blur();i.focus({preventScroll:true})}catch(e){}}base=i.value.length;later2()},clear(){base=i.value.length;later2()}};
 }
 
 const GAMES={
@@ -1361,7 +1646,17 @@ const GAMES={
   catch:{icon:'🎒',title:'선반 낙하물 받기',rule:'선반에서 떨어지는 짐을 바구니로 받아. ☕ 커피는 피해! 끌거나 ← → 키로 움직여. 목숨 3개, 25초.',run:mgCatch},
   flash:{icon:'🔦',title:'정전 속 비상구 찾기',rule:'정전이야! 손전등(마우스·손가락)으로 비추면서 EXIT를 찾아 눌러. 3번 탈출하면 끝. 30초.',run:mgFlash},
   rhythm:{icon:'🎵',title:'안내 멜로디 리듬',rule:'노트가 선에 닿을 때 D F J K 키(또는 아래 레인 버튼)를 눌러. 22초.',run:mgRhythm},
-  stairs:{icon:'🪜',title:'환승 계단 오르기',rule:'← → 를 번갈아 눌러서 계단을 올라가. 같은 쪽을 두 번 누르면 미끄러져! 15초.',run:mgStairs}
+  stairs:{icon:'🪜',title:'환승 계단 오르기',rule:'← → 를 번갈아 눌러서 계단을 올라가. 같은 쪽을 두 번 누르면 미끄러져! 15초.',run:mgStairs},
+  order:{icon:'🧭',title:'노선 순서 맞추기',rule:'같은 노선의 역 5개가 섞여 있어. 열차가 가는 순서대로 눌러. 35초.',run:mgOrder},
+  xfer:{icon:'🔀',title:'환승역 찾기',rule:'두 노선이 만나는 환승역을 골라. 30초.',run:mgXfer},
+  memo:{icon:'🧠',title:'역 이름 기억력',rule:'5초 동안 역 이름 6개를 외웠다가, 섞인 12개 중에서 골라. 2라운드.',run:mgMemo},
+  reverse:{icon:'🔁',title:'거꾸로 타이핑',rule:'거꾸로 쓰인 이름을 바르게 쳐. 모르면 넘겨도 돼. 30초.',run:mgReverse},
+  blank:{icon:'🕳️',title:'빈칸 채우기',rule:'이름에서 빠진 한 글자를 골라. 25초.',run:mgBlank},
+  snake:{icon:'🐍',title:'지하철 스네이크',rule:'방향키·버튼·스와이프로 열차를 몰아 승객을 태워. 태울수록 길어져. 벽이나 꼬리에 부딪히면 끝. 40초.',run:mgSnake},
+  stack:{icon:'📦',title:'짐 쌓기',rule:'움직이는 짐이 아래 짐과 겹칠 때 놓아(스페이스바·클릭). 삐져나온 부분은 잘려. 완전히 빗나가면 끝!',run:mgStack},
+  typo:{icon:'🔎',title:'오타 찾기',rule:'이름 6개 중 딱 하나에 오타가 있어. 찾아서 눌러. 30초.',run:mgTypo},
+  speed:{icon:'⚡',title:'스피드 타자 30초',rule:'30초 동안 보이는 이름을 최대한 많이 쳐.',run:mgSpeed},
+  dodge:{icon:'🚧',title:'터널 장애물 피하기',rule:'← →로 선로를 바꿔서 장애물을 피하고 코인을 모아. 목숨 3개, 25초.',run:mgDodge}
 };
 const GAME_POOL=Object.keys(GAMES).filter(k=>k!=='boss');
 function runStationGame(){
@@ -1390,7 +1685,7 @@ const ITEMS=[
 function openShop(){
   const st=STATIONS[G.si];openPanel(st.name,'',st.transfer?'xfer':'');
   const draw=()=>{
-    panel.querySelector('.panel-body').innerHTML=`<div class="mg-intro"><span class="mg-ico">🏪</span><h2>${st.name}역 매점</h2></div><p>코인으로 아이템을 사. 다음 구간부터 바로 효과가 있어.</p>
+    panel.querySelector('.panel-body').innerHTML=`<div class="mg-intro"><span class="mg-ico">🏪</span><h2>${G.bus?esc(st.typeName||st.name):st.name+'역'} 매점</h2></div><p>코인으로 아이템을 사. 다음 구간부터 바로 효과가 있어.</p>
     <div class="wallet"><span>보유 코인</span><b>${G.coins}</b></div>
     <div class="shop">${ITEMS.filter(it=>!it.lives||G.maxLives).map(it=>{const own=G.items[it.k]?'보유 '+G.items[it.k]:'';const dis=G.coins<it.price||(it.k==='heal'&&G.lives>=G.maxLives);
       return`<button class="shop-it" data-k="${it.k}" ${dis?'disabled':''}><span class="si">${it.icon}</span><span class="sn"><b>${it.name}</b><small>${it.desc}</small></span><span class="sp">${own?'<em>'+own+'</em>':''}${it.price} 코인</span></button>`}).join('')}</div>
@@ -1407,7 +1702,7 @@ function openRoulette(){
   const st=STATIONS[G.si],n=PRIZES.length,c=LINES[G.line].color;
   const grad=PRIZES.map((p,i)=>`${i%2?mix(c,'#ffffff',.55):mix(c,'#ffffff',.2)} ${i*360/n}deg ${(i+1)*360/n}deg`).join(',');
   openPanel(st.name,`<div class="roul"><div class="wheel-wrap"><div class="wheel" id="wh" style="background:conic-gradient(${grad})">${PRIZES.map((p,i)=>`<span style="transform:rotate(${i*360/n+180/n}deg) translateY(-82px)">${p[0]}</span>`).join('')}</div><i class="wheel-pin"></i></div>
-    <div class="roul-side"><div class="mg-intro"><span class="mg-ico">🎡</span><h2>행운 룰렛</h2></div><p>${st.name}역 이벤트! 한 번 돌려봐. 목숨이 꽉 차 있으면 ❤️는 코인 30개로 바뀌어.</p>
+    <div class="roul-side"><div class="mg-intro"><span class="mg-ico">🎡</span><h2>행운 룰렛</h2></div><p>${G.bus?esc(st.typeName||st.name)+' 정류장':st.name+'역'} 이벤트! 한 번 돌려봐. 목숨이 꽉 차 있으면 ❤️는 코인 30개로 바뀌어.</p>
     <ul class="prize-list">${PRIZES.map(p=>`<li>${p[0]} ${p[1]}</li>`).join('')}</ul>
     <div class="result-msg" id="whMsg">버튼을 눌러 돌려!</div><div class="row"><button class="btn go" id="spin" type="button">룰렛 돌리기</button></div></div></div>`,st.transfer?'xfer':'');
   panel.classList.add('wide','mid');
@@ -1461,7 +1756,7 @@ function mgSlide(root,done){
 }
 /* ---------- 새 미니게임 ---------- */
 function onKeys(down,up){const d=e=>{if(down(e))e.preventDefault()},u=e=>{if(up&&up(e))e.preventDefault()};addEventListener('keydown',d);addEventListener('keyup',u);return()=>{removeEventListener('keydown',d);removeEventListener('keyup',u)}}
-function lineBadge(n){return`<span class="lb" style="background:${LINES[n].color}">${n}</span>`}
+function lineBadge(n){const sh=LINES[n].short;return`<span class="lb${sh.length>1?' wide':''}" style="background:${LINES[n].color}">${sh}</span>`}
 
 /* 정시 정차: 브레이크를 꾹 눌러 정차선에 딱 맞춰 세우기 */
 function mgBrake(root,done){
@@ -1490,9 +1785,9 @@ function mgBrake(root,done){
 function mgNext(root,done){
   let correct=0,wrong=0;
   root.innerHTML=`<div class="mg-top"><span id="mgInfo">정답 0</span><span class="clock" id="mgClock">25</span></div><div class="q-card" id="qc"></div><div class="q-opts" id="qo"></div>`;
-  const q=()=>{const ln=+Object.keys(LINES)[rnd(5)],S=LINES[ln].stops.map(s=>s.split('|')[0]);const i=rnd(S.length-1),ans=S[i+1];
+  const q=()=>{const ln=SUBWAY_KEYS[rnd(SUBWAY_KEYS.length)],S=LINES[ln].names;const i=rnd(S.length-1),ans=S[i+1];
     const pool=S.filter(s=>s!==ans&&s!==S[i]);const opts=shuffle([ans,...shuffle(pool).slice(0,2)]);
-    $('#qc').innerHTML=`<div class="q-line">${lineBadge(ln)}<span>${ln}호선 · ${LINES[ln].dir} 방면</span></div><div class="q-big">${S[i]}</div><div class="q-sub">다음 역은?</div>`;
+    $('#qc').innerHTML=`<div class="q-line">${lineBadge(ln)}<span>${LINES[ln].name} · ${LINES[ln].dir} 방면</span></div><div class="q-big">${S[i]}</div><div class="q-sub">다음 역은?</div>`;
     $('#qo').innerHTML=opts.map(o=>`<button class="cbtn" data-a="${o}">${o}</button>`).join('');
     $('#qo').querySelectorAll('button').forEach(b=>b.onclick=()=>{if(b.dataset.a===ans){correct++;sfx.ok();b.classList.add('right')}else{wrong++;sfx.bad();b.classList.add('wrong')}
       $('#mgInfo').textContent='정답 '+correct+(wrong?' · 오답 '+wrong:'');setTimeout(q,260)})};
@@ -1501,13 +1796,13 @@ function mgNext(root,done){
 
 /* 어느 노선일까?: 목적지 역이 있는 노선 고르기 */
 function mgSort(root,done){
-  let correct=0,wrong=0;const all=[...new Set(Object.values(LINES).flatMap(L=>L.stops.map(s=>s.split('|')[0])))];
+  let correct=0,wrong=0;const all=[...new Set(SUBWAY_KEYS.flatMap(k=>LINES[k].names))];
   const has=(ln,st)=>LINES[ln].all.includes(st)||LINES[ln].stops.some(s=>s.split('|')[0]===st);
   root.innerHTML=`<div class="mg-top"><span id="mgInfo">안내 0명</span><span class="clock" id="mgClock">25</span></div><div class="q-card" id="qc"></div><div class="q-opts three" id="qo"></div>`;
-  const q=()=>{const st=all[rnd(all.length)];const ok=Object.keys(LINES).filter(l=>has(l,st));const no=Object.keys(LINES).filter(l=>!has(l,st));
+  const q=()=>{const st=all[rnd(all.length)];const ok=SUBWAY_KEYS.filter(l=>has(l,st));const no=SUBWAY_KEYS.filter(l=>!has(l,st));
     const opts=shuffle([ok[rnd(ok.length)],...shuffle(no).slice(0,2)]);
     $('#qc').innerHTML=`<div class="q-emoji">🧳</div><div class="q-big">${st}</div><div class="q-sub">가는 손님이에요. 몇 호선을 타야 할까?</div>`;
-    $('#qo').innerHTML=opts.map(l=>`<button class="cbtn" data-l="${l}">${lineBadge(l)}${l}호선</button>`).join('');
+    $('#qo').innerHTML=opts.map(l=>`<button class="cbtn" data-l="${l}">${lineBadge(l)}${LINES[l].name}</button>`).join('');
     $('#qo').querySelectorAll('button').forEach(b=>b.onclick=()=>{if(has(b.dataset.l,st)){correct++;sfx.ok();b.classList.add('right')}else{wrong++;sfx.bad();b.classList.add('wrong')}
       $('#mgInfo').textContent='안내 '+correct+'명'+(wrong?' · 실수 '+wrong:'');setTimeout(q,260)})};
   q();mgStop=countdown(25,$('#mgClock'),()=>done(correct*40-wrong*10,'손님 '+correct+'명을 제대로 안내했어!'));
@@ -1616,10 +1911,10 @@ function mgFare(root,done){
 
 /* 보스: 안내방송 문장 여러 개 */
 function mgBoss(root,done){
-  const st=STATIONS[G.si],n=st.name,cnt=[1,2,2,3][DL()]+(st.terminal?1:0);
-  const pool=['이번 역은 '+n+' '+n+'역입니다',n+'역에서 내리실 고객께서는 잊으신 물건이 없는지 확인하세요','열차와 승강장 사이가 넓으니 조심하세요','출입문 닫습니다 다음 열차를 이용해 주세요','안전선 밖으로 한 걸음 물러나 주시기 바랍니다','휴대전화는 진동으로 하고 통화는 짧게 해 주세요','노약자석은 비워 두는 배려를 부탁드립니다'];
+  const st=STATIONS[G.si],n=st.typeName||st.name,cnt=[1,2,2,3][DL()]+(st.terminal?1:0);
+  const pool=G.bus?['이번 정류장은 '+n+'입니다','다음 정류장에서 내리실 분은 벨을 눌러 주세요','버스가 완전히 멈춘 뒤에 자리에서 일어나 주세요','하차하실 때도 교통카드를 꼭 찍어 주세요','차내에서는 음식물 섭취를 삼가 주세요','교통약자에게 자리를 양보해 주세요']:['이번 역은 '+n+' '+n+'역입니다',n+'역에서 내리실 고객께서는 잊으신 물건이 없는지 확인하세요','열차와 승강장 사이가 넓으니 조심하세요','출입문 닫습니다 다음 열차를 이용해 주세요','안전선 밖으로 한 걸음 물러나 주시기 바랍니다','휴대전화는 진동으로 하고 통화는 짧게 해 주세요','노약자석은 비워 두는 배려를 부탁드립니다'];
   if(st.xfer)pool.push('이 역에서 '+ro(st.xfer)+' 갈아타실 수 있습니다');
-  let list=shuffle(pool.slice()).slice(0,cnt);if(st.terminal)list[0]='이 역은 종착역입니다 모두 내려 주시기 바랍니다';
+  let list=shuffle(pool.slice()).slice(0,cnt);if(st.terminal)list[0]=G.bus?'이 버스의 종점입니다 모두 내려 주시기 바랍니다':'이 역은 종착역입니다 모두 내려 주시기 바랍니다';
   const total=list.join('').replace(/\s/g,'').length;const lim=Math.round(4+total*(.6-DL()*.1));
   let idx=0,left=lim,finished=false,sT=performance.now();const t0=sT;
   root.innerHTML=`<div class="mg-top"><span id="bInfo">문장 1 / ${cnt}</span><span class="clock" id="mgClock">${lim}</span></div><div class="tbar"><i id="bossBar"></i></div><div class="sentence" id="sent"></div><div id="bossBox"></div><div id="bossFb" class="mg-hint" style="color:var(--red);font-weight:700;min-height:1.3em"></div>`;
@@ -1720,7 +2015,7 @@ function mgStop10(root,done){
   mgStop=()=>{alive=false;run=false;cancelAnimationFrame(raf);rm()};
 }
 function mgAssemble(root,done){
-  const pool=[...new Set(Object.values(LINES).flatMap(L=>L.all))].filter(w=>w.length>=3&&w.length<=7);
+  const pool=[...new Set(SUBWAY_KEYS.flatMap(k=>LINES[k].all))].filter(w=>w.length>=3&&w.length<=7);
   let ok=0,cur='',pos=0,alive=true;
   root.innerHTML=`<div class="mg-top"><span id="mgInfo">완성 0</span><span class="clock" id="mgClock">35</span></div><div class="asm-slot" id="as"></div><div class="asm" id="ab"></div>`;
   const q=()=>{cur=pool[rnd(pool.length)];pos=0;$('#as').innerHTML=[...cur].map(()=>'<i></i>').join('');
@@ -1744,9 +2039,9 @@ function mgShade(root,done){
 function mgCount(root,done){
   let ok=0,bad=0,lock=false;
   root.innerHTML=`<div class="mg-top"><span id="mgInfo">정답 0</span><span class="clock" id="mgClock">30</span></div><div class="q-card" id="qc"></div><div class="q-opts four" id="qo"></div>`;
-  const q=()=>{lock=false;const ln=+Object.keys(LINES)[rnd(5)],S=LINES[ln].names;const gap=2+rnd(Math.min(9,S.length-2)),a=rnd(S.length-gap);
+  const q=()=>{lock=false;const ln=SUBWAY_KEYS[rnd(SUBWAY_KEYS.length)],S=LINES[ln].names;const gap=2+rnd(Math.min(9,S.length-2)),a=rnd(S.length-gap);
     const o=new Set([gap]);while(o.size<4){const x=gap+rnd(7)-3;if(x>0)o.add(x)}const opts=shuffle([...o]);
-    $('#qc').innerHTML=`<div class="q-line">${lineBadge(ln)}<span>${ln}호선</span></div><div class="q-big sm">${S[a]} → ${S[a+gap]}</div><div class="q-sub">몇 정거장일까?</div>`;
+    $('#qc').innerHTML=`<div class="q-line">${lineBadge(ln)}<span>${LINES[ln].name}</span></div><div class="q-big sm">${S[a]} → ${S[a+gap]}</div><div class="q-sub">몇 정거장일까?</div>`;
     $('#qo').innerHTML=opts.map(x=>`<button class="cbtn" data-a="${x}" type="button">${x}정거장</button>`).join('');
     $('#qo').querySelectorAll('button').forEach(b=>b.onclick=()=>{if(lock)return;lock=true;if(+b.dataset.a===gap){ok++;sfx.ok();b.classList.add('right')}else{bad++;sfx.bad();b.classList.add('wrong');$('#qo').querySelector(`[data-a="${gap}"]`).classList.add('right')}$('#mgInfo').textContent='정답 '+ok;setTimeout(q,500)})};
   q();mgStop=countdown(30,$('#mgClock'),()=>done(ok*55-bad*10,'정거장 계산 '+ok+'문제 정답!'));
@@ -1859,37 +2154,232 @@ function mgStairs(root,done){
   const stop=()=>{alive=false;rm();stopT()};mgStop=stop;
 }
 
+/* ---------- 미니게임 10종 (v5) ---------- */
+function mgOrder(root,done){
+  let ok=0;
+  root.innerHTML=`<div class="mg-top"><span id="mgInfo">완성 0</span><span class="clock" id="mgClock">35</span></div><div class="q-card" id="oq"></div><div class="ord-slots" id="os"></div><div class="asm" id="ob"></div>`;
+  const q=()=>{const ln=SUBWAY_KEYS[rnd(SUBWAY_KEYS.length)],S=LINES[ln].names,a=rnd(S.length-5),seq=S.slice(a,a+5);let pos=0;
+    $('#oq').innerHTML=`<div class="q-line">${lineBadge(ln)}<span>${LINES[ln].name} · ${LINES[ln].dir} 방면</span></div><div class="q-sub">열차가 가는 순서대로 눌러!</div>`;
+    $('#os').innerHTML=seq.map((_,i)=>`<i>${i+1}</i>`).join('');
+    $('#ob').innerHTML=shuffle(seq.slice()).map(x=>`<button class="cbtn" type="button" data-s="${x}">${x}</button>`).join('');
+    $('#ob').querySelectorAll('button').forEach(b=>b.onclick=()=>{if(b.disabled)return;
+      if(b.dataset.s===seq[pos]){b.disabled=true;const sl=$('#os').children[pos];sl.textContent=seq[pos];sl.classList.add('on');pos++;sfx.key();if(pos>=5){ok++;sfx.ok();$('#mgInfo').textContent='완성 '+ok;setTimeout(q,380)}}
+      else{sfx.bad();b.classList.add('wrong');setTimeout(()=>b.classList.remove('wrong'),300)}})};
+  q();mgStop=countdown(35,$('#mgClock'),()=>done(ok*90,'노선 순서 '+ok+'개 완성!'));
+}
+function mgXfer(root,done){
+  const pairs=[];for(let i=0;i<SUBWAY_KEYS.length;i++)for(let j=i+1;j<SUBWAY_KEYS.length;j++){const a=SUBWAY_KEYS[i],b=SUBWAY_KEYS[j],B=new Set(LINES[b].names),c=LINES[a].names.filter(x=>B.has(x));if(c.length)pairs.push([a,b,c])}
+  let ok=0,bad=0,lock=false;
+  root.innerHTML=`<div class="mg-top"><span id="mgInfo">정답 0</span><span class="clock" id="mgClock">30</span></div><div class="q-card" id="xq"></div><div class="q-opts four" id="xo"></div>`;
+  const q=()=>{lock=false;const[a,b,c]=pairs[rnd(pairs.length)],ans=c[rnd(c.length)];const wrong=shuffle([...new Set([...LINES[a].names,...LINES[b].names])].filter(x=>!c.includes(x))).slice(0,3);
+    $('#xq').innerHTML=`<div class="q-line">${lineBadge(a)}<span>${LINES[a].name}</span><span>↔</span>${lineBadge(b)}<span>${LINES[b].name}</span></div><div class="q-sub">두 노선이 만나는 환승역은?</div>`;
+    $('#xo').innerHTML=shuffle([ans,...wrong]).map(x=>`<button class="cbtn" type="button" data-a="${x}">${x}</button>`).join('');
+    $('#xo').querySelectorAll('button').forEach(btn=>btn.onclick=()=>{if(lock)return;lock=true;if(c.includes(btn.dataset.a)){ok++;sfx.ok();btn.classList.add('right')}else{bad++;sfx.bad();btn.classList.add('wrong');const r=$('#xo').querySelector(`[data-a="${ans}"]`);r&&r.classList.add('right')}$('#mgInfo').textContent='정답 '+ok;setTimeout(q,500)})};
+  q();mgStop=countdown(30,$('#mgClock'),()=>done(ok*60-bad*10,'환승역 '+ok+'개 정답!'));
+}
+function mgMemo(root,done){
+  let round=0,score=0,goodAll=0;const pool=[...new Set(SUBWAY_KEYS.flatMap(k=>LINES[k].names))];
+  root.innerHTML=`<div class="mg-top"><span id="mgInfo">1 / 2 라운드</span><span class="clock" id="mgClock">5</span></div><p class="mg-hint" id="mh"></p><div class="memo" id="mm"></div><div class="row"><button class="btn go" id="mDone" type="button" hidden>다 골랐어</button></div>`;
+  let iv=0;mgStop=()=>clearInterval(iv);
+  const go=()=>{const pick=shuffle(pool.slice()).slice(0,6),extra=shuffle(pool.filter(x=>!pick.includes(x))).slice(0,6);
+    $('#mm').innerHTML=pick.map(x=>`<span class="memo-it show">${x}</span>`).join('');$('#mh').textContent='이 역 이름 6개를 외워!';$('#mDone').hidden=true;
+    let t=5;$('#mgClock').textContent=t;clearInterval(iv);iv=setInterval(()=>{t--;$('#mgClock').textContent=Math.max(0,t);if(t<=0){clearInterval(iv);ask()}},1000);
+    const ask=()=>{$('#mh').textContent='아까 본 역 6개를 골라!';$('#mm').innerHTML=shuffle([...pick,...extra]).map(x=>`<button class="memo-it" type="button" data-s="${x}">${x}</button>`).join('');$('#mDone').hidden=false;
+      $('#mm').querySelectorAll('button').forEach(b=>b.onclick=()=>{b.classList.toggle('on');sfx.key()});
+      $('#mDone').onclick=()=>{let good=0,badc=0;$('#mm').querySelectorAll('button').forEach(b=>{const on=b.classList.contains('on'),hit=pick.includes(b.dataset.s);b.disabled=true;
+        if(on&&hit){good++;b.classList.add('right')}else if(on){badc++;b.classList.add('wrong')}else if(hit)b.classList.add('miss')});
+        score+=good*45-badc*20;goodAll+=good;sfx[good>=5?'ok':'bad']();round++;$('#mDone').hidden=true;
+        if(round>=2)setTimeout(()=>done(score,'12개 중 '+goodAll+'개 기억!'),1300);else setTimeout(()=>{$('#mgInfo').textContent='2 / 2 라운드';go()},1400)}};
+  };go();
+}
+function mgReverse(root,done){
+  let ok=0,cur='';
+  root.innerHTML=`<div class="mg-top"><span id="mgInfo">정답 0</span><span class="clock" id="mgClock">30</span></div><div class="q-card"><div class="q-sub">거꾸로 쓰인 이름을 바르게 쳐!</div><div class="q-big" id="rq"></div></div><div id="rBox"></div><div class="row"><button class="btn" id="rSkip" type="button">넘기기</button></div>`;
+  const box=imeBox('바른 이름');$('#rBox').appendChild(box.w);
+  const q=()=>{let t=0;do{cur=pickWord();t++}while(cur.length<3&&t<30);$('#rq').textContent=[...cur].reverse().join('')};
+  box.on((v,comp,enter)=>{if(norm(v)===norm(cur)&&(autoNext||enter)){ok++;sfx.ok();$('#mgInfo').textContent='정답 '+ok;box.consume();q()}else if(enter){sfx.bad();box.clear()}});
+  $('#rSkip').onclick=()=>{sfx.bad();q();box.focus()};q();box.focus();
+  mgStop=countdown(30,$('#mgClock'),()=>done(ok*60,'거꾸로 이름 '+ok+'개 해독!'));
+}
+function mgBlank(root,done){
+  let ok=0,bad=0,lock=false;const SY='가나다라마바사아자차카타파하강남동서신역문산천대교원리구로성정공';
+  root.innerHTML=`<div class="mg-top"><span id="mgInfo">정답 0</span><span class="clock" id="mgClock">25</span></div><div class="q-card"><div class="q-sub">빈칸에 들어갈 글자는?</div><div class="q-big" id="bq"></div></div><div class="q-opts four" id="bo"></div>`;
+  const q=()=>{lock=false;let w,t=0;do{w=pickWord();t++}while((w.length<3||!/^[가-힣]+$/.test(w))&&t<40);const i=rnd(w.length),ans=w[i];$('#bq').textContent=w.slice(0,i)+'□'+w.slice(i+1);
+    const o=new Set([ans]);while(o.size<4)o.add(SY[rnd(SY.length)]);
+    $('#bo').innerHTML=shuffle([...o]).map(c=>`<button class="cbtn big" type="button" data-c="${c}">${c}</button>`).join('');
+    $('#bo').querySelectorAll('button').forEach(b=>b.onclick=()=>{if(lock)return;lock=true;if(b.dataset.c===ans){ok++;sfx.ok();b.classList.add('right')}else{bad++;sfx.bad();b.classList.add('wrong');$('#bo').querySelector(`[data-c="${ans}"]`).classList.add('right')}$('#bq').textContent=w;$('#mgInfo').textContent='정답 '+ok;setTimeout(q,500)})};
+  q();mgStop=countdown(25,$('#mgClock'),()=>done(ok*50-bad*10,'빈칸 '+ok+'개 정답!'));
+}
+function mgSnake(root,done){
+  root.innerHTML=`<div class="mg-top"><span id="mgInfo">태운 승객 0</span><span class="clock" id="mgClock">40</span></div><canvas class="rn tall" id="sn"></canvas><div class="pad"><span></span><button class="cbtn" data-d="0" type="button" aria-label="위">▲</button><span></span><button class="cbtn" data-d="3" type="button" aria-label="왼쪽">◀</button><button class="cbtn" data-d="2" type="button" aria-label="아래">▼</button><button class="cbtn" data-d="1" type="button" aria-label="오른쪽">▶</button></div>`;
+  const cv=$('#sn'),H=260,[ctx,W]=canvasSetup(cv,H),cs=Math.max(12,Math.floor(Math.min(W/18,H/13))),cols=Math.floor(W/cs),rows=Math.floor(H/cs),ox=(W-cols*cs)/2,oy=(H-rows*cs)/2,col=LINES[G.line].color;
+  let body=[[4,Math.floor(rows/2)],[3,Math.floor(rows/2)],[2,Math.floor(rows/2)]],dir=1,nd=1,food=null,got=0,alive=true,acc=0,lt=performance.now(),raf=0,step=.17-DL()*.015;
+  const DX=[[0,-1],[1,0],[0,1],[-1,0]];
+  const place=()=>{do{food=[rnd(cols),rnd(rows)]}while(body.some(b=>b[0]===food[0]&&b[1]===food[1]))};place();
+  const turn=d=>{if((d+2)%4!==dir)nd=d};
+  root.querySelectorAll('.pad button').forEach(b=>b.onclick=()=>turn(+b.dataset.d));
+  const rm=onKeys(e=>{const m={ArrowUp:0,KeyW:0,ArrowRight:1,KeyD:1,ArrowDown:2,KeyS:2,ArrowLeft:3,KeyA:3}[e.code];if(m!==undefined){turn(m);return true}});
+  let sx=0,sy=0;cv.addEventListener('pointerdown',e=>{sx=e.clientX;sy=e.clientY});cv.addEventListener('pointerup',e=>{const dx=e.clientX-sx,dy=e.clientY-sy;if(Math.max(Math.abs(dx),Math.abs(dy))<16)return;turn(Math.abs(dx)>Math.abs(dy)?(dx>0?1:3):(dy>0?2:0))});
+  const draw=()=>{ctx.fillStyle='#141a20';ctx.fillRect(0,0,W,H);ctx.strokeStyle='rgba(255,255,255,.05)';for(let x=0;x<=cols;x++){ctx.beginPath();ctx.moveTo(ox+x*cs,oy);ctx.lineTo(ox+x*cs,oy+rows*cs);ctx.stroke()}
+    ctx.font=Math.floor(cs*.85)+'px '+EMOJI_FONT;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🧍',ox+food[0]*cs+cs/2,oy+food[1]*cs+cs/2);
+    body.forEach((b,i)=>{ctx.fillStyle=i===0?'#ffbf3c':col;ctx.beginPath();const x=ox+b[0]*cs+1,y=oy+b[1]*cs+1;if(ctx.roundRect)ctx.roundRect(x,y,cs-2,cs-2,4);else ctx.rect(x,y,cs-2,cs-2);ctx.fill()})};
+  const end=msg=>{if(!alive)return;stop();done(got*45,msg+' 승객 '+got+'명을 태웠어')};
+  const tick=now=>{if(!alive)return;acc+=Math.min(.1,(now-lt)/1000);lt=now;
+    while(acc>=step){acc-=step;dir=nd;const h=body[0],n=[h[0]+DX[dir][0],h[1]+DX[dir][1]];
+      if(n[0]<0||n[1]<0||n[0]>=cols||n[1]>=rows||body.some(b=>b[0]===n[0]&&b[1]===n[1])){sfx.bad();end('쾅!');return}
+      body.unshift(n);if(n[0]===food[0]&&n[1]===food[1]){got++;tone(880+got*20,.08,'triangle',.2);$('#mgInfo').textContent='태운 승객 '+got;place();step=Math.max(.08,step-.004)}else body.pop()}
+    draw();raf=requestAnimationFrame(tick)};
+  draw();raf=requestAnimationFrame(tick);const stopT=countdown(40,$('#mgClock'),()=>end('시간 종료!'));
+  const stop=()=>{alive=false;cancelAnimationFrame(raf);rm();stopT()};mgStop=stop;
+}
+function mgStack(root,done){
+  root.innerHTML=`<div class="mg-top"><span id="mgInfo">0층</span><span class="clock" id="mgPf">퍼펙트 0</span></div><canvas class="rn tall" id="stk"></canvas><button class="btn go bk-btn" id="sDrop" type="button">놓기! (스페이스바 · 화면 클릭)</button>`;
+  const cv=$('#stk'),H=300,[ctx,W]=canvasSetup(cv,H),bh=22,col=LINES[G.line].color,bw0=Math.min(160,W*.45);
+  let stack=[{x:W/2-bw0/2,w:bw0}],cur={x:0,w:bw0,dir:1},sp=150+DL()*30,alive=true,raf=0,lt=performance.now(),fall=null,pf=0;
+  const end=()=>{if(!alive)return;stop();done((stack.length-1)*35+pf*15,(stack.length-1)+'층까지 쌓았어!'+(pf?' 퍼펙트 '+pf+'번':''))};
+  const press=()=>{if(!alive||fall)return;const top=stack[stack.length-1],l=Math.max(cur.x,top.x),r=Math.min(cur.x+cur.w,top.x+top.w);
+    if(r<=l){fall={x:cur.x,w:cur.w,y:0,v:0};sfx.bad();setTimeout(end,800);return}
+    const perfect=Math.abs(cur.x-top.x)<5,nw=perfect?top.w:r-l,nx=perfect?top.x:l;stack.push({x:nx,w:nw});
+    if(perfect){pf++;$('#mgPf').textContent='퍼펙트 '+pf;tone(1320,.1,'square',.18)}else tone(420+stack.length*25,.08,'triangle',.2);
+    $('#mgInfo').textContent=(stack.length-1)+'층';sp+=9;cur=Math.random()<.5?{x:-nw,w:nw,dir:1}:{x:W,w:nw,dir:-1};if(stack.length>=41)end()};
+  const step=now=>{if(!alive)return;const dt=Math.min(.04,(now-lt)/1000);lt=now;
+    if(!fall){cur.x+=cur.dir*sp*dt;if(cur.x+cur.w>W+cur.w*.2&&cur.dir>0)cur.dir=-1;if(cur.x<-cur.w*.2&&cur.dir<0)cur.dir=1}else{fall.v+=900*dt;fall.y+=fall.v*dt}
+    const off=Math.max(0,stack.length*bh-(H-90));ctx.fillStyle='#16202a';ctx.fillRect(0,0,W,H);
+    stack.forEach((b,i)=>{const y=H-20-(i+1)*bh+off;if(y>H||y<-bh)return;ctx.fillStyle=i===0?'#5d676e':mix(col,'#ffffff',(i%4)*.12);ctx.fillRect(b.x,y,b.w,bh-2)});
+    const cy=H-20-(stack.length+1)*bh+off;ctx.fillStyle='#ffbf3c';if(fall)ctx.fillRect(fall.x,cy+fall.y,fall.w,bh-2);else ctx.fillRect(cur.x,cy,cur.w,bh-2);
+    raf=requestAnimationFrame(step)};
+  cv.addEventListener('pointerdown',e=>{e.preventDefault();press()});$('#sDrop').onclick=press;
+  const rm=onKeys(e=>{if(e.code==='Space'){if(!e.repeat)press();return true}});
+  raf=requestAnimationFrame(step);const stop=()=>{alive=false;cancelAnimationFrame(raf);rm()};mgStop=stop;
+}
+function typoOf(w){const cs=[...w];for(let t=0;t<30;t++){const i=rnd(cs.length),c=cs[i].charCodeAt(0)-0xAC00;if(c<0||c>=11172)continue;
+  const cho=Math.floor(c/588),jung=Math.floor(c%588/28),jong=c%28;let nj=jung,nk=jong;if(rnd(2))nj=(jung+1+rnd(3))%21;else nk=jong?0:[4,8,16,21][rnd(4)];
+  const n=String.fromCharCode(0xAC00+(cho*21+nj)*28+nk);if(n!==cs[i]){cs[i]=n;return cs.join('')}}return w+'ㅋ'}
+function mgTypo(root,done){
+  let ok=0,bad=0;
+  root.innerHTML=`<div class="mg-top"><span id="mgInfo">정답 0</span><span class="clock" id="mgClock">30</span></div><p class="mg-hint">딱 하나만 오타야! 찾아서 눌러</p><div class="q-opts typo" id="to"></div>`;
+  const q=()=>{const ws=[];let t=0;while(ws.length<6&&t++<200){const w=pickWord();if(!ws.includes(w)&&/^[가-힣]{2,}$/.test(w))ws.push(w)}const k=rnd(ws.length),wrong=typoOf(ws[k]);
+    $('#to').innerHTML=ws.map((w,i)=>`<button class="cbtn" type="button" data-t="${i===k?1:''}">${i===k?wrong:w}</button>`).join('');
+    $('#to').querySelectorAll('button').forEach(b=>b.onclick=()=>{if(b.dataset.t){ok++;sfx.ok();$('#mgInfo').textContent='정답 '+ok;q()}else{bad++;sfx.bad();b.classList.add('wrong')}})};
+  q();mgStop=countdown(30,$('#mgClock'),()=>done(ok*55-bad*10,'오타 '+ok+'개 발견!'));
+}
+function mgSpeed(root,done){
+  let ok=0,chars=0,cur=pickWord(),nx=pickWord();
+  root.innerHTML=`<div class="mg-top"><span id="mgInfo">0개</span><span class="clock" id="mgClock">30</span></div><div class="q-card"><div class="q-big" id="sq"></div><div class="q-sub" id="sn2"></div></div><div id="sBox"></div>`;
+  const box=imeBox('보이는 이름을 쳐');$('#sBox').appendChild(box.w);
+  const show=()=>{$('#sq').textContent=cur;$('#sn2').textContent='다음: '+nx};
+  box.on((v,comp,enter)=>{if(norm(v)===norm(cur)&&(autoNext||enter)){ok++;chars+=strokes(cur);sfx.ok();$('#mgInfo').textContent=ok+'개';box.consume();cur=nx;nx=pickWord();show()}else if(enter){sfx.bad();box.clear()}});
+  show();box.focus();mgStop=countdown(30,$('#mgClock'),()=>done(ok*35,'30초 동안 '+ok+'개 · 약 '+Math.round(chars*2)+'타/분'));
+}
+function mgDodge(root,done){
+  root.innerHTML=`<div class="mg-top"><span id="mgInfo">♥♥♥ · 코인 0</span><span class="clock" id="mgClock">25</span></div><canvas class="rn tall" id="dg"></canvas><div class="row"><button class="btn bk-btn" id="dL" type="button">◀ 왼쪽</button><button class="btn bk-btn" id="dR" type="button">오른쪽 ▶</button></div>`;
+  const cv=$('#dg'),H=280,[ctx,W]=canvasSetup(cv,H),lw=W/3,lx=l=>lw*l+lw/2,col=LINES[G.line].color;
+  let lane=1,px=lx(1),obs=[],t=0,sp=0,lives=3,got=0,alive=true,raf=0,lt=performance.now(),inv=0;
+  const info=()=>$('#mgInfo').textContent='♥'.repeat(Math.max(0,lives))+'♡'.repeat(3-Math.max(0,lives))+' · 코인 '+got;
+  const mv=d=>{lane=Math.max(0,Math.min(2,lane+d));tone(600,.04,'square',.1)};
+  $('#dL').onclick=()=>mv(-1);$('#dR').onclick=()=>mv(1);
+  const rm=onKeys(e=>{if(e.repeat)return false;if(e.code==='ArrowLeft'||e.code==='KeyA'){mv(-1);return true}if(e.code==='ArrowRight'||e.code==='KeyD'){mv(1);return true}});
+  cv.addEventListener('pointerdown',e=>{e.preventDefault();const r=cv.getBoundingClientRect();mv(e.clientX-r.left<W/2?-1:1)});
+  const end=()=>{if(!alive)return;stop();done(Math.round(t*10)+got*30,Math.round(t)+'초 버티고 코인 '+got+'개!')};
+  const step=now=>{if(!alive)return;const dt=Math.min(.04,(now-lt)/1000);lt=now;t+=dt;sp-=dt;inv=Math.max(0,inv-dt);
+    if(sp<=0){const coin=Math.random()<.3;obs.push({l:rnd(3),y:-30,coin});sp=Math.max(.32,.85-t*.02-DL()*.07)}
+    const spd=200+t*8+DL()*30;px+=(lx(lane)-px)*Math.min(1,dt*14);
+    for(const o of obs){o.y+=spd*dt;if(!o.hit&&o.l===lane&&Math.abs(o.y-(H-52))<22){o.hit=true;if(o.coin){got++;sfx.coin();info()}else if(!inv){lives--;inv=1;sfx.bad();info();if(lives<=0){end();return}}}}
+    obs=obs.filter(o=>!(o.hit&&o.coin)&&o.y<H+40);
+    ctx.fillStyle='#10151a';ctx.fillRect(0,0,W,H);ctx.strokeStyle='rgba(255,255,255,.12)';ctx.setLineDash([14,14]);ctx.lineDashOffset=-t*spd%28;
+    for(let i=1;i<3;i++){ctx.beginPath();ctx.moveTo(lw*i,0);ctx.lineTo(lw*i,H);ctx.stroke()}ctx.setLineDash([]);
+    ctx.font='28px '+EMOJI_FONT;ctx.textAlign='center';ctx.textBaseline='middle';obs.forEach(o=>{if(!o.hit||!o.coin)ctx.fillText(o.coin?'🪙':'🚧',lx(o.l),o.y)});
+    if(!(inv&&Math.floor(t*12)%2)){ctx.fillStyle=col;ctx.beginPath();if(ctx.roundRect)ctx.roundRect(px-22,H-74,44,46,10);else ctx.rect(px-22,H-74,44,46);ctx.fill();ctx.fillStyle='#ffd36b';ctx.fillRect(px-16,H-66,32,10)}
+    raf=requestAnimationFrame(step)};
+  raf=requestAnimationFrame(step);const stopT=countdown(25,$('#mgClock'),end);
+  const stop=()=>{alive=false;cancelAnimationFrame(raf);rm();stopT()};mgStop=stop;
+}
+
 /* ---------- 시작/결과 화면 ---------- */
-function saveCfg(){save('metroTyping.cfg',JSON.stringify({line:G.line,diff:G.diff,course:G.course}))}
+function saveCfg(){save('metroTyping.cfg',JSON.stringify({line:G.line,diff:G.diff,course:G.course,custom:G.custom}))}
 function loadNum(k){try{return +localStorage.getItem(k)||0}catch(e){return 0}}
+function routeCard(k){const L=LINES[k],n=L.names.length,u=L.bus?'곳':'역';
+  return`<button class="routeopt" data-k="${k}" aria-pressed="${k===String(G.line)}" style="--c:${L.color}" type="button"><span class="rbadge">${esc(L.short)}</span><span class="rinfo"><b>${esc(L.name)}</b><small>${esc(L.names[0])} → ${esc(L.names[n-1])} · ${n}${u}</small></span></button>`}
+function routeList(){
+  if(G.tab==='bus')return['간선','지선','광역','광역급행','시외','고속'].map(kd=>{const ks=BUS_KEYS.filter(k=>LINES[k].kind===kd);return ks.length?`<p class="kind-t">${kd}</p><div class="route-grid">${ks.map(routeCard).join('')}</div>`:''}).join('');
+  return`<div class="route-grid">${SUBWAY_KEYS.map(routeCard).join('')}</div>`;
+}
+function routePreview(){
+  const L=LINES[G.line],ps=L.bus?L.parsed:L.stops.map(q=>({name:q.split('|')[0],x:q.includes('|')})),n=ps.length;
+  const ns=ps.filter(q=>q.nostop).length;
+  return`<div class="rprev" style="--c:${L.color}"><div class="lmap${n>40?' dense':''}"><b class="lrail"></b>${ps.map(q=>`<span class="lst${q.x?' x':''}${q.nostop?' ns':''}"><i></i><em>${esc(q.name)}</em></span>`).join('')}</div>
+    <p class="net-msg">${L.bus?`${L.kind} · 정류장 ${n}곳${ns?' (미정차·가상 '+ns+'곳 포함)':''} · ${{간선:'정류장이 많고 짧게 끊어 달려',지선:'동네 구석구석, 정차 판단이 많아',광역:'시내 정차 후 고속 구간을 달려',광역급행:'미정차 구간이 길고 빨라',시외:'고속도로 위주, 차내 미니게임',고속:'장거리 고속도로, 휴게소 1번'}[L.kind]}`:'환승역 '+ps.filter(q=>q.x).length+'곳 · '+L.dir+' 방면'}</p></div>`;
+}
+function courseText(){const L=LINES[G.line],n=L.names.length,h=L.bus?Math.min(n,Math.max(10,Math.ceil(n/2))):Math.min(n,13),u=L.bus?'곳':'개 역';return{half:h+u,full:n+u}}
 function titleScreen(){
-  G.phase='title';G.si=0;G.maxLives=0;applyLine();hud();setTerrain(STATIONS[0].up?'up':'tunnel');
-  led(lineName()+' '+STATIONS[0].name+'역 · '+LINES[G.line].dir+' 방면 열차가 대기 중입니다');
+  G.phase='title';G.si=0;G.maxLives=0;if(G.tab!=='bus'&&G.tab!=='subway')G.tab='subway';if(LINES[G.line].bus!==(G.tab==='bus'))G.tab=LINES[G.line].bus?'bus':'subway';
+  applyLine();hud();setTerrain(stTerrain(STATIONS[0]));
+  const say=()=>led(lineName()+' '+STATIONS[0].name+(G.bus?' · '+LINES[G.line].dir+' 방면 버스가 출발을 기다리고 있어요':'역 · '+LINES[G.line].dir+' 방면 열차가 대기 중입니다'));say();
   const bestT=loadNum('metroTyping.bestTpm');
-  openPanel(STATIONS[0].name,`<div class="tgrid"><div class="tcol tcol-a"><p class="title-big">지하철<br><em>타이핑</em> 여행</p>
-  <p>노선과 난이도를 고르고 출발해. 역 사이는 타자로 달리고, 역마다 미니게임·매점·룰렛·보스전이 기다려.</p>
-  <dl class="howto"><dt>달리기</dt><dd>역 이름을 다 치면 바로 다음 이름. 구간마다 급행·타임어택·초성·기억·안내방송 규칙</dd><dt>이벤트</dt><dd>🕊️ 갑툭튀 · 🚨 비상상황 · 🪤 억까</dd><dt>역</dt><dd>미니게임 26종 · 🏪 매점 · 🎡 룰렛 · 💨 무정차 · 👑 보스전</dd><dt>타수</dt><dd>실시간 측정 · 끝나면 구간별 그래프</dd></dl>
+  openPanel(STATIONS[0].name,`<div class="tgrid"><div class="tcol tcol-a"><p class="title-big">지하철·버스<br><em>타이핑</em> 여행</p>
+  <p>노선과 난이도를 고르고 출발해. 지하철은 역마다, 버스는 정류장마다 미니게임·매점·룰렛·보스전이 기다려.</p>
+  <dl class="howto"><dt>달리기</dt><dd>이름을 다 치면 바로 다음. 구간마다 13가지 규칙이 바뀌어</dd><dt>버스</dt><dd>🔔 하차벨·🧍 대기 승객 보고 정차, 아무도 없으면 미정차 통과</dd><dt>이벤트</dt><dd>🕊️ 갑툭튀 · 🚨 비상상황 · 🪤 억까 · 🚦 신호</dd><dt>역</dt><dd>미니게임 36종 · 🏪 매점 · 🎡 룰렛 · 👑 보스전</dd></dl>
   <div class="best" id="bestLine"></div>
   <div id="onlineBox" class="online-box"></div>
-  <div class="tbtns"><button class="btn go" id="startBtn" type="button">출발하기</button><button class="btn" id="testBtn" type="button">⌨️ 타자 측정 60초${bestT?' · 최고 '+bestT+'타':''}</button></div></div>
-  <div class="tcol"><div class="sec"><p class="sec-t">노선</p>
-  <div class="lines">${Object.entries(LINES).map(([k,L])=>`<button class="lineopt" data-k="${k}" aria-pressed="${+k===G.line}" style="--c:${L.color}" type="button">
-    <span class="ln">${k}</span><span class="lmap"><b class="lrail"></b>${L.names.map((s,i)=>`<span class="lst${L.stops[i].includes('|')?' x':''}"><i></i><em>${s}</em></span>`).join('')}</span></button>`).join('')}</div></div>
+  <div class="tbtns"><button class="btn go" id="startBtn" type="button">출발하기</button><div class="tbtn2"><button class="btn" id="testBtn" type="button">⌨️ 타자 측정${bestT?' · '+bestT+'타':''}</button><button class="btn" id="custBtn" type="button">⚙️ 세부 설정</button></div></div></div>
+  <div class="tcol"><div class="sec"><div class="tabs2 three"><button type="button" data-t="subway" aria-pressed="${G.tab==='subway'}">🚇 지하철 ${SUBWAY_KEYS.length}</button><button type="button" data-t="bus" aria-pressed="${G.tab==='bus'}">🚌 버스 ${BUS_KEYS.length}</button><button type="button" class="rnd" id="rndBtn" title="지하철·버스 전체에서 아무 노선이나 골라줘">🎲 랜덤</button></div>
+  <div class="route-scroll" id="routeList">${routeList()}</div><div id="routePrev">${routePreview()}</div></div>
   </div><div class="tcol"><div class="sec"><p class="sec-t">난이도</p><div class="diffs">${Object.entries(DIFF).map(([k,d])=>`<button class="diffopt" data-k="${k}" aria-pressed="${k===G.diff}" type="button"><span class="dname">${d.icon} ${d.name}</span><small>${d.desc}</small></button>`).join('')}</div></div>
   <div class="sec"><p class="sec-t">코스</p><div class="seg2">
-    <button class="courseopt" data-k="half" aria-pressed="${G.course==='half'}" type="button"><b>반 구간</b><small>13개 역 · 약 10분</small></button>
-    <button class="courseopt" data-k="full" aria-pressed="${G.course==='full'}" type="button"><b>전 구간</b><small id="fullN">${LINES[G.line].stops.length}개 역 · 약 25분</small></button></div></div></div></div>`);
+    <button class="courseopt" data-k="half" aria-pressed="${G.course==='half'}" type="button"><b>반 구간</b><small id="halfN">${courseText().half}</small></button>
+    <button class="courseopt" data-k="full" aria-pressed="${G.course==='full'}" type="button"><b>전 구간</b><small id="fullN">${courseText().full}</small></button></div></div>
+  <div class="sec"><p class="net-msg" id="custSum">${customSummary()}</p></div></div></div>`);
   panel.classList.add('wide');
   const bestLine=()=>{const b=loadNum(BEST_KEY+'.'+G.diff);$('#bestLine').textContent=b?D().icon+' '+D().name+' 최고 기록 '+b.toLocaleString()+'점':''};bestLine();
-  panel.querySelectorAll('.lineopt').forEach(b=>b.onclick=()=>{audioInit();G.line=+b.dataset.k;panel.querySelectorAll('.lineopt').forEach(o=>o.setAttribute('aria-pressed',o===b));applyLine();hud();setTerrain(STATIONS[0].up?'up':'tunnel');
-    panel.querySelector('.panel-head b').textContent=STATIONS[0].name;panel.querySelector('.panel-head .badge').textContent=G.line;$('#fullN').textContent=LINES[G.line].stops.length+'개 역 · 약 25분';
-    led(lineName()+' '+STATIONS[0].name+'역 · '+LINES[G.line].dir+' 방면 열차가 대기 중입니다');saveCfg()});
+  const bindRoutes=()=>panel.querySelectorAll('.routeopt').forEach(b=>b.onclick=()=>{audioInit();G.line=b.dataset.k;panel.querySelectorAll('.routeopt').forEach(o=>o.setAttribute('aria-pressed',o===b));applyLine();hud();setTerrain(stTerrain(STATIONS[0]));
+    if(glOK){plat.visible=true;plat.position.z=0}
+    panel.querySelector('.panel-head b').textContent=STATIONS[0].name;panel.querySelector('.panel-head .badge').textContent=LINES[G.line].short;$('#routePrev').innerHTML=routePreview();
+    $('#halfN').textContent=courseText().half;$('#fullN').textContent=courseText().full;say();saveCfg()});
+  bindRoutes();
+  panel.querySelectorAll('.tabs2 button[data-t]').forEach(b=>b.onclick=()=>{G.tab=b.dataset.t;panel.querySelectorAll('.tabs2 button[data-t]').forEach(o=>o.setAttribute('aria-pressed',o===b));$('#routeList').innerHTML=routeList();bindRoutes();sfx.key()});
   panel.querySelectorAll('.diffopt').forEach(b=>b.onclick=()=>{G.diff=b.dataset.k;panel.querySelectorAll('.diffopt').forEach(o=>o.setAttribute('aria-pressed',o===b));bestLine();sfx.key();saveCfg()});
-  panel.querySelectorAll('.courseopt').forEach(b=>b.onclick=()=>{G.course=b.dataset.k;panel.querySelectorAll('.courseopt').forEach(o=>o.setAttribute('aria-pressed',o===b));applyLine();hud();sfx.key();saveCfg()});
-  $('#startBtn').onclick=()=>startGame(false);$('#testBtn').onclick=()=>startGame(true);
+  panel.querySelectorAll('.courseopt').forEach(b=>b.onclick=()=>{G.course=b.dataset.k;panel.querySelectorAll('.courseopt').forEach(o=>o.setAttribute('aria-pressed',o===b));applyLine();hud();if(glOK){plat.visible=true;plat.position.z=0}sfx.key();saveCfg()});
+  /* 🎲 랜덤: 카드가 잠깐 돌다가 하나에 멈춤 */
+  $('#rndBtn').onclick=()=>{audioInit();const all=[...SUBWAY_KEYS,...BUS_KEYS].filter(k=>k!==G.line),pick=all[rnd(all.length)],id=G.run;
+    let n=0;const steps=9;$('#rndBtn').disabled=true;
+    const spin=()=>{if(G.phase!=='title'||id!==G.run)return;n++;const k=n<steps?all[rnd(all.length)]:pick,tab=LINES[k].bus?'bus':'subway';
+      if(G.tab!==tab){G.tab=tab;panel.querySelectorAll('.tabs2 button[data-t]').forEach(o=>o.setAttribute('aria-pressed',o.dataset.t===tab));$('#routeList').innerHTML=routeList();bindRoutes()}
+      panel.querySelectorAll('.routeopt').forEach(o=>o.classList.toggle('spin',o.dataset.k===k));const card=panel.querySelector(`.routeopt[data-k="${k}"]`);
+      card&&card.scrollIntoView({block:'nearest'});tone(500+n*60,.05,'square',.08);
+      if(n<steps)setTimeout(spin,60+n*18);else{card&&card.classList.remove('spin');card&&card.click();$('#rndBtn').disabled=false;sfx.ok()}};
+    spin()};
+  $('#startBtn').onclick=()=>startGame(false);$('#testBtn').onclick=()=>startGame(true);$('#custBtn').onclick=openCustom;
   if(window.MT&&MT.titleHook)MT.titleHook($('#onlineBox'));
 }
-function goHome(){G.run++;T.active=false;closePanel();clearFx();if(glOK){plat.visible=true;plat.position.z=0;W.mode='stopped';W.vel=0}W.doorTgt=1;titleScreen()}
+/* ---------- 세부 설정 화면 ---------- */
+const CUST_OPTS={ev:[[0,'끄기'],[.5,'적게'],[1,'보통'],[1.6,'많이']],mg:[['all','모든 역'],['half','절반만'],['none','없음']],wm:[[.5,'0.5배'],[1,'1배'],[1.5,'1.5배'],[2,'2배']],tm:[[.7,'0.7배'],[1,'1배'],[1.3,'1.3배'],[1.6,'1.6배']],extras:[[true,'켬'],[false,'끔']]};
+function customSummary(){const c=C(),on=Object.keys(MODES).filter(k=>c.modes[k]!==false).length;const lab=(k,v)=>(CUST_OPTS[k].find(o=>o[0]===v)||[,v])[1];
+  return`⚙️ 구간 규칙 ${on}/${Object.keys(MODES).length} · 이벤트 ${lab('ev',c.ev)} · 미니게임 ${lab('mg',c.mg)} · 단어 ${lab('wm',c.wm)} · 시간 ${lab('tm',c.tm)}`}
+function openCustom(){
+  const draw=()=>{const c=C();
+    const seg=(k,title,desc)=>`<div class="cust-row"><div><b>${title}</b><small>${desc}</small></div><div class="segN">${CUST_OPTS[k].map(([v,l])=>`<button type="button" data-k="${k}" data-v="${v}" aria-pressed="${c[k]===v}">${l}</button>`).join('')}</div></div>`;
+    panel.querySelector('.panel-body').innerHTML=`<div class="mg-intro"><span class="mg-ico">⚙️</span><h2>세부 설정</h2></div><p>난이도와 따로, 내 마음대로 게임을 바꿀 수 있어. 바꾼 설정은 저장돼.</p>
+    <div class="cust-grid"><div class="sec"><p class="sec-t">나오는 구간 규칙 (일반 운행은 항상 나와)</p><div class="mode-chips">${Object.entries(MODES).map(([k,M])=>`<button type="button" class="mchip" data-m="${k}" aria-pressed="${c.modes[k]!==false}" ${k==='normal'?'disabled':''}>${M.icon} ${M.name}</button>`).join('')}</div></div>
+    <div class="sec">${seg('ev','이벤트 빈도','갑툭튀·비상상황·억까가 얼마나 자주 터질지')}${seg('mg','미니게임','역(정류장)마다 미니게임을 할지')}${seg('wm','단어 수','구간마다 쳐야 하는 단어 수')}${seg('tm','제한 시간','단어마다 주어지는 시간')}${seg('extras','매점·룰렛','매점과 룰렛 역을 넣을지')}</div></div>
+    <div class="row"><button class="btn" id="cuReset" type="button">기본값으로</button><button class="btn go" id="cuOk" type="button">저장하고 돌아가기</button></div>`;
+    panel.querySelectorAll('.mchip').forEach(b=>b.onclick=()=>{const m=b.dataset.m;c.modes[m]=!(c.modes[m]!==false);sfx.key();draw()});
+    panel.querySelectorAll('.segN button').forEach(b=>b.onclick=()=>{const k=b.dataset.k,o=CUST_OPTS[k].find(x=>String(x[0])===b.dataset.v);c[k]=o[0];sfx.key();draw()});
+    $('#cuReset').onclick=()=>{G.custom=CUSTOM_DEF();draw()};$('#cuOk').onclick=()=>{saveCfg();titleScreen()};
+  };
+  openPanel('세부 설정','');panel.classList.add('wide','mid');draw();
+}
+function goHome(){hideHomeAsk(true);G.run++;T.active=false;closePanel();clearFx();if(glOK){plat.visible=true;plat.position.z=0;W.mode='stopped';W.vel=0}W.doorTgt=1;titleScreen()}
+/* ---------- 게임 중 홈으로 ---------- */
+const homeAsk=document.createElement('div');homeAsk.id='homeAsk';homeAsk.hidden=true;
+homeAsk.innerHTML='<div class="ha" role="dialog" aria-modal="true" aria-labelledby="haT"><h3 id="haT">🏠 처음 화면으로 갈까?</h3><p id="haP">지금 하던 판은 기록되지 않고 끝나.</p><div class="row"><button class="btn" id="haNo" type="button">계속하기</button><button class="btn go" id="haYes" type="button">홈으로</button></div></div>';
+document.body.appendChild(homeAsk);
+function showHomeAsk(){if(G.phase==='title'||!homeAsk.hidden)return;G.hold=true;$('#haP').textContent=G.race?'레이스 방에서 나가고 처음 화면으로 가.':(G.phase==='end'?'결과 화면을 닫고 처음 화면으로 가.':'지금 하던 판은 기록되지 않고 끝나.');homeAsk.hidden=false;sfx.key();setTimeout(()=>$('#haNo').focus(),30)}
+function hideHomeAsk(silent){if(homeAsk.hidden)return;homeAsk.hidden=true;G.hold=false;if(!silent&&G.phase!=='title'&&!panel.innerHTML)focusInput()}
+$('#haNo').onclick=()=>hideHomeAsk();
+$('#haYes').onclick=()=>{hideHomeAsk(true);if(G.race){if(window.MT&&MT.onQuitRace)MT.onQuitRace();leaveRaceUI()}else goHome()};
+homeAsk.addEventListener('click',e=>{if(e.target===homeAsk)hideHomeAsk()});
+$('#homeHud').onclick=showHomeAsk;
+addEventListener('keydown',e=>{if(e.key==='Escape'&&!e.isComposing){if(!homeAsk.hidden){e.preventDefault();hideHomeAsk()}else if(G.phase!=='title'){e.preventDefault();showHomeAsk()}}},true);
 function rankLadder(t){const r=rankOf(t);return`<div class="ladder">${RANKS.map(x=>`<span class="${x===r?'on':''}">${x[1]}<small>${x[0]}+</small></span>`).join('')}</div>`}
 function testResult(){
   G.phase='end';T.active=false;W.mode='estop';hud();setIdle('측정 끝!','결과 확인');
@@ -1912,7 +2402,7 @@ function endGame(over){
   if(tpm>loadNum('metroTyping.bestTpm')&&G.wlog.length>=20)save('metroTyping.bestTpm',tpm);
   const per=final/Math.max(1,G.si),m=D().mult,stars=over?0:per>=1000*m?3:per>=600*m?2:1;
   const endName=STATIONS[G.si].name;
-  led(over?'운행이 중단되었습니다 · '+endName+'역':'여행 종착역 '+endName+'입니다 · 오늘도 '+lineName()+'을 이용해 주셔서 감사합니다');over?sfx.bad():sfx.win();
+  led(over?'운행이 중단되었습니다 · '+endName+'역':'여행 종착역 '+endName+'입니다 · 오늘도 '+eul(lineName())+' 이용해 주셔서 감사합니다');over?sfx.bad():sfx.win();
   const mx=Math.max(1,...G.segTpm);
   const chart=G.segTpm.length?`<div class="tchart-wrap"><div class="tchart-h"><span>구간별 타수</span><span>최고 ${mx}타</span></div><div class="tchart">${G.segTpm.map((v,i)=>`<i style="height:${Math.max(4,v/mx*100)}%" title="${STATIONS[i].name} → ${STATIONS[i+1].name} · ${v}타"></i>`).join('')}</div><div class="tchart-h"><span>${STATIONS[0].name}</span><span>${endName}</span></div></div>`:'';
   openPanel(endName,`<div class="res2"><div class="rescol"><h2>${over?'💥 운행 중단!':lineName()+' 여행 완주!'}</h2><p class="sub">${D().icon} ${D().name} · ${G.course==='half'?'반 구간':'전 구간'}${over?' · '+(G.si+1)+'번째 역 근처에서 멈췄어':''}</p>
@@ -1929,7 +2419,7 @@ function endGame(over){
 
 /* ---------- 온라인 레이스 (웹사이트 버전에서 사용) ---------- */
 const OPP_COLORS=['#ffbf3c','#ff6b8b','#4fc3f7','#b388ff','#69f0ae','#ff8a65','#e0e0e0','#fff176'];
-const RACE_MINI=['mole','shade','count','push','balance','rhythm','stairs','next','sort','assemble','lost','fare','chosung'];
+const RACE_MINI=['mole','shade','count','push','balance','rhythm','stairs','next','sort','assemble','lost','fare','chosung','order','xfer','blank','typo','speed','reverse'];
 const RACE_EVENTS=['pigeon','passenger','mirror','tiny','shuffle','vanish','quake','smoke','blackout','estop','trap','animal'];
 const ATK=['pigeon','mirror','shuffle','tiny','smoke','quake','vanish'];
 const contFlow=()=>G.phase==='race'?raceWord():nextWord();
@@ -1948,10 +2438,10 @@ function makeRaceScript(line,count,opts){
   return{items,events,mini};
 }
 function startRace(o){
-  audioInit();G.run++;G.line=LINES[o.line]?+o.line:2;G.diff=DIFF[o.diff]?o.diff:'normal';G.course=o.script.items.length>=120?'full':'half';
+  audioInit();G.run++;G.line=LINES[o.line]?String(o.line):'2';G.diff=DIFF[o.diff]?o.diff:'normal';G.course=o.script.items.length>=120?'full':'half';
   shuffleGames();applyLine();resetRun(false);G.maxLives=0;G.lives=0;
   closePanel();clearFx();
-  if(glOK){plat.visible=true;plat.position.z=0;W.vel=0;W.mode='stopped';setPlatformSigns(0);setTerrain(STATIONS[0].up?'up':'tunnel')}
+  if(glOK){plat.visible=true;plat.position.z=0;W.vel=0;W.mode='stopped';setPlatformSigns(0);setTerrain(stTerrain(STATIONS[0]))}
   const sc=o.script,ev={};(sc.events||[]).forEach(([i,k])=>ev[i]=k);
   const minis=Array.isArray(sc.mini)?sc.mini:sc.mini?[sc.mini]:[];
   G.race={items:sc.items,events:ev,evDone:{},minis,miniDone:{},bonusMs:0,atkOn:!!(o.opts&&o.opts.atk),atk:0,lastMode:'',i:0,o,start:o.startAt,done:false,si:0,t0:0,lastSend:0,timer:0};
@@ -2022,7 +2512,7 @@ function receiveAttack(fx,from){
 function raceFinish(){
   const R=G.race;if(!R||R.done)return;R.done=true;G.phase='raceEnd';T.active=false;renderAtk();clearFx();
   const n=STATIONS.length;G.si=n-1;
-  if(glOK){setTerrain(STATIONS[n-1].up?'up':'tunnel');setPlatformSigns(n-1);plat.visible=true;plat.position.z=-130;W.mode='approach';W.onStop=()=>{W.doorTgt=1}}
+  if(glOK){setTerrain(stTerrain(STATIONS[n-1]));setPlatformSigns(n-1);plat.visible=true;plat.position.z=-130;W.mode='approach';W.onStop=()=>{W.doorTgt=1}}
   setIdle('도착! 다른 사람을 기다리는 중…','🏁 도착');sfx.win();hud();
   const ms=Math.round(performance.now()-R.t0);
   R.o.onFinish&&R.o.onFinish({ms,bonusMs:R.bonusMs||0,tpm:avgTpm(),acc:accuracy(),done:R.items.length,total:R.items.length});
@@ -2060,14 +2550,14 @@ window.MT={
   makeRaceWords,makeRaceScript,startRace,raceUpdate,raceStop,showRaceResult,leaveRaceUI,receiveAttack,sortRace,adjMs,OPP_COLORS,
   openPanel:(h,b,k)=>{openPanel(h,b,k);return panel.querySelector('.panel-body')},
   widePanel:()=>panel.classList.add('wide','mid'),closePanel,goHome,esc,sfx,
-  getCfg:()=>({line:G.line,diff:G.diff,course:G.course,lineName:lineName(),diffName:D().name,diffIcon:D().icon}),
+  getCfg:()=>({line:G.line,diff:G.diff,course:G.course,lineName:lineName(),lineNameOf:k=>lineName(k),diffName:D().name,diffIcon:D().icon}),
   isPlaying:()=>!['title','end'].includes(G.phase),
   debug:()=>({phase:G.phase,target:T.target,alts:T.alts,active:T.active,cls:wordEl.className,atk:G.race&&G.race.atk,panel:!scrim.hidden}),
   onResult:null,titleHook:null
 };
 
 /* ---------- 부팅 ---------- */
-try{const c=JSON.parse(localStorage.getItem('metroTyping.cfg')||'{}');if(LINES[c.line])G.line=c.line;if(DIFF[c.diff])G.diff=c.diff;if(c.course==='full'||c.course==='half')G.course=c.course}catch(e){}
+try{const c=JSON.parse(localStorage.getItem('metroTyping.cfg')||'{}');if(LINES[c.line])G.line=String(c.line);if(c.custom)G.custom=Object.assign(CUSTOM_DEF(),c.custom,{modes:Object.assign(CUSTOM_DEF().modes,c.custom.modes||{})});if(DIFF[c.diff])G.diff=c.diff;if(c.course==='full'||c.course==='half')G.course=c.course}catch(e){}
 buildStations();buildRoute();initGL();
 const ready=document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve();
 ready.then(()=>setPlatformSigns(0)).catch(()=>setPlatformSigns(0));

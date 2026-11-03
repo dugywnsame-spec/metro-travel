@@ -18,6 +18,7 @@ async function boot(){
   }catch(e){net=null;netErr='온라인 서버에 연결하지 못했어. 인터넷 연결이나 Firebase 설정을 확인해줘.'}
   MT.titleHook=el=>{boxEl=el;renderBox()};
   MT.onResult=r=>submitResult(r);
+  MT.onQuitRace=()=>leaveRoom();
   if(net)net.onAuth(async u=>{user=u;profile=null;if(u){await net.syncClock(u.uid);profile=await net.get('scores/'+u.uid).catch(()=>null);if(!profile||!profile.name)askNickname()}renderBox()});
   const el=$('#onlineBox');if(el){boxEl=el;renderBox()}
 }
@@ -201,7 +202,7 @@ function renderLobby(){
     <p>친구에게 이 방 코드를 알려줘. 같은 사이트에서 로그인하고 코드를 넣으면 들어와.</p>
     <div class="lobby-code" id="lbCode">${esc(roomCode)}</div>
     <div class="row"><button class="btn" id="lbCopy" type="button">코드 복사</button></div>
-    <p class="net-msg">${esc(room.line)}호선 · 역 이름 ${room.count||30}개 · 방장 ${esc(room.hostName||'')}</p>
+    <p class="net-msg">${esc(MT.getCfg().lineNameOf(room.line))} · 역 이름 ${room.count||30}개 · 방장 ${esc(room.hostName||'')}</p>
     <div class="race-opts">${RACE_OPTS.map(([k,l,d])=>`<label class="ropt"><input type="checkbox" data-k="${k}" ${(room.opts||{})[k]?'checked':''} ${isHost()?'':'disabled'}><span><b>${l}</b><small>${d}</small></span></label>`).join('')}</div>
     <label class="ropt mini-n"><span><b>🎮 미니게임 결승전</b><small>모두 같은 미니게임을 하고, 점수만큼 기록이 줄어. 레이스 중간중간 고르게 나와</small></span><select id="miniN" ${isHost()?'':'disabled'}>${MINI_N.filter(n=>n<=maxMini(room.count)).map(n=>`<option value="${n}" ${miniOf(room)===n?'selected':''}>${n?n+'번':'끄기'}</option>`).join('')}</select></label>
     <p class="net-msg">${isHost()?'방장만 바꿀 수 있어.':'방장이 정한 규칙이야.'}</p>
