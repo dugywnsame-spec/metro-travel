@@ -556,7 +556,17 @@ body.fever #typebox{box-shadow:0 0 0 2px var(--amber),0 0 48px rgba(255,150,30,.
 .rprev .lst i{border-color:var(--c)}
 .lmap.dense .lst{width:4px;height:4px}.lmap.dense .lst i{border-width:1.5px}
 .lmap .lst.ns i{border-style:dotted;background:#eef1f0;opacity:.7}
-.tbtn2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tbtn2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;max-height:52vh;overflow:auto;padding:8px 4px 4px}
+.gal-it{position:relative;display:flex;align-items:center;gap:8px;text-align:left;border:1.5px solid #dfe5e2;background:#fff;border-radius:12px;padding:10px;font:700 13px var(--f-body);color:var(--ink);cursor:pointer;min-height:52px}
+.gal-it:hover{border-color:var(--line);background:color-mix(in srgb,var(--line) 8%,#fff)}
+.gal-it:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.gal-it span{font-size:22px}.gal-it small{display:block;font-weight:600;color:#7a868d;font-size:11px}
+.newb{position:absolute;top:-6px;right:-4px;background:#e8463a;color:#fff;font:800 10px var(--f-body);font-style:normal;border-radius:99px;padding:2px 6px}
+p .newb{position:static}
+.gal-f{display:flex;gap:6px;flex-wrap:wrap;margin:-4px 0 10px}
+.gal-f button{border:1.5px solid #dfe5e2;background:#fff;border-radius:99px;padding:5px 12px;font:700 12.5px var(--f-body);cursor:pointer;color:var(--ink)}
+.gal-f button[aria-pressed="true"]{background:#14191d;color:#fff;border-color:#14191d}
 .tbtn2 .btn{min-height:44px;font-size:14px;padding:8px}
 .cust-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .mode-chips{display:flex;flex-wrap:wrap;gap:6px}
@@ -765,7 +775,13 @@ function strokes(s){let n=0;for(const ch of s){const c=ch.charCodeAt(0);if(c>=0x
 let gameDeck=[];
 /* 버스에서는 지하철 노선 지식이 필요한 미니게임은 빼고 섞는다 */
 const BUS_SKIP=['next','sort','count','order','xfer','maze','simon'];
-function shuffleGames(){const bus=!!(LINES[G.line]&&LINES[G.line].bus);gameDeck=shuffle(GAME_POOL.filter(k=>!(bus&&BUS_SKIP.includes(k))))}
+/* 미니게임을 몇 번 했는지 기억해 두고, 덜 해본 게임(안 해본 게임)부터 나오게 한다 */
+const PLAY_KEY='metroTyping.mgPlays';
+function playCounts(){try{return JSON.parse(localStorage.getItem(PLAY_KEY)||'{}')||{}}catch(e){return{}}}
+function markPlayed(k){const c=playCounts();c[k]=(c[k]||0)+1;try{localStorage.setItem(PLAY_KEY,JSON.stringify(c))}catch(e){}}
+function shuffleGames(){const bus=!!(LINES[G.line]&&LINES[G.line].bus),c=playCounts();
+  const pool=shuffle(GAME_POOL.filter(k=>!(bus&&BUS_SKIP.includes(k))));
+  gameDeck=pool.map(k=>[k,(c[k]||0)+Math.random()*.9]).sort((a,b)=>a[1]-b[1]).map(x=>x[0])}
 /* ---------- 버스 모드 문구 바꾸기 ----------
    버스를 탈 때는 화면에 나오는 '열차·승강장·선로…' 같은 지하철 표현을 버스 표현으로 바꿔 보여준다.
    정류장 이름 자체(예: 불광역3호선)는 건드리지 않도록, 일반 단어 대신 문구 단위로만 바꾼다. */
@@ -1695,7 +1711,7 @@ function runStationGame(){
   const st=STATIONS[G.si],key=st.type==='boss'?'boss':st.game,g=GAMES[key];
   const title=key==='boss'?(st.terminal?'종착역 최종 보스':'보스전')+' · 안내방송 타이핑':g.title;
   openPanel(st.name,`<div class="mg-intro"><span class="mg-ico">${g.icon}</span><h2>${title}</h2></div><p>${g.rule}</p><div class="row"><button class="btn go" id="mgStart" type="button">시작</button></div>`,key==='boss'?'boss':st.transfer?'xfer':'');
-  $('#mgStart').onclick=()=>{panel.querySelector('.panel-body').innerHTML=`<div class="mg-intro sm"><span class="mg-ico">${g.icon}</span><h2>${title}</h2></div><div id="mgArea" class="mg-area"></div>`;g.run($('#mgArea'),showResult)};
+  $('#mgStart').onclick=()=>{panel.querySelector('.panel-body').innerHTML=`<div class="mg-intro sm"><span class="mg-ico">${g.icon}</span><h2>${title}</h2></div><div id="mgArea" class="mg-area"></div>`;if(key!=='boss')markPlayed(key);g.run($('#mgArea'),showResult)};
   $('#mgStart').focus();
 }
 function showResult(pts,msg){
@@ -2353,7 +2369,7 @@ function titleScreen(){
   <dl class="howto"><dt>달리기</dt><dd>이름을 다 치면 바로 다음. 구간마다 13가지 규칙이 바뀌어</dd><dt>버스</dt><dd>🔔 하차벨·🧍 대기 승객 보고 정차, 아무도 없으면 미정차 통과</dd><dt>이벤트</dt><dd>🕊️ 갑툭튀 · 🚨 비상상황 · 🪤 억까 · 🚦 신호</dd><dt>역</dt><dd>미니게임 36종 · 🏪 매점 · 🎡 룰렛 · 👑 보스전</dd></dl>
   <div class="best" id="bestLine"></div>
   <div id="onlineBox" class="online-box"></div>
-  <div class="tbtns"><button class="btn go" id="startBtn" type="button">출발하기</button><div class="tbtn2"><button class="btn" id="testBtn" type="button">⌨️ 타자 측정${bestT?' · '+bestT+'타':''}</button><button class="btn" id="custBtn" type="button">⚙️ 세부 설정</button></div></div></div>
+  <div class="tbtns"><button class="btn go" id="startBtn" type="button">출발하기</button><div class="tbtn2"><button class="btn" id="testBtn" type="button">⌨️ 타자 측정${bestT?' · '+bestT+'타':''}</button><button class="btn" id="galBtn" type="button">🎮 미니게임</button><button class="btn" id="custBtn" type="button">⚙️ 세부 설정</button></div></div></div>
   <div class="tcol"><div class="sec"><div class="tabs2 three"><button type="button" data-t="subway" aria-pressed="${G.tab==='subway'}">🚇 지하철 ${SUBWAY_KEYS.length}</button><button type="button" data-t="bus" aria-pressed="${G.tab==='bus'}">🚌 버스 ${BUS_KEYS.length}</button><button type="button" class="rnd" id="rndBtn" title="지하철·버스 전체에서 아무 노선이나 골라줘">🎲 랜덤</button></div>
   <div class="route-scroll" id="routeList">${routeList()}</div><div id="routePrev">${routePreview()}</div></div>
   </div><div class="tcol"><div class="sec"><p class="sec-t">난이도</p><div class="diffs">${Object.entries(DIFF).map(([k,d])=>`<button class="diffopt" data-k="${k}" aria-pressed="${k===G.diff}" type="button"><span class="dname">${d.icon} ${d.name}</span><small>${d.desc}</small></button>`).join('')}</div></div>
@@ -2380,7 +2396,7 @@ function titleScreen(){
       card&&card.scrollIntoView({block:'nearest'});tone(500+n*60,.05,'square',.08);
       if(n<steps)setTimeout(spin,60+n*18);else{card&&card.classList.remove('spin');card&&card.click();$('#rndBtn').disabled=false;sfx.ok()}};
     spin()};
-  $('#startBtn').onclick=()=>startGame(false);$('#testBtn').onclick=()=>startGame(true);$('#custBtn').onclick=openCustom;
+  $('#startBtn').onclick=()=>startGame(false);$('#testBtn').onclick=()=>startGame(true);$('#custBtn').onclick=openCustom;$('#galBtn').onclick=openGallery;
   if(window.MT&&MT.titleHook)MT.titleHook($('#onlineBox'));
 }
 /* ---------- 세부 설정 화면 ---------- */
@@ -2399,6 +2415,32 @@ function openCustom(){
     $('#cuReset').onclick=()=>{G.custom=CUSTOM_DEF();draw()};$('#cuOk').onclick=()=>{saveCfg();titleScreen()};
   };
   openPanel('세부 설정','');panel.classList.add('wide','mid');draw();
+}
+/* ---------- 미니게임 모음 (연습) ---------- */
+function openGallery(filter){
+  filter=filter||'all';const c=playCounts(),bus=!!LINES[G.line].bus;
+  const keys=GAME_POOL.filter(k=>filter==='new'?!c[k]:true);
+  const unseen=GAME_POOL.filter(k=>!c[k]).length;
+  openPanel('미니게임 모음',`<div class="mg-intro"><span class="mg-ico">🎮</span><h2>미니게임 ${GAME_POOL.length}종</h2></div>
+    <p>골라서 바로 연습해 봐. 여기 점수는 기록되지 않아. <i class="newb">NEW</i> 표시는 아직 한 번도 안 해본 게임이야. 실제 여행에서도 안 해본 게임이 먼저 나와.${bus?' 버스 노선에서는 🚇 표시 게임은 안 나와.':''}</p>
+    <div class="gal-f"><button type="button" data-f="all" aria-pressed="${filter==='all'}">전체 ${GAME_POOL.length}</button><button type="button" data-f="new" aria-pressed="${filter==='new'}">안 해본 것 ${unseen}</button></div>
+    <div class="gal">${keys.length?keys.map(k=>{const g=GAMES[k];return`<button type="button" class="gal-it" data-k="${k}"><span>${g.icon}</span><b>${g.title}${bus&&BUS_SKIP.includes(k)?' 🚇':''}<small>${c[k]?c[k]+'번 함':'아직 안 해봄'}</small></b>${c[k]?'':'<i class="newb">NEW</i>'}</button>`}).join(''):'<p>전부 해봤어! 👏</p>'}</div>
+    <div class="row"><button class="btn" id="galBack" type="button">처음 화면으로</button></div>`);
+  panel.classList.add('wide','mid');
+  panel.querySelectorAll('.gal-f button').forEach(b=>b.onclick=()=>{sfx.key();openGallery(b.dataset.f)});
+  panel.querySelectorAll('.gal-it').forEach(b=>b.onclick=()=>{audioInit();practiceGame(b.dataset.k,filter)});
+  $('#galBack').onclick=()=>titleScreen();
+}
+function practiceGame(k,filter){
+  const g=GAMES[k];G.phase='practice';G.si=Math.max(0,Math.min(3,STATIONS.length-2));
+  openPanel(g.title,`<div class="mg-intro"><span class="mg-ico">${g.icon}</span><h2>${g.title}</h2></div><p>${g.rule}</p><div class="row"><button class="btn" id="pBack" type="button">목록으로</button><button class="btn go" id="mgStart" type="button">시작</button></div>`);
+  $('#pBack').onclick=()=>openGallery(filter);
+  $('#mgStart').onclick=()=>{markPlayed(k);panel.querySelector('.panel-body').innerHTML=`<div class="mg-intro sm"><span class="mg-ico">${g.icon}</span><h2>${g.title}</h2></div><div id="mgArea" class="mg-area"></div>`;
+    g.run($('#mgArea'),(pts,msg)=>{if(mgStop){mgStop();mgStop=null}if(G.phase!=='practice')return;sfx.chime();
+      const tgt=$('#mgMain')||panel.querySelector('.panel-body');
+      tgt.innerHTML=`<div class="mg-res"><div class="result-msg">${msg}</div><div class="result-big">${Math.max(0,Math.round(pts)).toLocaleString()}<small> 점</small></div><p style="text-align:center">연습 모드라 점수는 기록되지 않아</p><div class="row"><button class="btn" id="pList" type="button">목록으로</button><button class="btn go" id="pAgain" type="button">한 번 더</button></div></div>`;
+      $('#pList').onclick=()=>openGallery(filter);$('#pAgain').onclick=()=>practiceGame(k,filter);$('#pAgain').focus()})};
+  $('#mgStart').focus();
 }
 function goHome(){hideHomeAsk(true);G.run++;T.active=false;closePanel();clearFx();if(glOK){plat.visible=true;plat.position.z=0;W.mode='stopped';W.vel=0}W.doorTgt=1;titleScreen()}
 /* ---------- 게임 중 홈으로 ---------- */
