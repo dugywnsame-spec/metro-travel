@@ -763,7 +763,34 @@ const cho=s=>[...s].map(ch=>{const c=ch.charCodeAt(0)-0xAC00;return c>=0&&c<1117
 /* 한글 타수: 자모 키 입력 수 (겹모음·겹받침은 2타) */
 function strokes(s){let n=0;for(const ch of s){const c=ch.charCodeAt(0);if(c>=0xAC00&&c<=0xD7A3){const x=c-0xAC00,m=Math.floor((x%588)/28),f=x%28;n+=1+([9,10,11,14,15,16,19].includes(m)?2:1)+(f?([3,5,6,9,10,11,12,13,14,15,18].includes(f)?2:1):0)}else n+=1}return n}
 let gameDeck=[];
-function shuffleGames(){gameDeck=shuffle(GAME_POOL.slice())}
+/* 버스에서는 지하철 노선 지식이 필요한 미니게임은 빼고 섞는다 */
+const BUS_SKIP=['next','sort','count','order','xfer','maze','simon'];
+function shuffleGames(){const bus=!!(LINES[G.line]&&LINES[G.line].bus);gameDeck=shuffle(GAME_POOL.filter(k=>!(bus&&BUS_SKIP.includes(k))))}
+/* ---------- 버스 모드 문구 바꾸기 ----------
+   버스를 탈 때는 화면에 나오는 '열차·승강장·선로…' 같은 지하철 표현을 버스 표현으로 바꿔 보여준다.
+   정류장 이름 자체(예: 불광역3호선)는 건드리지 않도록, 일반 단어 대신 문구 단위로만 바꾼다. */
+const BUS_WORDS=[
+  [/자기부상열차/g,'\u0000'],[/열차/g,'버스'],[/전동차/g,'버스'],[/승강장/g,'정류장'],[/스크린도어/g,'버스 문'],[/선로/g,'차로'],[/기관사/g,'기사님'],
+  [/개찰구/g,'카드 단말기'],[/지하철 스네이크/g,'버스 스네이크'],[/지하철/g,'버스'],[/터널 장애물/g,'도로 장애물'],[/환승 계단/g,'육교 계단'],[/환승 통로/g,'지하 통로'],
+  [/종착역/g,'종점'],[/역 이름/g,'정류장 이름'],[/역이름/g,'정류장 이름'],[/(다음|이번|첫|빨간|황금|함정|목적지|이|그|두|마지막|모든|한) 역/g,'$1 정류장'],
+  [/역마다/g,'정류장마다'],[/ 역 중에서/g,' 정류장 중에서'],[/개 역/g,'개 정류장'],[/역\(정류장\)/g,'정류장'],[/정거장/g,'정류장'],[/🚇/g,'🚌'],[/🚉/g,'🚏'],[/\u0000/g,'자기부상열차']
+];
+const BUS_TEST=/열차|전동차|승강장|스크린도어|선로|기관사|개찰구|지하철|터널 장애물|환승 계단|환승 통로|역|정거장|🚇|🚉/;
+let busNameRe=null,busNameKey='';
+function busify(t){
+  if(!t||!BUS_TEST.test(t))return t;
+  if(busNameKey!==G.line){busNameKey=G.line;const L=LINES[G.line],ns=[...new Set([...(L.names||[]),...(L.all||[])])].filter(Boolean).sort((a,b)=>b.length-a.length).map(x=>x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'));busNameRe=ns.length?new RegExp('('+ns.join('|')+')역(?![가-힣])','g'):null}
+  if(busNameRe)t=t.replace(busNameRe,'$1');
+  for(const[a,b]of BUS_WORDS)t=t.replace(a,b);return t}
+const busOn=()=>G.bus&&G.phase!=='title';
+const BUS_KEEP='.sentence,#word,#typeIn,#inView,input,textarea,.inview,.q-big,#sq,#cq,.memo-it,.cbtn,.drop';
+function busifyNode(root){if(!busOn())return;
+  if(root.nodeType===3){const el=root.parentElement;if(!el||el.closest(BUS_KEEP))return;const n=busify(root.nodeValue);if(n!==root.nodeValue)root.nodeValue=n;return}
+  if(root.nodeType!==1||root.closest(BUS_KEEP))return;
+  const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:x=>x.parentElement&&x.parentElement.closest(BUS_KEEP)?2:1});let x;
+  while((x=w.nextNode())){const n=busify(x.nodeValue);if(n!==x.nodeValue)x.nodeValue=n}}
+new MutationObserver(ms=>{if(!busOn())return;for(const m of ms){if(m.type==='characterData')busifyNode(m.target);else m.addedNodes.forEach(busifyNode)}})
+  .observe(document.body,{subtree:true,childList:true,characterData:true});
 let STATIONS=[];
 /* ---------- 세부 설정 ---------- */
 const CUSTOM_DEF=()=>({modes:Object.fromEntries(Object.keys(MODES).map(k=>[k,true])),ev:1,mg:'all',wm:1,tm:1,extras:true});
@@ -1212,17 +1239,19 @@ function fb(t,cls){const e=$('#fb');e.textContent=t;e.className=cls||''}
 function banner(icon,title,desc,kind){const b=$('#banner');b.className='banner '+(kind||'');b.innerHTML=`<span class="bi">${icon}</span><span class="bt"><b>${title}</b><small>${desc}</small></span>`;void b.offsetWidth;b.classList.add('show');clearTimeout(banner.t);banner.t=setTimeout(()=>b.classList.remove('show'),2400)}
 
 /* ---------- 타이핑 ---------- */
-const T={target:'',alts:null,disp:null,dispProg:false,hide:false,matched:'',onOK:null,onTimeout:null,limit:0,t:0,active:false,last:0,composing:false,base:0,ghost:'',shown:0,id:0,stat:false};
+const T={target:'',alts:null,disp:null,dispProg:false,hide:false,matched:'',onOK:null,onTimeout:null,limit:0,t:0,active:false,last:0,composing:false,base:0,prev:'',shown:0,id:0,stat:false};
 const typebox=$('#typebox'),inp=$('#typeIn'),wordEl=$('#word'),tFill=$('#tbarFill');
 /* 입력 처리: 입력칸을 조합 중에 비우면 한글 입력기가 마지막 글자를 다음 칸에 다시 넣는다.
    그래서 입력칸은 절대 조합 중에 지우지 않고, 이미 끝난 단어 뒤(T.base)부터만 읽어서 판정·표시한다. */
 const inView=$('#inView');
 const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-function typed(){let v=inp.value.slice(T.base).replace(/^\s+/,'');
-  /* 한글 입력기가 앞 단어 마지막 글자를 한 번 더 넣는 경우(유령 글자)는 자동으로 떼어낸다 */
-  if(T.ghost&&v.startsWith(T.ghost)&&!(T.alts||[T.target]).some(t=>t.startsWith(T.ghost)))v=v.slice(T.ghost.length).replace(/^\s+/,'');
-  return v}
-function matchOf(v){const n=norm(v);if(!n)return'';const n2=norm2(v);for(const t of (T.alts||[T.target])){const a=norm(t),b=norm2(t);if(a===n||b===n2)return t;
+/* 한글 입력기가 앞 단어의 끝(마지막 글자 또는 그 이상)을 새 칸에 다시 넣는 일이 있다.
+   앞 단어의 끝부분이 새로 친 글자 맨 앞에 붙어 있고, 떼어냈을 때 정답에 더 가까워지면 떼어낸다. 모든 단어에 공통 적용. */
+function ghostCands(v,prev){const out=[];if(!prev||!v)return out;const pv=prev.replace(/\s+/g,'');let cur=[v];for(let d=0;d<4&&cur.length;d++){const nx=[];for(const x of cur)for(let k=pv.length;k>=1;k--){const g=pv.slice(-k);if(x.startsWith(g)){const y=x.slice(g.length).replace(/^\s+/,'');if(!out.includes(y)){out.push(y);nx.push(y)}}}cur=nx}return out}
+function rawTyped(){return inp.value.slice(T.base).replace(/^\s+/,'')}
+function typed(){const v=rawTyped(),sc=x=>{const p=progress(x);return(matchOf1(x)?1e6:0)+(p>=x.length?1e3:0)+p};let best=v,bs=sc(v);for(const c of ghostCands(v,T.prev)){const q=sc(c);if(q>bs||(c===''&&progress(v)===0)){best=c;bs=q}}return best}
+function matchOf(v){const r=rawTyped(),m=matchOf1(v)||matchOf1(r);if(m)return m;for(const c of ghostCands(r,T.prev)){const x=matchOf1(c);if(x)return x}return''}
+function matchOf1(v){const n=norm(v);if(!n)return'';const n2=norm2(v);for(const t of (T.alts||[T.target])){const a=norm(t),b=norm2(t);if(a===n||b===n2)return t;
   /* 앞에 찌꺼기가 붙어도 끝이 정확히 정답이면 인정 (최대 2글자까지) */
   if(a&&n.length-a.length<=2&&n.length>a.length&&(n.endsWith(a)||n2.endsWith(b)))return t}return''}
 function typedProgress(v,t){let k=0;while(k<v.length&&k<t.length&&v[k]===t[k])k++;return k}
@@ -1241,13 +1270,14 @@ function renderWord(){
 }
 /* 입력칸은 절대 그 자리에서 비우지 않는다. 조합이 완전히 끝나고 새로 친 글자가 없을 때만 나중에 비운다. */
 function resetInput(){T.base=inp.value.length;paintInput();scheduleCleanup()}
-function scheduleCleanup(){clearTimeout(scheduleCleanup.t);scheduleCleanup.t=setTimeout(()=>{if(!T.composing&&inp.value.slice(T.base).trim()===''){if(inp.value!==''){inp.value=''}T.base=0;T.ghost='';paintInput()}},40)}
+function scheduleCleanup(){clearTimeout(scheduleCleanup.t);scheduleCleanup.t=setTimeout(()=>{if(!T.composing&&inp.value.slice(T.base).trim()===''){if(inp.value!==''){inp.value=''}T.base=0;paintInput()}},40)}
 const finePointer=!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);
 function endComposition(){if(!T.composing||!finePointer||document.activeElement!==inp)return;try{inp.blur();inp.focus({preventScroll:true})}catch(e){}}
 function setTarget(text,o){
+  if(G.bus&&/\s/.test(text)){text=busify(text);if(o.alts)o.alts=o.alts.map(busify)}
   T.id++;T.target=text;T.alts=o.alts||null;T.disp=o.disp==null?null:o.disp;T.dispProg=!!o.dispProg;T.hide=false;T.matched='';
   T.onOK=o.onOK;T.onTimeout=o.onTimeout||null;T.limit=o.limit||0;T.t=T.limit;T.active=true;T.shown=performance.now();T.stat=!!o.stat;T.trapAny=!!o.trapAny;
-  typebox.hidden=false;wordEl.className=(o.cls||'')+' pop';$('#goldTag').hidden=!o.golden;
+  typebox.hidden=false;wordEl.className=(o.cls||'')+' pop';$('#goldTag').hidden=!o.golden;if(o.golden)$('#goldTag').textContent='★ 황금 '+V().stop+' · 점수 3배 · 코인 5배';
   $('#prompt').textContent=o.prompt||'';resetInput();tFill.style.transform='scaleX(1)';tFill.classList.remove('low');
   tFill.parentElement.style.visibility=(T.limit||o.bar)?'visible':'hidden';renderWord();
   if(o.hideAfter){const id=T.id;setTimeout(()=>{if(T.id===id&&T.active){T.hide=true;renderWord()}},o.hideAfter)}
@@ -1258,7 +1288,7 @@ function setIdle(prompt,word){
 }
 function focusInput(){try{inp.focus({preventScroll:true})}catch(e){inp.focus()}}
 function accept(){
-  const cb=T.onOK;T.active=false;const mw=norm(T.matched||T.target);T.ghost=mw?mw.slice(-1):'';T.base=inp.value.length;endComposition();T.base=inp.value.length;
+  const cb=T.onOK;T.active=false;T.prev=(T.matched||T.target||'');T.base=inp.value.length;endComposition();T.base=inp.value.length;
   if(T.stat){const dt=Math.max(.3,(performance.now()-T.shown)/1000),s=strokes(T.matched||T.target);G.strokes+=s;G.typeTime+=dt;G.segS+=s;G.segTt+=dt;G.wlog.push([s,dt]);if(G.wlog.length>500)G.wlog.shift()}
   cb&&cb();
 }
@@ -1275,7 +1305,7 @@ inp.addEventListener('compositionstart',()=>T.composing=true);
 inp.addEventListener('compositionend',()=>{T.composing=false;renderWord();check();scheduleCleanup()});
 inp.addEventListener('input',e=>{
   if(inp.value.length<T.base){const ins=e.inputType&&e.inputType.indexOf('insert')===0;T.base=ins?Math.max(0,inp.value.length-(e.data||'').length):inp.value.length}
-  if(e.inputType&&e.inputType.indexOf('delete')===0){T.ghost='';if(T.active)G.bs++}
+  if(e.inputType&&e.inputType.indexOf('delete')===0&&T.active)G.bs++;
   if(T.active)sfx.key();renderWord();
   if(T.trapAny&&T.active&&typed()){T.matched='';accept();return}
   check();
@@ -1603,9 +1633,10 @@ function closePanel(){if(mgStop){mgStop();mgStop=null}scrim.hidden=true;panel.in
 function countdown(sec,el,onEnd){let left=sec;el.textContent=left;const id=setInterval(()=>{left--;el.textContent=Math.max(0,left);if(left<=5&&left>0)sfx.tick();if(left<=0){clearInterval(id);onEnd()}},1000);return()=>clearInterval(id)}
 /* 미니게임용 한글 입력칸: 메인 입력칸과 같은 방식으로 조합 중인 글자가 다음 단어에 붙지 않게 처리 */
 function imeBox(ph){
+  if(G.bus)ph=busify(ph);
   const w=document.createElement('div');w.className='inwrap mg-inwrap';
   w.innerHTML='<input class="mg-input ime" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send" aria-label="'+ph+'"><div class="inview" aria-hidden="true"></div>';
-  const i=w.querySelector('input'),v=w.querySelector('.inview');let base=0,comp=false,cb=null;
+  const i=w.querySelector('input'),v=w.querySelector('.inview');let base=0,comp=false,cb=null,prev='';
   const typedB=()=>i.value.slice(base).replace(/^\s+/,'');
   const later2=()=>{paint();setTimeout(()=>{if(!comp&&i.value.slice(base).trim()===''){i.value='';base=0;paint()}},40)};
   const paint=()=>{const t=typedB();v.innerHTML=(t?'<span class="tx">'+esc(t)+'</span>':'<span class="ph">'+ph+'</span>')+'<i class="caret"></i>'};
@@ -1615,8 +1646,9 @@ function imeBox(ph){
   i.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)&&!e.isComposing)e.preventDefault()});
   i.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing){e.preventDefault();cb&&cb(typedB(),comp,true)}});
   paint();
-  return{w,i,typed:typedB,on(f){cb=f},focus(){try{i.focus({preventScroll:true})}catch(e){i.focus()}},
-    consume(){base=i.value.length;if(comp&&finePointer){try{i.blur();i.focus({preventScroll:true})}catch(e){}}base=i.value.length;later2()},clear(){base=i.value.length;later2()}};
+  const eq=t=>{const r=typedB(),nt=norm(t);if(!nt)return false;if(norm(r)===nt)return true;return ghostCands(r,prev).some(c=>norm(c)===nt)};
+  return{w,i,typed:typedB,eq,on(f){cb=f},focus(){try{i.focus({preventScroll:true})}catch(e){i.focus()}},
+    consume(){prev=typedB();base=i.value.length;if(comp&&finePointer){try{i.blur();i.focus({preventScroll:true})}catch(e){}}base=i.value.length;later2()},clear(){base=i.value.length;later2()}};
 }
 
 const GAMES={
@@ -1914,7 +1946,7 @@ function mgBoss(root,done){
   const st=STATIONS[G.si],n=st.typeName||st.name,cnt=[1,2,2,3][DL()]+(st.terminal?1:0);
   const pool=G.bus?['이번 정류장은 '+n+'입니다','다음 정류장에서 내리실 분은 벨을 눌러 주세요','버스가 완전히 멈춘 뒤에 자리에서 일어나 주세요','하차하실 때도 교통카드를 꼭 찍어 주세요','차내에서는 음식물 섭취를 삼가 주세요','교통약자에게 자리를 양보해 주세요']:['이번 역은 '+n+' '+n+'역입니다',n+'역에서 내리실 고객께서는 잊으신 물건이 없는지 확인하세요','열차와 승강장 사이가 넓으니 조심하세요','출입문 닫습니다 다음 열차를 이용해 주세요','안전선 밖으로 한 걸음 물러나 주시기 바랍니다','휴대전화는 진동으로 하고 통화는 짧게 해 주세요','노약자석은 비워 두는 배려를 부탁드립니다'];
   if(st.xfer)pool.push('이 역에서 '+ro(st.xfer)+' 갈아타실 수 있습니다');
-  let list=shuffle(pool.slice()).slice(0,cnt);if(st.terminal)list[0]=G.bus?'이 버스의 종점입니다 모두 내려 주시기 바랍니다':'이 역은 종착역입니다 모두 내려 주시기 바랍니다';
+  let list=shuffle(pool.slice()).slice(0,cnt);if(st.terminal)list[0]=G.bus?'이 버스의 종점입니다 모두 내려 주시기 바랍니다':'이 역은 종착역입니다 모두 내려 주시기 바랍니다';if(G.bus)list=list.map(busify);
   const total=list.join('').replace(/\s/g,'').length;const lim=Math.round(4+total*(.6-DL()*.1));
   let idx=0,left=lim,finished=false,sT=performance.now();const t0=sT;
   root.innerHTML=`<div class="mg-top"><span id="bInfo">문장 1 / ${cnt}</span><span class="clock" id="mgClock">${lim}</span></div><div class="tbar"><i id="bossBar"></i></div><div class="sentence" id="sent"></div><div id="bossBox"></div><div id="bossFb" class="mg-hint" style="color:var(--red);font-weight:700;min-height:1.3em"></div>`;
@@ -1922,7 +1954,7 @@ function mgBoss(root,done){
   const draw=()=>{const s=list[idx];if(!s)return 0;const v=box.typed();let k=0;while(k<v.length&&k<s.length&&v[k]===s[k])k++;$('#sent').innerHTML='<span class="ok">'+esc(s.slice(0,k))+'</span>'+esc(s.slice(k));return k};
   const finish=()=>{if(finished)return;finished=true;clearInterval(id);const sec=(performance.now()-t0)/1000;done(220*cnt+left*15,'보스 격파! '+sec.toFixed(1)+'초 만에 완료')};
   box.on((v,comp,enter)=>{const s=list[idx];draw();
-    if(norm(v)===norm(s)&&(autoNext||enter)){const dt=(performance.now()-sT)/1000;G.strokes+=strokes(s);G.typeTime+=Math.max(.5,dt);G.wlog.push([strokes(s),Math.max(.5,dt)]);sT=performance.now();
+    if(box.eq(s)&&(autoNext||enter)){const dt=(performance.now()-sT)/1000;G.strokes+=strokes(s);G.typeTime+=Math.max(.5,dt);G.wlog.push([strokes(s),Math.max(.5,dt)]);sT=performance.now();
       sfx.ok();idx++;box.consume();if(idx>=cnt)finish();else{$('#bInfo').textContent='문장 '+(idx+1)+' / '+cnt;draw()}}
     else if(enter){sfx.bad();G.typos++;$('#bossFb').textContent='아직 다른 곳이 있어. 초록색 뒤부터 확인해봐'}});
   const id=setInterval(()=>{left--;$('#mgClock').textContent=Math.max(0,left);$('#bossBar').style.transform='scaleX('+Math.max(0,left/lim)+')';if(left<=5&&left>0)sfx.tick();
@@ -1943,7 +1975,7 @@ function mgRain(root,done){
     for(const d of drops){d.y+=d.v*dt;d.el.style.transform='translateY('+d.y+'px)';
       if(d.y>H-48){d.dead=true;d.el.classList.add('splash');setTimeout(()=>d.el.remove(),300);hp--;sfx.bad();info();if(hp<=0){end();return}}}
     drops=drops.filter(d=>!d.dead);raf=requestAnimationFrame(step)};
-  box.on((v,comp,enter)=>{const n=norm(v);const d=n&&drops.find(x=>norm(x.w)===n);
+  box.on((v,comp,enter)=>{const n=norm(v);const d=n&&drops.find(x=>box.eq(x.w));
     if(d&&(autoNext||enter)){d.dead=true;drops=drops.filter(x=>x!==d);d.el.classList.add('popd');setTimeout(()=>d.el.remove(),250);got++;sfx.ok();info();box.consume()}
     else if(enter){sfx.bad();box.clear()}});
   const end=()=>{if(!alive)return;stop();done(got*40+Math.max(0,hp)*30,'역 이름 '+got+'개를 막아냈어!')};
@@ -1955,7 +1987,7 @@ function mgChosung(root,done){
   root.innerHTML=`<div class="mg-top"><span id="mgInfo">정답 0</span><span class="clock" id="mgClock">35</span></div><div class="q-card"><div class="q-line">${lineBadge(G.line)}<span>${lineName()} 역 중에서</span></div><div class="q-big cho" id="cq"></div><div class="q-sub" id="ch"></div></div><div id="cBox"></div><div class="row"><button class="btn" id="cSkip" type="button">모르겠어 (넘기기)</button></div>`;
   const box=imeBox('역 이름 입력');$('#cBox').appendChild(box.w);let alts=[],cur='',lock=false;
   const q=()=>{cur=pickWord();const c=cho(cur);alts=L.all.filter(x=>cho(x)===c);$('#cq').textContent=c;$('#ch').textContent=c.length+'글자 · 초성을 보고 역 이름을 쳐';lock=false};
-  box.on((v,comp,enter)=>{if(lock)return;if(alts.some(a=>norm(a)===norm(v))&&(autoNext||enter)){ok++;sfx.ok();$('#mgInfo').textContent='정답 '+ok;box.consume();q()}else if(enter){sfx.bad();box.clear()}});
+  box.on((v,comp,enter)=>{if(lock)return;if(alts.some(a=>box.eq(a))&&(autoNext||enter)){ok++;sfx.ok();$('#mgInfo').textContent='정답 '+ok;box.consume();q()}else if(enter){sfx.bad();box.clear()}});
   $('#cSkip').onclick=()=>{lock=true;$('#ch').textContent='정답: '+cur;sfx.bad();setTimeout(q,800);box.focus()};
   q();box.focus();mgStop=countdown(35,$('#mgClock'),()=>done(ok*60,'초성 '+ok+'개 정답!'));
 }
@@ -2197,7 +2229,7 @@ function mgReverse(root,done){
   root.innerHTML=`<div class="mg-top"><span id="mgInfo">정답 0</span><span class="clock" id="mgClock">30</span></div><div class="q-card"><div class="q-sub">거꾸로 쓰인 이름을 바르게 쳐!</div><div class="q-big" id="rq"></div></div><div id="rBox"></div><div class="row"><button class="btn" id="rSkip" type="button">넘기기</button></div>`;
   const box=imeBox('바른 이름');$('#rBox').appendChild(box.w);
   const q=()=>{let t=0;do{cur=pickWord();t++}while(cur.length<3&&t<30);$('#rq').textContent=[...cur].reverse().join('')};
-  box.on((v,comp,enter)=>{if(norm(v)===norm(cur)&&(autoNext||enter)){ok++;sfx.ok();$('#mgInfo').textContent='정답 '+ok;box.consume();q()}else if(enter){sfx.bad();box.clear()}});
+  box.on((v,comp,enter)=>{if(box.eq(cur)&&(autoNext||enter)){ok++;sfx.ok();$('#mgInfo').textContent='정답 '+ok;box.consume();q()}else if(enter){sfx.bad();box.clear()}});
   $('#rSkip').onclick=()=>{sfx.bad();q();box.focus()};q();box.focus();
   mgStop=countdown(30,$('#mgClock'),()=>done(ok*60,'거꾸로 이름 '+ok+'개 해독!'));
 }
@@ -2268,7 +2300,7 @@ function mgSpeed(root,done){
   root.innerHTML=`<div class="mg-top"><span id="mgInfo">0개</span><span class="clock" id="mgClock">30</span></div><div class="q-card"><div class="q-big" id="sq"></div><div class="q-sub" id="sn2"></div></div><div id="sBox"></div>`;
   const box=imeBox('보이는 이름을 쳐');$('#sBox').appendChild(box.w);
   const show=()=>{$('#sq').textContent=cur;$('#sn2').textContent='다음: '+nx};
-  box.on((v,comp,enter)=>{if(norm(v)===norm(cur)&&(autoNext||enter)){ok++;chars+=strokes(cur);sfx.ok();$('#mgInfo').textContent=ok+'개';box.consume();cur=nx;nx=pickWord();show()}else if(enter){sfx.bad();box.clear()}});
+  box.on((v,comp,enter)=>{if(box.eq(cur)&&(autoNext||enter)){ok++;chars+=strokes(cur);sfx.ok();$('#mgInfo').textContent=ok+'개';box.consume();cur=nx;nx=pickWord();show()}else if(enter){sfx.bad();box.clear()}});
   show();box.focus();mgStop=countdown(30,$('#mgClock'),()=>done(ok*35,'30초 동안 '+ok+'개 · 약 '+Math.round(chars*2)+'타/분'));
 }
 function mgDodge(root,done){
