@@ -190,7 +190,7 @@ function checkFinish(){
 }
 async function startRound(){
   if(!isHost())return;const n=room.status==='lobby'&&room.round===0?1:(room.round||0)+1;
-  await net.update('rooms/'+roomCode,{status:'racing',round:n,script:MT.makeRaceScript(room.line,room.count||30,room.opts||{}),startAt:net.now()+5000});
+  await net.update('rooms/'+roomCode,{status:'racing',round:n,script:JSON.parse(JSON.stringify(MT.makeRaceScript(room.line,room.count||30,room.opts||{}))),startAt:net.now()+5000});
 }
 function renderLobby(){
   if(!room||room.status!=='lobby')return;
@@ -210,7 +210,7 @@ function renderLobby(){
     <p class="net-msg">${L<2?'혼자서도 출발할 수 있지만 친구가 들어오면 더 재밌어.':L+'명 대기 중'}</p>
     <div class="row">${isHost()?'<button class="btn go" id="lbStart" type="button">🏁 출발!</button>':'<p class="net-msg" style="flex:1">방장이 출발을 누르면 5초 뒤에 시작해.</p>'}<button class="btn" id="lbLeave" type="button">나가기</button></div>`;
   $('#lbCopy').onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(roomCode).then(()=>toast('방 코드를 복사했어'),()=>toast('복사가 안 되면 코드를 직접 알려줘'))};
-  if(isHost())$('#lbStart').onclick=async()=>{$('#lbStart').disabled=true;try{await startRound()}catch(e){toast('출발하지 못했어');$('#lbStart').disabled=false}};
+  if(isHost())$('#lbStart').onclick=async()=>{$('#lbStart').disabled=true;try{await startRound()}catch(e){console.error(e);toast('출발하지 못했어: '+((e&&(e.code||e.message))||'알 수 없는 오류'));$('#lbStart').disabled=false}};
   $('#lbLeave').onclick=()=>{leaveRoom();backToTitle()};
   if(isHost())$('#miniN').onchange=e=>{const o=Object.assign({},room.opts||{});o.miniN=+e.target.value;delete o.mini;net.update('rooms/'+roomCode,{opts:o}).catch(()=>toast('설정을 바꾸지 못했어'))};
   if(isHost())document.querySelectorAll('.race-opts input').forEach(cb=>cb.onchange=()=>{const o=Object.assign({},room.opts||{});o[cb.dataset.k]=cb.checked;net.update('rooms/'+roomCode,{opts:o}).catch(()=>toast('설정을 바꾸지 못했어'))});
